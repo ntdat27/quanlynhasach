@@ -32,6 +32,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnMenuPOS = new ReaLTaiizor.Controls.MaterialButton();
             this.btnQuanLySach = new ReaLTaiizor.Controls.MaterialButton();
+            this.btnMenuNhanVien = new ReaLTaiizor.Controls.MaterialButton();
             this.pnlContent.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -47,6 +48,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnMenuNhanVien);
             this.panel1.Controls.Add(this.btnQuanLySach);
             this.panel1.Controls.Add(this.btnMenuPOS);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -97,6 +99,27 @@
             this.btnQuanLySach.UseVisualStyleBackColor = true;
             this.btnQuanLySach.Click += new System.EventHandler(this.btnQuanLySach_Click);
             // 
+            // btnMenuNhanVien
+            // 
+            this.btnMenuNhanVien.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnMenuNhanVien.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnMenuNhanVien.Depth = 0;
+            this.btnMenuNhanVien.HighEmphasis = true;
+            this.btnMenuNhanVien.Icon = null;
+            this.btnMenuNhanVien.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnMenuNhanVien.Location = new System.Drawing.Point(16, 102);
+            this.btnMenuNhanVien.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnMenuNhanVien.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnMenuNhanVien.Name = "btnMenuNhanVien";
+            this.btnMenuNhanVien.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnMenuNhanVien.Size = new System.Drawing.Size(124, 36);
+            this.btnMenuNhanVien.TabIndex = 3;
+            this.btnMenuNhanVien.Text = "Quản Lý Nhân Viên";
+            this.btnMenuNhanVien.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnMenuNhanVien.UseAccentColor = false;
+            this.btnMenuNhanVien.UseVisualStyleBackColor = true;
+            this.btnMenuNhanVien.Click += new System.EventHandler(this.btnMenuNhanVien_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -118,6 +141,7 @@
         private System.Windows.Forms.Panel panel1;
         private ReaLTaiizor.Controls.MaterialButton btnMenuPOS;
         private ReaLTaiizor.Controls.MaterialButton btnQuanLySach;
+        private ReaLTaiizor.Controls.MaterialButton btnMenuNhanVien;
     }
 }
 

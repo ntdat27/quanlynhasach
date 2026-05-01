@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="Controllers\HoaDonController.cs" />
     <Compile Include="Controllers\KhachHangController.cs" />
+    <Compile Include="Controllers\NhanVienController.cs" />
     <Compile Include="Controllers\SachController.cs" />
     <Compile Include="Data\DatabaseHelper.cs" />
     <Compile Include="frmMain.cs">
@@ -113,6 +114,7 @@
     </Compile>
     <Compile Include="Models\ChiTietHoaDon.cs" />
     <Compile Include="Models\KhachHang.cs" />
+    <Compile Include="Models\NhanVien.cs" />
     <Compile Include="Models\Sach.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -121,6 +123,12 @@
     </Compile>
     <Compile Include="UC_POS.Designer.cs">
       <DependentUpon>UC_POS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_QuanLyNhanVien.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_QuanLyNhanVien.Designer.cs">
+      <DependentUpon>UC_QuanLyNhanVien.cs</DependentUpon>
     </Compile>
     <Compile Include="UC_QuanLySach.cs">
       <SubType>UserControl</SubType>
@@ -143,6 +151,9 @@
     </Compile>
     <EmbeddedResource Include="UC_POS.resx">
       <DependentUpon>UC_POS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_QuanLyNhanVien.resx">
+      <DependentUpon>UC_QuanLyNhanVien.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_QuanLySach.resx">
       <DependentUpon>UC_QuanLySach.cs</DependentUpon>

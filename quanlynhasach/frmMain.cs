@@ -53,5 +53,10 @@ namespace quanlynhasach
             UC_QuanLySach sachScreen = new UC_QuanLySach();
             AddUserControl(sachScreen);
         }
+
+        private void btnMenuNhanVien_Click(object sender, EventArgs e)
+        {
+            AddUserControl(new UC_QuanLyNhanVien());
+        }
     }
 }

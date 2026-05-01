@@ -61,17 +61,17 @@
             this.materialCard1.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.materialCard1.Name = "materialCard1";
             this.materialCard1.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard1.Size = new System.Drawing.Size(1200, 398);
+            this.materialCard1.Size = new System.Drawing.Size(1000, 398);
             this.materialCard1.TabIndex = 0;
             // 
             // lblMaSach
             // 
             this.lblMaSach.AutoSize = true;
-            this.lblMaSach.Location = new System.Drawing.Point(17, 187);
+            this.lblMaSach.Location = new System.Drawing.Point(273, 125);
             this.lblMaSach.Name = "lblMaSach";
-            this.lblMaSach.Size = new System.Drawing.Size(34, 13);
+            this.lblMaSach.Size = new System.Drawing.Size(53, 13);
             this.lblMaSach.TabIndex = 3;
-            this.lblMaSach.Text = "ssasd";
+            this.lblMaSach.Text = "Mã Sách:";
             // 
             // txtSoLuong
             // 
@@ -256,7 +256,7 @@
             this.dgvDanhSachSach.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dgvDanhSachSach.Location = new System.Drawing.Point(0, 398);
             this.dgvDanhSachSach.Name = "dgvDanhSachSach";
-            this.dgvDanhSachSach.Size = new System.Drawing.Size(1200, 302);
+            this.dgvDanhSachSach.Size = new System.Drawing.Size(1000, 302);
             this.dgvDanhSachSach.TabIndex = 1;
             // 
             // UC_QuanLySach
@@ -266,7 +266,7 @@
             this.Controls.Add(this.dgvDanhSachSach);
             this.Controls.Add(this.materialCard1);
             this.Name = "UC_QuanLySach";
-            this.Size = new System.Drawing.Size(1200, 700);
+            this.Size = new System.Drawing.Size(1000, 700);
             this.materialCard1.ResumeLayout(false);
             this.materialCard1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDanhSachSach)).EndInit();
