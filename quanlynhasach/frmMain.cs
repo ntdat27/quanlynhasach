@@ -47,5 +47,11 @@ namespace quanlynhasach
             UC_POS posScreen = new UC_POS();
             AddUserControl(posScreen);
         }
+
+        private void btnQuanLySach_Click(object sender, EventArgs e)
+        {
+            UC_QuanLySach sachScreen = new UC_QuanLySach();
+            AddUserControl(sachScreen);
+        }
     }
 }
