@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using quanlynhasach.Data;
 using quanlynhasach.Models;
@@ -9,17 +10,17 @@ namespace quanlynhasach.Controllers
     {
         private DatabaseHelper db = new DatabaseHelper();
 
+        // Lấy 1 khách hàng bằng SĐT (Đã đổi tên bảng thành HangThanhVien)
         public KhachHang GetKhachHangBySdt(string sdt)
         {
-            // Kết hợp (JOIN) 2 bảng để biết khách hàng này thuộc hạng nào, được giảm bao nhiêu %
-            string query = $@"SELECT kh.MaKH, kh.HoTen, kh.SoDienThoai, htv.PhanTramGiam 
+            string query = $@"SELECT kh.MaKH, kh.HoTen, kh.SoDienThoai, kh.DiemTichLuy, kh.MaHang, 
+                                     tv.TenHang, tv.PhanTramGiam 
                               FROM KhachHang kh 
-                              JOIN HangThanhVien htv ON kh.MaHang = htv.MaHang 
+                              LEFT JOIN HangThanhVien tv ON kh.MaHang = tv.MaHang 
                               WHERE kh.SoDienThoai = '{sdt}'";
 
             DataTable dt = db.ExecuteQuery(query);
 
-            // Nếu tìm thấy khách hàng
             if (dt.Rows.Count > 0)
             {
                 DataRow row = dt.Rows[0];
@@ -28,11 +29,61 @@ namespace quanlynhasach.Controllers
                     MaKH = Convert.ToInt32(row["MaKH"]),
                     HoTen = row["HoTen"].ToString(),
                     SoDienThoai = row["SoDienThoai"].ToString(),
+                    DiemTichLuy = Convert.ToInt32(row["DiemTichLuy"]),
+                    MaHang = Convert.ToInt32(row["MaHang"]),
+                    TenHang = row["TenHang"].ToString(),
                     PhanTramGiam = Convert.ToInt32(row["PhanTramGiam"])
                 };
             }
+            return null;
+        }
 
-            return null; // Không tìm thấy
+        // Lấy danh sách toàn bộ khách hàng (Đã đổi tên bảng thành HangThanhVien)
+        public List<KhachHang> GetAllKhachHang()
+        {
+            List<KhachHang> list = new List<KhachHang>();
+            string query = @"SELECT kh.MaKH, kh.HoTen, kh.SoDienThoai, kh.DiemTichLuy, kh.MaHang, 
+                                    tv.TenHang, tv.PhanTramGiam 
+                             FROM KhachHang kh 
+                             LEFT JOIN HangThanhVien tv ON kh.MaHang = tv.MaHang";
+
+            DataTable dt = db.ExecuteQuery(query);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                list.Add(new KhachHang
+                {
+                    MaKH = Convert.ToInt32(row["MaKH"]),
+                    HoTen = row["HoTen"].ToString(),
+                    SoDienThoai = row["SoDienThoai"].ToString(),
+                    DiemTichLuy = Convert.ToInt32(row["DiemTichLuy"]),
+                    MaHang = Convert.ToInt32(row["MaHang"]),
+                    TenHang = row["TenHang"].ToString(),
+                    PhanTramGiam = Convert.ToInt32(row["PhanTramGiam"])
+                });
+            }
+            return list;
+        }
+
+        // Thêm khách hàng (Đã bỏ cột PhanTramGiam ở bảng KhachHang cho đúng DB của bạn)
+        public bool AddKhachHang(KhachHang kh)
+        {
+            string query = $"INSERT INTO KhachHang (HoTen, SoDienThoai, DiemTichLuy, MaHang) " +
+                           $"VALUES ('{kh.HoTen}', '{kh.SoDienThoai}', {kh.DiemTichLuy}, {kh.MaHang})";
+            return db.ExecuteNonQuery(query) > 0;
+        }
+
+        public bool UpdateKhachHang(KhachHang kh)
+        {
+            string query = $"UPDATE KhachHang SET HoTen='{kh.HoTen}', SoDienThoai='{kh.SoDienThoai}', " +
+                           $"DiemTichLuy={kh.DiemTichLuy}, MaHang={kh.MaHang} WHERE MaKH={kh.MaKH}";
+            return db.ExecuteNonQuery(query) > 0;
+        }
+
+        public bool DeleteKhachHang(int maKH)
+        {
+            string query = $"DELETE FROM KhachHang WHERE MaKH={maKH}";
+            return db.ExecuteNonQuery(query) > 0;
         }
     }
 }

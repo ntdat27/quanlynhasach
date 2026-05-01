@@ -118,11 +118,24 @@
     <Compile Include="Models\Sach.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Session.cs" />
+    <Compile Include="UC_Home.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Home.Designer.cs">
+      <DependentUpon>UC_Home.cs</DependentUpon>
+    </Compile>
     <Compile Include="UC_POS.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UC_POS.Designer.cs">
       <DependentUpon>UC_POS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UC_QuanLyKhachHang.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_QuanLyKhachHang.Designer.cs">
+      <DependentUpon>UC_QuanLyKhachHang.cs</DependentUpon>
     </Compile>
     <Compile Include="UC_QuanLyNhanVien.cs">
       <SubType>UserControl</SubType>
@@ -149,8 +162,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UC_Home.resx">
+      <DependentUpon>UC_Home.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UC_POS.resx">
       <DependentUpon>UC_POS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_QuanLyKhachHang.resx">
+      <DependentUpon>UC_QuanLyKhachHang.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_QuanLyNhanVien.resx">
       <DependentUpon>UC_QuanLyNhanVien.cs</DependentUpon>

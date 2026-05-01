@@ -6,7 +6,6 @@ using System;
 using System.Windows.Forms;
 using static ReaLTaiizor.Controls.HopeTabPage;
 
-
 namespace quanlynhasach
 {
     public partial class frmMain : MaterialForm
@@ -15,6 +14,29 @@ namespace quanlynhasach
         {
             InitializeComponent();
             SetupMaterialTheme();
+
+            // 1. Phân quyền ngay khi form được khởi tạo
+            PhanQuyenHeThong();
+
+            // 2. Mặc định mở màn hình TRANG CHỦ thay vì để trống
+            // (Đảm bảo bạn đã tạo file UC_Home.cs)
+            AddUserControl(new UC_Home());
+
+            // 3. Hiển thị tên nhân viên đăng nhập lên tiêu đề của Form
+            // (Đảm bảo class Session đã được tạo và có dữ liệu từ lúc Login)
+            this.Text = $"Hệ Thống Nhà Sách - Xin chào: {Session.HoTen} ({Session.ChucVu})";
+        }
+
+        private void PhanQuyenHeThong()
+        {
+            // Nếu chức vụ là "Nhân viên" thì ẩn các nút quản lý đi
+            // Tên nút phải khớp đúng với tên (Name) bạn đặt trong Designer
+            if (Session.ChucVu == "Nhân viên")
+            {
+                btnQuanLySach.Visible = false;
+                btnMenuNhanVien.Visible = false;
+                btnMenuKhachHang.Visible = false;
+            }
         }
 
         private void SetupMaterialTheme()
@@ -41,9 +63,18 @@ namespace quanlynhasach
             uc.BringToFront();
         }
 
+        // =====================================
+        // CÁC SỰ KIỆN CHUYỂN TRANG BÊN SIDEBAR
+        // =====================================
+
+        // Nút Trang Chủ mới thêm
+        private void btnMenuHome_Click(object sender, EventArgs e)
+        {
+            AddUserControl(new UC_Home());
+        }
+
         private void btnMenuPOS_Click(object sender, EventArgs e)
         {
-            // Đảm bảo bạn đã tạo file UC_POS.cs thì dòng này mới không bị gạch đỏ nhé
             UC_POS posScreen = new UC_POS();
             AddUserControl(posScreen);
         }
@@ -57,6 +88,11 @@ namespace quanlynhasach
         private void btnMenuNhanVien_Click(object sender, EventArgs e)
         {
             AddUserControl(new UC_QuanLyNhanVien());
+        }
+
+        private void btnMenuKhachHang_Click(object sender, EventArgs e)
+        {
+            AddUserControl(new UC_QuanLyKhachHang());
         }
     }
 }
