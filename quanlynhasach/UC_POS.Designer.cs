@@ -31,18 +31,18 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.txtTimKiem = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.dgvSach = new System.Windows.Forms.DataGridView();
-            this.dgvGioHang = new System.Windows.Forms.DataGridView();
             this.materialCard1 = new ReaLTaiizor.Controls.MaterialCard();
-            this.materialButton1 = new ReaLTaiizor.Controls.MaterialButton();
+            this.txtSoDienThoai = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
+            this.btnThanhToan = new ReaLTaiizor.Controls.MaterialButton();
             this.lblTongTien = new ReaLTaiizor.Controls.MaterialLabel();
-            this.materialLabel2 = new ReaLTaiizor.Controls.MaterialLabel();
+            this.dgvGioHang = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSach)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvGioHang)).BeginInit();
             this.materialCard1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvGioHang)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -74,7 +74,7 @@
             this.txtTimKiem.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.txtTimKiem.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
             this.txtTimKiem.Depth = 0;
-            this.txtTimKiem.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtTimKiem.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.txtTimKiem.HideSelection = true;
             this.txtTimKiem.Hint = "Nhập mã sách, tên sách hoặc quét mã vạch..";
             this.txtTimKiem.LeadingIcon = null;
@@ -110,19 +110,11 @@
             this.dgvSach.Size = new System.Drawing.Size(600, 643);
             this.dgvSach.TabIndex = 1;
             // 
-            // dgvGioHang
-            // 
-            this.dgvGioHang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvGioHang.Location = new System.Drawing.Point(2, 57);
-            this.dgvGioHang.Name = "dgvGioHang";
-            this.dgvGioHang.Size = new System.Drawing.Size(385, 350);
-            this.dgvGioHang.TabIndex = 0;
-            // 
             // materialCard1
             // 
             this.materialCard1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.materialCard1.Controls.Add(this.materialButton1);
-            this.materialCard1.Controls.Add(this.materialLabel2);
+            this.materialCard1.Controls.Add(this.txtSoDienThoai);
+            this.materialCard1.Controls.Add(this.btnThanhToan);
             this.materialCard1.Controls.Add(this.lblTongTien);
             this.materialCard1.Depth = 0;
             this.materialCard1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -135,31 +127,63 @@
             this.materialCard1.Size = new System.Drawing.Size(390, 287);
             this.materialCard1.TabIndex = 1;
             // 
-            // materialButton1
+            // txtSoDienThoai
             // 
-            this.materialButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.materialButton1.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.materialButton1.Depth = 0;
-            this.materialButton1.HighEmphasis = true;
-            this.materialButton1.Icon = null;
-            this.materialButton1.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            this.materialButton1.Location = new System.Drawing.Point(199, 213);
-            this.materialButton1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.materialButton1.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            this.materialButton1.Name = "materialButton1";
-            this.materialButton1.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.materialButton1.Size = new System.Drawing.Size(114, 36);
-            this.materialButton1.TabIndex = 2;
-            this.materialButton1.Text = "Thanh Toán";
-            this.materialButton1.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.materialButton1.UseAccentColor = false;
-            this.materialButton1.UseVisualStyleBackColor = true;
+            this.txtSoDienThoai.AnimateReadOnly = false;
+            this.txtSoDienThoai.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtSoDienThoai.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtSoDienThoai.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.txtSoDienThoai.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+            this.txtSoDienThoai.Depth = 0;
+            this.txtSoDienThoai.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtSoDienThoai.HideSelection = true;
+            this.txtSoDienThoai.Hint = "Nhập SĐT giảm giá";
+            this.txtSoDienThoai.LeadingIcon = null;
+            this.txtSoDienThoai.Location = new System.Drawing.Point(17, 17);
+            this.txtSoDienThoai.MaxLength = 32767;
+            this.txtSoDienThoai.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.txtSoDienThoai.Name = "txtSoDienThoai";
+            this.txtSoDienThoai.PasswordChar = '\0';
+            this.txtSoDienThoai.PrefixSuffixText = null;
+            this.txtSoDienThoai.ReadOnly = false;
+            this.txtSoDienThoai.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtSoDienThoai.SelectedText = "";
+            this.txtSoDienThoai.SelectionLength = 0;
+            this.txtSoDienThoai.SelectionStart = 0;
+            this.txtSoDienThoai.ShortcutsEnabled = true;
+            this.txtSoDienThoai.Size = new System.Drawing.Size(250, 48);
+            this.txtSoDienThoai.TabIndex = 3;
+            this.txtSoDienThoai.TabStop = false;
+            this.txtSoDienThoai.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtSoDienThoai.TrailingIcon = null;
+            this.txtSoDienThoai.UseSystemPasswordChar = false;
+            // 
+            // btnThanhToan
+            // 
+            this.btnThanhToan.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnThanhToan.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnThanhToan.Depth = 0;
+            this.btnThanhToan.HighEmphasis = true;
+            this.btnThanhToan.Icon = null;
+            this.btnThanhToan.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnThanhToan.Location = new System.Drawing.Point(199, 213);
+            this.btnThanhToan.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnThanhToan.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnThanhToan.Name = "btnThanhToan";
+            this.btnThanhToan.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnThanhToan.Size = new System.Drawing.Size(114, 36);
+            this.btnThanhToan.TabIndex = 2;
+            this.btnThanhToan.Text = "Thanh Toán";
+            this.btnThanhToan.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnThanhToan.UseAccentColor = false;
+            this.btnThanhToan.UseVisualStyleBackColor = true;
+            this.btnThanhToan.Click += new System.EventHandler(this.btnThanhToan_Click);
             // 
             // lblTongTien
             // 
             this.lblTongTien.AutoSize = true;
             this.lblTongTien.Depth = 0;
-            this.lblTongTien.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblTongTien.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.lblTongTien.Location = new System.Drawing.Point(17, 90);
             this.lblTongTien.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.lblTongTien.Name = "lblTongTien";
@@ -167,17 +191,13 @@
             this.lblTongTien.TabIndex = 0;
             this.lblTongTien.Text = "0 VND";
             // 
-            // materialLabel2
+            // dgvGioHang
             // 
-            this.materialLabel2.AutoSize = true;
-            this.materialLabel2.Depth = 0;
-            this.materialLabel2.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel2.Location = new System.Drawing.Point(17, 60);
-            this.materialLabel2.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            this.materialLabel2.Name = "materialLabel2";
-            this.materialLabel2.Size = new System.Drawing.Size(151, 19);
-            this.materialLabel2.TabIndex = 1;
-            this.materialLabel2.Text = "Nhập SDT (giảm giá)";
+            this.dgvGioHang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvGioHang.Location = new System.Drawing.Point(2, 57);
+            this.dgvGioHang.Name = "dgvGioHang";
+            this.dgvGioHang.Size = new System.Drawing.Size(385, 350);
+            this.dgvGioHang.TabIndex = 0;
             // 
             // UC_POS
             // 
@@ -191,9 +211,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSach)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvGioHang)).EndInit();
             this.materialCard1.ResumeLayout(false);
             this.materialCard1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvGioHang)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -203,10 +223,10 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private ReaLTaiizor.Controls.MaterialTextBoxEdit txtTimKiem;
         private System.Windows.Forms.DataGridView dgvSach;
-        private ReaLTaiizor.Controls.MaterialButton materialButton1;
+        private ReaLTaiizor.Controls.MaterialButton btnThanhToan;
         private ReaLTaiizor.Controls.MaterialCard materialCard1;
         private System.Windows.Forms.DataGridView dgvGioHang;
-        private ReaLTaiizor.Controls.MaterialLabel materialLabel2;
         private ReaLTaiizor.Controls.MaterialLabel lblTongTien;
+        private ReaLTaiizor.Controls.MaterialTextBoxEdit txtSoDienThoai;
     }
 }

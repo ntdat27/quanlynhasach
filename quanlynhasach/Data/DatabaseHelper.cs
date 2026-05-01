@@ -44,5 +44,23 @@ namespace quanlynhasach.Data
             }
             return result; // Trả về số dòng bị ảnh hưởng
         }
+        // Hàm mới: Thực thi lệnh và trả về 1 ID vừa được tạo
+        public int ExecuteScalar(string query)
+        {
+            int result = 0;
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    object obj = cmd.ExecuteScalar();
+                    if (obj != null && obj != DBNull.Value)
+                    {
+                        result = Convert.ToInt32(obj);
+                    }
+                }
+            }
+            return result;
+        }
     }
 }

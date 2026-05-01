@@ -10,6 +10,11 @@ namespace quanlynhasach
     public partial class UC_POS : UserControl
     {
         private SachController sachController = new SachController();
+        private KhachHangController khController = new KhachHangController(); // Gọi thêm Controller khách hàng
+
+        // 2 Biến toàn cục để lưu thông tin giảm giá
+        private int phanTramGiamHienTai = 0;
+        private int? maKhachHangHienTai = null;
 
         public UC_POS()
         {
@@ -18,13 +23,15 @@ namespace quanlynhasach
             FormatDataGridView(dgvSach);
             FormatDataGridView(dgvGioHang);
             SetupColumns();
-
             LoadDanhSachSach();
 
             // Đăng ký các sự kiện
             dgvSach.CellDoubleClick += dgvSach_CellDoubleClick;
             dgvGioHang.CellContentClick += dgvGioHang_CellContentClick;
-            txtTimKiem.TextChanged += txtTimKiem_TextChanged; // Bắt sự kiện gõ phím tìm kiếm
+            txtTimKiem.TextChanged += txtTimKiem_TextChanged;
+
+            // Bắt sự kiện gõ phím vào ô Số điện thoại
+            txtSoDienThoai.KeyDown += txtSoDienThoai_KeyDown;
         }
 
         private void FormatDataGridView(DataGridView dgv)
@@ -117,35 +124,88 @@ namespace quanlynhasach
         }
 
         // ========================================================
-        // LOGIC XỬ LÝ SỰ KIỆN (EVENT HANDLERS)
+        // LOGIC XỬ LÝ SỰ KIỆN
         // ========================================================
 
-        // TÍNH NĂNG TÌM KIẾM (Gõ đến đâu tìm đến đó)
+        // KIỂM TRA SĐT KHI ẤN ENTER
+        private void txtSoDienThoai_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Kiểm tra xem người dùng có ấn phím Enter không
+            if (e.KeyCode == Keys.Enter)
+            {
+                string sdt = txtSoDienThoai.Text.Trim();
+                if (string.IsNullOrEmpty(sdt))
+                {
+                    // Nếu xóa trắng SĐT thì reset lại không giảm giá
+                    phanTramGiamHienTai = 0;
+                    maKhachHangHienTai = null;
+                    TinhTongTien();
+                    return;
+                }
+
+                KhachHang kh = khController.GetKhachHangBySdt(sdt);
+                if (kh != null)
+                {
+                    phanTramGiamHienTai = kh.PhanTramGiam;
+                    maKhachHangHienTai = kh.MaKH;
+
+                    MessageBox.Show($"Tìm thấy khách hàng: {kh.HoTen}\nĐược giảm giá: {kh.PhanTramGiam}%", "Khách hàng thân thiết", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    phanTramGiamHienTai = 0;
+                    maKhachHangHienTai = null;
+                    MessageBox.Show("Khách hàng chưa đăng ký thành viên!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                // Sau khi có % giảm giá thì gọi hàm tính lại tiền
+                TinhTongTien();
+            }
+        }
+
+        // TÍNH LẠI HÀM TỔNG TIỀN (Bổ sung logic chiết khấu)
+        private void TinhTongTien()
+        {
+            int tongTienHang = 0;
+            foreach (DataGridViewRow row in dgvGioHang.Rows)
+            {
+                tongTienHang += Convert.ToInt32(row.Cells["ThanhTien"].Value);
+            }
+
+            // Tính tiền giảm
+            int tienGiam = (tongTienHang * phanTramGiamHienTai) / 100;
+
+            // Khách cần trả
+            int khachCanTra = tongTienHang - tienGiam;
+
+            // Nếu có giảm giá thì hiển thị rõ ràng trên Label
+            if (phanTramGiamHienTai > 0)
+            {
+                lblTongTien.Text = string.Format("{0:N0} VNĐ (Đã giảm {1}%)", khachCanTra, phanTramGiamHienTai);
+            }
+            else
+            {
+                lblTongTien.Text = string.Format("{0:N0} VNĐ", khachCanTra);
+            }
+        }
+
         private void txtTimKiem_TextChanged(object sender, EventArgs e)
         {
-            string keyword = txtTimKiem.Text.Trim(); // Trim() để xóa khoảng trắng thừa ở 2 đầu
+            string keyword = txtTimKiem.Text.Trim();
             dgvSach.Rows.Clear();
-
             List<Sach> danhSachTimKiem;
 
-            // Nếu ô tìm kiếm trống thì load lại toàn bộ sách
             if (string.IsNullOrEmpty(keyword))
-            {
                 danhSachTimKiem = sachController.GetAllSach();
-            }
-            else // Nếu có chữ thì gọi hàm tìm kiếm
-            {
+            else
                 danhSachTimKiem = sachController.SearchSach(keyword);
-            }
 
-            // Đổ kết quả tìm được lên lưới
             foreach (Sach s in danhSachTimKiem)
             {
                 dgvSach.Rows.Add(s.MaSach, s.TenSach, s.SoLuongTon, s.GiaBan);
             }
         }
 
-        // CLICK ĐÚP THÊM VÀO GIỎ
         private void dgvSach_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -180,7 +240,6 @@ namespace quanlynhasach
             }
         }
 
-        // NÚT (+) HOẶC (-) TRONG GIỎ HÀNG
         private void dgvGioHang_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -233,14 +292,62 @@ namespace quanlynhasach
             }
         }
 
-        private void TinhTongTien()
+        private void btnThanhToan_Click(object sender, EventArgs e)
         {
-            int tongTien = 0;
+            // Kiểm tra xem có mua cuốn sách nào không
+            if (dgvGioHang.Rows.Count == 0)
+            {
+                MessageBox.Show("Giỏ hàng đang trống! Vui lòng chọn sách trước khi thanh toán.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int tongTienHang = 0;
+            List<ChiTietHoaDon> listChiTiet = new List<ChiTietHoaDon>();
+
+            // Lấy toàn bộ sách trong giỏ hàng đóng gói lại
             foreach (DataGridViewRow row in dgvGioHang.Rows)
             {
-                tongTien += Convert.ToInt32(row.Cells["ThanhTien"].Value);
+                int thanhTien = Convert.ToInt32(row.Cells["ThanhTien"].Value);
+                tongTienHang += thanhTien;
+
+                listChiTiet.Add(new ChiTietHoaDon
+                {
+                    MaSach = Convert.ToInt32(row.Cells["MaSach"].Value),
+                    SoLuongBan = Convert.ToInt32(row.Cells["SoLuong"].Value),
+                    GiaBan = Convert.ToInt32(row.Cells["DonGia"].Value),
+                    ThanhTien = thanhTien
+                });
             }
-            lblTongTien.Text = string.Format("{0:N0} VNĐ", tongTien);
+
+            int tienGiam = (tongTienHang * phanTramGiamHienTai) / 100;
+            int khachCanTra = tongTienHang - tienGiam;
+
+            // Tạm thời cố định MaNV = 1 (Tài khoản Admin) vì ta chưa làm module Đăng nhập
+            int maNhanVien = 1;
+
+            // Gọi Controller để thực thi lưu DB
+            HoaDonController hdController = new HoaDonController();
+            bool result = hdController.ThanhToan(maKhachHangHienTai, maNhanVien, tongTienHang, phanTramGiamHienTai, tienGiam, khachCanTra, listChiTiet);
+
+            if (result)
+            {
+                MessageBox.Show("Thanh toán thành công! Hệ thống đã cập nhật tồn kho.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Xóa trắng giỏ hàng và màn hình để đón khách tiếp theo
+                dgvGioHang.Rows.Clear();
+                txtSoDienThoai.Clear();
+                phanTramGiamHienTai = 0;
+                maKhachHangHienTai = null;
+                lblTongTien.Text = "0 VNĐ";
+                lblTongTien.ForeColor = Color.Black;
+
+                // Bắt buộc gọi lại hàm này để load lại số lượng tồn kho mới nhất lên bảng bên trái
+                LoadDanhSachSach();
+            }
+            else
+            {
+                MessageBox.Show("Có lỗi xảy ra khi lưu hóa đơn xuống Database!", "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
