@@ -14,6 +14,7 @@ namespace quanlynhasach
         {
             InitializeComponent();
             SetupMaterialTheme();
+            this.WindowState = FormWindowState.Maximized;
 
             // 1. Phân quyền ngay khi form được khởi tạo
             PhanQuyenHeThong();
@@ -71,6 +72,7 @@ namespace quanlynhasach
         private void btnMenuHome_Click(object sender, EventArgs e)
         {
             AddUserControl(new UC_Home());
+
         }
 
         private void btnMenuPOS_Click(object sender, EventArgs e)

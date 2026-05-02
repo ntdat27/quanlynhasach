@@ -48,7 +48,7 @@
             // 
             // pnlSidebar
             // 
-            this.pnlSidebar.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pnlSidebar.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.pnlSidebar.Controls.Add(this.btnMenuHome);
             this.pnlSidebar.Controls.Add(this.btnMenuKhachHang);
             this.pnlSidebar.Controls.Add(this.btnMenuNhanVien);
@@ -79,6 +79,7 @@
             this.btnMenuHome.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
             this.btnMenuHome.UseAccentColor = false;
             this.btnMenuHome.UseVisualStyleBackColor = true;
+            this.btnMenuHome.Click += new System.EventHandler(this.btnMenuHome_Click);
             // 
             // btnMenuKhachHang
             // 

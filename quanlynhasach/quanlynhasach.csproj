@@ -105,6 +105,7 @@
     <Compile Include="Controllers\KhachHangController.cs" />
     <Compile Include="Controllers\NhanVienController.cs" />
     <Compile Include="Controllers\SachController.cs" />
+    <Compile Include="Controllers\ThongKeController.cs" />
     <Compile Include="Data\DatabaseHelper.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
