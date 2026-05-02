@@ -47,6 +47,7 @@
             this.Controls.Add(this.label1);
             this.Name = "UC_Home";
             this.Size = new System.Drawing.Size(1000, 700);
+            this.Load += new System.EventHandler(this.UC_Home_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

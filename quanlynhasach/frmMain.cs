@@ -17,10 +17,10 @@ namespace quanlynhasach
 
             // 1. Phân quyền ngay khi form được khởi tạo
             PhanQuyenHeThong();
+            AddUserControl(new UC_Home()); // <--- THÊM DÒNG NÀY VÀO ĐÂY
 
             // 2. Mặc định mở màn hình TRANG CHỦ thay vì để trống
             // (Đảm bảo bạn đã tạo file UC_Home.cs)
-            AddUserControl(new UC_Home());
 
             // 3. Hiển thị tên nhân viên đăng nhập lên tiêu đề của Form
             // (Đảm bảo class Session đã được tạo và có dữ liệu từ lúc Login)

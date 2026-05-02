@@ -16,5 +16,10 @@ namespace quanlynhasach
         {
             InitializeComponent();
         }
+
+        private void UC_Home_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
