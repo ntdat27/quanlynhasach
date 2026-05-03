@@ -38,6 +38,7 @@ namespace quanlynhasach
                 btnMenuNhanVien.Visible = false;
                 btnMenuKhachHang.Visible = false;
             }
+
         }
 
         private void SetupMaterialTheme()

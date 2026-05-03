@@ -196,7 +196,6 @@
             this.txtSoLuong.Depth = 0;
             this.txtSoLuong.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.txtSoLuong.HideSelection = true;
-            this.txtSoLuong.Hint = "nãmb";
             this.txtSoLuong.LeadingIcon = null;
             this.txtSoLuong.Location = new System.Drawing.Point(17, 290);
             this.txtSoLuong.MaxLength = 32767;
@@ -227,7 +226,6 @@
             this.txtGiaBan.Depth = 0;
             this.txtGiaBan.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.txtGiaBan.HideSelection = true;
-            this.txtGiaBan.Hint = "Giá bán";
             this.txtGiaBan.LeadingIcon = null;
             this.txtGiaBan.Location = new System.Drawing.Point(785, 193);
             this.txtGiaBan.MaxLength = 32767;
@@ -258,7 +256,6 @@
             this.txtTenSach.Depth = 0;
             this.txtTenSach.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.txtTenSach.HideSelection = true;
-            this.txtTenSach.Hint = "Tên sách";
             this.txtTenSach.LeadingIcon = null;
             this.txtTenSach.Location = new System.Drawing.Point(17, 101);
             this.txtTenSach.MaxLength = 32767;
@@ -320,7 +317,6 @@
             this.txtGiaNhap.Depth = 0;
             this.txtGiaNhap.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.txtGiaNhap.HideSelection = true;
-            this.txtGiaNhap.Hint = "gianhap";
             this.txtGiaNhap.LeadingIcon = null;
             this.txtGiaNhap.Location = new System.Drawing.Point(529, 193);
             this.txtGiaNhap.MaxLength = 32767;
@@ -351,7 +347,6 @@
             this.txtNamXB.Depth = 0;
             this.txtNamXB.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.txtNamXB.HideSelection = true;
-            this.txtNamXB.Hint = "Tồn kho";
             this.txtNamXB.LeadingIcon = null;
             this.txtNamXB.Location = new System.Drawing.Point(273, 193);
             this.txtNamXB.MaxLength = 32767;

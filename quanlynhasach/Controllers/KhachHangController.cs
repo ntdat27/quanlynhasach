@@ -64,18 +64,24 @@ namespace quanlynhasach.Controllers
             }
             return list;
         }
+        public bool KiemTraTrungSdt(string sdt, int maKHIgnore = 0)
+        {
+            string query = $"SELECT MaKH FROM KhachHang WHERE SoDienThoai = '{sdt}' AND MaKH != {maKHIgnore}";
+            DataTable dt = db.ExecuteQuery(query);
+            return dt.Rows.Count > 0;
+        }
 
         // Thêm khách hàng (Đã bỏ cột PhanTramGiam ở bảng KhachHang cho đúng DB của bạn)
         public bool AddKhachHang(KhachHang kh)
         {
             string query = $"INSERT INTO KhachHang (HoTen, SoDienThoai, DiemTichLuy, MaHang) " +
-                           $"VALUES ('{kh.HoTen}', '{kh.SoDienThoai}', {kh.DiemTichLuy}, {kh.MaHang})";
+                           $"VALUES (N'{kh.HoTen}', '{kh.SoDienThoai}', {kh.DiemTichLuy}, {kh.MaHang})";
             return db.ExecuteNonQuery(query) > 0;
         }
 
         public bool UpdateKhachHang(KhachHang kh)
         {
-            string query = $"UPDATE KhachHang SET HoTen='{kh.HoTen}', SoDienThoai='{kh.SoDienThoai}', " +
+            string query = $"UPDATE KhachHang SET HoTen=N'{kh.HoTen}', SoDienThoai='{kh.SoDienThoai}', " +
                            $"DiemTichLuy={kh.DiemTichLuy}, MaHang={kh.MaHang} WHERE MaKH={kh.MaKH}";
             return db.ExecuteNonQuery(query) > 0;
         }

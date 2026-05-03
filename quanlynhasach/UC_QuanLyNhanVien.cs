@@ -21,6 +21,7 @@ namespace quanlynhasach
             cboChucVu.Items.Add("Nhân viên");
             cboChucVu.SelectedIndex = 0; // Chọn mặc định là Admin
 
+
             FormatDataGridView(dgvNhanVien);
             SetupColumns();
             LoadData();
@@ -108,66 +109,17 @@ namespace quanlynhasach
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtTaiKhoan.Text) || string.IsNullOrEmpty(txtMatKhau.Text))
-            {
-                MessageBox.Show("Tài khoản và mật khẩu không được để trống!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
 
-            NhanVien nv = new NhanVien
-            {
-                HoTen = txtHoTen.Text.Trim(),
-                SoDienThoai = txtSDT.Text.Trim(),
-                TaiKhoan = txtTaiKhoan.Text.Trim(),
-                MatKhau = txtMatKhau.Text.Trim(),
-                ChucVu = cboChucVu.SelectedItem.ToString()
-            };
-
-            if (nvController.AddNhanVien(nv))
-            {
-                MessageBox.Show("Thêm nhân viên thành công!");
-                btnLamMoi_Click(null, null);
-            }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(lblMaNV.Text))
-            {
-                MessageBox.Show("Vui lòng chọn nhân viên cần sửa từ bảng bên dưới!");
-                return;
-            }
 
-            NhanVien nv = new NhanVien
-            {
-                MaNV = int.Parse(lblMaNV.Text),
-                HoTen = txtHoTen.Text.Trim(),
-                SoDienThoai = txtSDT.Text.Trim(),
-                TaiKhoan = txtTaiKhoan.Text.Trim(),
-                MatKhau = txtMatKhau.Text.Trim(),
-                ChucVu = cboChucVu.SelectedItem.ToString()
-            };
-
-            if (nvController.UpdateNhanVien(nv))
-            {
-                MessageBox.Show("Cập nhật thành công!");
-                btnLamMoi_Click(null, null);
-            }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(lblMaNV.Text)) return;
 
-            DialogResult dr = MessageBox.Show("Bạn có chắc muốn xóa nhân viên này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dr == DialogResult.Yes)
-            {
-                if (nvController.DeleteNhanVien(int.Parse(lblMaNV.Text)))
-                {
-                    MessageBox.Show("Đã xóa nhân viên!");
-                    btnLamMoi_Click(null, null);
-                }
-            }
         }
 
         // Khi click vào dòng trong bảng

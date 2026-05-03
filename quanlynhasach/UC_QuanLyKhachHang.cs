@@ -114,61 +114,17 @@ namespace quanlynhasach
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtHoTen.Text) || string.IsNullOrEmpty(txtSDT.Text))
-            {
-                MessageBox.Show("Vui lòng nhập đủ thông tin!"); return;
-            }
 
-            int diem = 0;
-            int.TryParse(txtDiemTichLuy.Text, out diem);
-
-            KhachHang kh = new KhachHang
-            {
-                HoTen = txtHoTen.Text.Trim(),
-                SoDienThoai = txtSDT.Text.Trim(),
-                DiemTichLuy = diem,
-                MaHang = ((KeyValuePair<int, string>)cboHangThanhVien.SelectedItem).Key
-            };
-
-            if (khController.AddKhachHang(kh))
-            {
-                MessageBox.Show("Thêm khách hàng thành công!");
-                btnLamMoi_Click(null, null);
-            }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(lblMaKH.Text)) return;
 
-            int diem = 0;
-            int.TryParse(txtDiemTichLuy.Text, out diem);
-
-            KhachHang kh = new KhachHang
-            {
-                MaKH = int.Parse(lblMaKH.Text),
-                HoTen = txtHoTen.Text.Trim(),
-                SoDienThoai = txtSDT.Text.Trim(),
-                DiemTichLuy = diem,
-                MaHang = ((KeyValuePair<int, string>)cboHangThanhVien.SelectedItem).Key
-            };
-
-            if (khController.UpdateKhachHang(kh))
-            {
-                MessageBox.Show("Cập nhật thành công!");
-                btnLamMoi_Click(null, null);
-            }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(lblMaKH.Text)) return;
 
-            if (MessageBox.Show("Xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                khController.DeleteKhachHang(int.Parse(lblMaKH.Text));
-                btnLamMoi_Click(null, null);
-            }
         }
 
         private void dgvKhachHang_CellClick(object sender, DataGridViewCellEventArgs e)

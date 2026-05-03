@@ -14,5 +14,6 @@ namespace quanlynhasach
 
         // Bạn có thể đổi thành "Nhân viên" để test thử xem các nút quản lý có bị ẩn đi không nhé
         public static string ChucVu { get; set; } = "Admin";
+        public static string TaiKhoan { get; internal set; }
     }
 }
