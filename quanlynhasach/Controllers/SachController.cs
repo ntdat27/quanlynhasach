@@ -66,16 +66,17 @@ namespace quanlynhasach.Controllers
                 Sach s = new Sach();
                 s.MaSach = Convert.ToInt32(row["MaSach"]);
                 s.TenSach = row["TenSach"].ToString();
+
+                // MẸO CHỐNG LỖI DBNULL: Nếu dữ liệu trong DB là NULL thì gán bằng 0, ngược lại thì Convert
                 s.MaTL = row["MaTL"] != DBNull.Value ? Convert.ToInt32(row["MaTL"]) : 0;
                 s.MaTG = row["MaTG"] != DBNull.Value ? Convert.ToInt32(row["MaTG"]) : 0;
                 s.MaNXB = row["MaNXB"] != DBNull.Value ? Convert.ToInt32(row["MaNXB"]) : 0;
-                s.TenTL = row["TenTL"].ToString();
-                s.TenTG = row["TenTG"].ToString();
-                s.TenNXB = row["TenNXB"].ToString();
-                s.NamXB = Convert.ToInt32(row["NamXB"]);
-                s.GiaNhap = Convert.ToInt32(row["GiaNhap"]);
-                s.SoLuongTon = Convert.ToInt32(row["SoLuongTon"]);
-                s.GiaBan = Convert.ToInt32(row["GiaBan"]);
+
+                // Cột NamXB đang bị NULL của bạn sẽ được an toàn đi qua đây
+                s.NamXB = row["NamXB"] != DBNull.Value ? Convert.ToInt32(row["NamXB"]) : 0;
+                s.GiaNhap = row["GiaNhap"] != DBNull.Value ? Convert.ToInt32(row["GiaNhap"]) : 0;
+                s.GiaBan = row["GiaBan"] != DBNull.Value ? Convert.ToInt32(row["GiaBan"]) : 0;
+                s.SoLuongTon = row["SoLuongTon"] != DBNull.Value ? Convert.ToInt32(row["SoLuongTon"]) : 0;
 
                 listSach.Add(s);
             }
