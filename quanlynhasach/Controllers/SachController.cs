@@ -14,7 +14,17 @@ namespace quanlynhasach.Controllers
         public List<Sach> GetAllSach()
         {
             List<Sach> listSach = new List<Sach>();
-            string query = "SELECT MaSach, TenSach, SoLuongTon, GiaBan FROM Sach";
+            // Dùng LEFT JOIN để lấy tên từ các bảng phụ
+            string query = @"
+                SELECT s.MaSach, s.TenSach, 
+                       s.MaTL, tl.TenTL, 
+                       s.MaTG, tg.TenTG, 
+                       s.MaNXB, nxb.TenNXB, 
+                       s.NamXB, s.GiaNhap, s.SoLuongTon, s.GiaBan 
+                FROM Sach s
+                LEFT JOIN theloai tl ON s.MaTL = tl.MaTL
+                LEFT JOIN tacgia tg ON s.MaTG = tg.MaTG
+                LEFT JOIN nhaxuatban nxb ON s.MaNXB = nxb.MaNXB";
 
             DataTable dt = db.ExecuteQuery(query);
 
@@ -23,12 +33,24 @@ namespace quanlynhasach.Controllers
                 Sach s = new Sach();
                 s.MaSach = Convert.ToInt32(row["MaSach"]);
                 s.TenSach = row["TenSach"].ToString();
+
+                // Lấy Mã (để lưu)
+                s.MaTL = row["MaTL"] != DBNull.Value ? Convert.ToInt32(row["MaTL"]) : 0;
+                s.MaTG = row["MaTG"] != DBNull.Value ? Convert.ToInt32(row["MaTG"]) : 0;
+                s.MaNXB = row["MaNXB"] != DBNull.Value ? Convert.ToInt32(row["MaNXB"]) : 0;
+
+                // Lấy Tên (để hiển thị)
+                s.TenTL = row["TenTL"].ToString();
+                s.TenTG = row["TenTG"].ToString();
+                s.TenNXB = row["TenNXB"].ToString();
+
+                s.NamXB = Convert.ToInt32(row["NamXB"]);
+                s.GiaNhap = Convert.ToInt32(row["GiaNhap"]);
                 s.SoLuongTon = Convert.ToInt32(row["SoLuongTon"]);
                 s.GiaBan = Convert.ToInt32(row["GiaBan"]);
 
                 listSach.Add(s);
             }
-
             return listSach;
         }
 
@@ -36,8 +58,20 @@ namespace quanlynhasach.Controllers
         public List<Sach> SearchSach(string keyword)
         {
             List<Sach> listSach = new List<Sach>();
-            // Tìm kiếm tương đối bằng toán tử LIKE (dấu % đại diện cho chuỗi bất kỳ)
-            string query = $"SELECT MaSach, TenSach, SoLuongTon, GiaBan FROM Sach WHERE TenSach LIKE '%{keyword}%' OR MaSach LIKE '%{keyword}%'";
+            string query = $@"
+                SELECT s.MaSach, s.TenSach, 
+                       s.MaTL, tl.TenTL, 
+                       s.MaTG, tg.TenTG, 
+                       s.MaNXB, nxb.TenNXB, 
+                       s.NamXB, s.GiaNhap, s.SoLuongTon, s.GiaBan 
+                FROM Sach s
+                LEFT JOIN theloai tl ON s.MaTL = tl.MaTL
+                LEFT JOIN tacgia tg ON s.MaTG = tg.MaTG
+                LEFT JOIN nhaxuatban nxb ON s.MaNXB = nxb.MaNXB
+                WHERE s.TenSach LIKE '%{keyword}%' 
+                   OR tl.TenTL LIKE '%{keyword}%' 
+                   OR tg.TenTG LIKE '%{keyword}%'";
+            // Tìm theo cả tên Tác giả và Thể loại cho VIP!
 
             DataTable dt = db.ExecuteQuery(query);
 
@@ -46,12 +80,19 @@ namespace quanlynhasach.Controllers
                 Sach s = new Sach();
                 s.MaSach = Convert.ToInt32(row["MaSach"]);
                 s.TenSach = row["TenSach"].ToString();
+                s.MaTL = row["MaTL"] != DBNull.Value ? Convert.ToInt32(row["MaTL"]) : 0;
+                s.MaTG = row["MaTG"] != DBNull.Value ? Convert.ToInt32(row["MaTG"]) : 0;
+                s.MaNXB = row["MaNXB"] != DBNull.Value ? Convert.ToInt32(row["MaNXB"]) : 0;
+                s.TenTL = row["TenTL"].ToString();
+                s.TenTG = row["TenTG"].ToString();
+                s.TenNXB = row["TenNXB"].ToString();
+                s.NamXB = Convert.ToInt32(row["NamXB"]);
+                s.GiaNhap = Convert.ToInt32(row["GiaNhap"]);
                 s.SoLuongTon = Convert.ToInt32(row["SoLuongTon"]);
                 s.GiaBan = Convert.ToInt32(row["GiaBan"]);
 
                 listSach.Add(s);
             }
-
             return listSach;
         }
         public bool AddSach(Sach s)

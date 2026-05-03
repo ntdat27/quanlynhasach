@@ -36,6 +36,7 @@
             this.btnThanhToan = new ReaLTaiizor.Controls.MaterialButton();
             this.lblTongTien = new ReaLTaiizor.Controls.MaterialLabel();
             this.dgvGioHang = new System.Windows.Forms.DataGridView();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -113,6 +114,7 @@
             // materialCard1
             // 
             this.materialCard1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard1.Controls.Add(this.label1);
             this.materialCard1.Controls.Add(this.txtSoDienThoai);
             this.materialCard1.Controls.Add(this.btnThanhToan);
             this.materialCard1.Controls.Add(this.lblTongTien);
@@ -183,8 +185,8 @@
             // 
             this.lblTongTien.AutoSize = true;
             this.lblTongTien.Depth = 0;
-            this.lblTongTien.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.lblTongTien.Location = new System.Drawing.Point(17, 90);
+            this.lblTongTien.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblTongTien.Location = new System.Drawing.Point(154, 88);
             this.lblTongTien.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.lblTongTien.Name = "lblTongTien";
             this.lblTongTien.Size = new System.Drawing.Size(46, 19);
@@ -198,6 +200,16 @@
             this.dgvGioHang.Name = "dgvGioHang";
             this.dgvGioHang.Size = new System.Drawing.Size(385, 350);
             this.dgvGioHang.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(13, 88);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(113, 24);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Thành Tiền:";
             // 
             // UC_POS
             // 
@@ -228,5 +240,6 @@
         private System.Windows.Forms.DataGridView dgvGioHang;
         private ReaLTaiizor.Controls.MaterialLabel lblTongTien;
         private ReaLTaiizor.Controls.MaterialTextBoxEdit txtSoDienThoai;
+        private System.Windows.Forms.Label label1;
     }
 }

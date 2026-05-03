@@ -1,9 +1,11 @@
-﻿using System;
+﻿using quanlynhasach.Controllers;
+using quanlynhasach.Data;
+using quanlynhasach.Models;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using quanlynhasach.Controllers;
-using quanlynhasach.Models;
 
 namespace quanlynhasach
 {
@@ -14,13 +16,11 @@ namespace quanlynhasach
         public UC_QuanLySach()
         {
             InitializeComponent();
-
-            // Làm đẹp và cấu hình bảng ngay khi khởi tạo
+            LoadComboBoxes();
             FormatDataGridView(dgvDanhSachSach);
             SetupColumns();
             LoadData();
 
-            // Gắn sự kiện click vào dòng để hiện lên textbox
             dgvDanhSachSach.CellClick += dgvDanhSachSach_CellClick;
         }
 
@@ -36,7 +36,6 @@ namespace quanlynhasach
             dgv.RowHeadersVisible = false;
             dgv.RowTemplate.Height = 35;
 
-            // Màu tiêu đề
             dgv.EnableHeadersVisualStyles = false;
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(48, 63, 159);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
@@ -52,6 +51,22 @@ namespace quanlynhasach
 
             dgvDanhSachSach.Columns.Add("TenSach", "Tên sách");
             dgvDanhSachSach.Columns["TenSach"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            // Thêm các cột ẩn (hoặc hiện tùy bạn) để lấy dữ liệu khi click
+            dgvDanhSachSach.Columns.Add("MaTL", "Mã TL");
+            dgvDanhSachSach.Columns["MaTL"].Visible = false;
+
+            dgvDanhSachSach.Columns.Add("MaTG", "Mã TG");
+            dgvDanhSachSach.Columns["MaTG"].Visible = false;
+
+            dgvDanhSachSach.Columns.Add("MaNXB", "Mã NXB");
+            dgvDanhSachSach.Columns["MaNXB"].Visible = false;
+
+            dgvDanhSachSach.Columns.Add("NamXB", "Năm XB");
+            dgvDanhSachSach.Columns["NamXB"].Width = 80;
+
+            dgvDanhSachSach.Columns.Add("GiaNhap", "Giá nhập");
+            dgvDanhSachSach.Columns["GiaNhap"].Visible = false; // Có thể ẩn đi cho gọn
 
             dgvDanhSachSach.Columns.Add("SoLuongTon", "Tồn kho");
             dgvDanhSachSach.Columns["SoLuongTon"].Width = 100;
@@ -69,7 +84,8 @@ namespace quanlynhasach
                 List<Sach> ds = sachController.GetAllSach();
                 foreach (var s in ds)
                 {
-                    dgvDanhSachSach.Rows.Add(s.MaSach, s.TenSach, s.SoLuongTon, s.GiaBan);
+                    // Chú ý thứ tự add phải khớp với thứ tự add Columns ở trên
+                    dgvDanhSachSach.Rows.Add(s.MaSach, s.TenSach, s.MaTL, s.MaTG, s.MaNXB, s.NamXB, s.GiaNhap, s.SoLuongTon, s.GiaBan);
                 }
             }
             catch (Exception ex)
@@ -81,17 +97,20 @@ namespace quanlynhasach
 
         #region Sự kiện Nút bấm (CRUD)
 
-        // 1. LÀM MỚI (Reset form)
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
-            lblMaSach.Text = ""; // Xóa mã đang chọn
+            lblMaSach.Text = "";
             txtTenSach.Clear();
+            cboTheLoai.SelectedIndex = -1;
+            cboTacGia.SelectedIndex = -1;
+            cboNXB.SelectedIndex = -1;
+            txtNamXB.Clear();
+            txtGiaNhap.Clear();
             txtGiaBan.Clear();
             txtSoLuong.Clear();
             LoadData();
         }
 
-        // 2. THÊM SÁCH
         private void btnThem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtTenSach.Text))
@@ -103,8 +122,13 @@ namespace quanlynhasach
             Sach s = new Sach
             {
                 TenSach = txtTenSach.Text.Trim(),
-                GiaBan = int.Parse(txtGiaBan.Text),
-                SoLuongTon = int.Parse(txtSoLuong.Text)
+                MaTL = Convert.ToInt32(cboTheLoai.SelectedValue),
+                MaTG = Convert.ToInt32(cboTacGia.SelectedValue),
+                MaNXB = Convert.ToInt32(cboNXB.SelectedValue),
+                NamXB = string.IsNullOrEmpty(txtNamXB.Text) ? 0 : int.Parse(txtNamXB.Text),
+                GiaNhap = string.IsNullOrEmpty(txtGiaNhap.Text) ? 0 : int.Parse(txtGiaNhap.Text),
+                GiaBan = string.IsNullOrEmpty(txtGiaBan.Text) ? 0 : int.Parse(txtGiaBan.Text),
+                SoLuongTon = string.IsNullOrEmpty(txtSoLuong.Text) ? 0 : int.Parse(txtSoLuong.Text)
             };
 
             if (sachController.AddSach(s))
@@ -112,9 +136,9 @@ namespace quanlynhasach
                 MessageBox.Show("Thêm sách thành công!");
                 btnLamMoi_Click(null, null);
             }
+            else MessageBox.Show("Thêm thất bại, vui lòng kiểm tra lại kiểu dữ liệu!");
         }
 
-        // 3. SỬA SÁCH
         private void btnSua_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(lblMaSach.Text))
@@ -127,8 +151,13 @@ namespace quanlynhasach
             {
                 MaSach = int.Parse(lblMaSach.Text),
                 TenSach = txtTenSach.Text.Trim(),
-                GiaBan = int.Parse(txtGiaBan.Text),
-                SoLuongTon = int.Parse(txtSoLuong.Text)
+                MaTL = Convert.ToInt32(cboTheLoai.SelectedValue),
+                MaTG = Convert.ToInt32(cboTacGia.SelectedValue),
+                MaNXB = Convert.ToInt32(cboNXB.SelectedValue),
+                NamXB = string.IsNullOrEmpty(txtNamXB.Text) ? 0 : int.Parse(txtNamXB.Text),
+                GiaNhap = string.IsNullOrEmpty(txtGiaNhap.Text) ? 0 : int.Parse(txtGiaNhap.Text),
+                GiaBan = string.IsNullOrEmpty(txtGiaBan.Text) ? 0 : int.Parse(txtGiaBan.Text),
+                SoLuongTon = string.IsNullOrEmpty(txtSoLuong.Text) ? 0 : int.Parse(txtSoLuong.Text)
             };
 
             if (sachController.UpdateSach(s))
@@ -138,7 +167,6 @@ namespace quanlynhasach
             }
         }
 
-        // 4. XÓA SÁCH
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(lblMaSach.Text)) return;
@@ -158,17 +186,46 @@ namespace quanlynhasach
             }
         }
 
-        // KHI CLICK VÀO BẢNG: Đẩy dữ liệu ngược lên các ô nhập liệu
         private void dgvDanhSachSach_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvDanhSachSach.Rows[e.RowIndex];
                 lblMaSach.Text = row.Cells["MaSach"].Value.ToString();
-                txtTenSach.Text = row.Cells["TenSach"].Value.ToString();
-                txtSoLuong.Text = row.Cells["SoLuongTon"].Value.ToString();
-                txtGiaBan.Text = row.Cells["GiaBan"].Value.ToString();
+                txtTenSach.Text = row.Cells["TenSach"].Value?.ToString();
+
+                // Đổ ngược dữ liệu vào text box
+                cboTheLoai.SelectedValue = row.Cells["MaTL"].Value;
+                cboTacGia.SelectedValue = row.Cells["MaTG"].Value;
+                cboNXB.SelectedValue = row.Cells["MaNXB"].Value;
+                txtNamXB.Text = row.Cells["NamXB"].Value?.ToString();
+                txtGiaNhap.Text = row.Cells["GiaNhap"].Value?.ToString();
+
+                txtSoLuong.Text = row.Cells["SoLuongTon"].Value?.ToString();
+                txtGiaBan.Text = row.Cells["GiaBan"].Value?.ToString();
             }
+        }
+        private void LoadComboBoxes()
+        {
+            DatabaseHelper db = new DatabaseHelper();
+
+            // 1. Đổ dữ liệu Thể Loại
+            DataTable dtTL = db.ExecuteQuery("SELECT MaTL, TenTL FROM theloai");
+            cboTheLoai.DataSource = dtTL;
+            cboTheLoai.DisplayMember = "TenTL"; // Hiển thị Chữ
+            cboTheLoai.ValueMember = "MaTL";    // Lưu ngầm Số
+
+            // 2. Đổ dữ liệu Tác Giả
+            DataTable dtTG = db.ExecuteQuery("SELECT MaTG, TenTG FROM tacgia");
+            cboTacGia.DataSource = dtTG;
+            cboTacGia.DisplayMember = "TenTG";
+            cboTacGia.ValueMember = "MaTG";
+
+            // 3. Đổ dữ liệu NXB
+            DataTable dtNXB = db.ExecuteQuery("SELECT MaNXB, TenNXB FROM nhaxuatban");
+            cboNXB.DataSource = dtNXB;
+            cboNXB.DisplayMember = "TenNXB";
+            cboNXB.ValueMember = "MaNXB";
         }
         #endregion
     }
