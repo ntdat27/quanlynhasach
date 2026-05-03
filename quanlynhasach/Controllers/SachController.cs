@@ -13,19 +13,9 @@ namespace quanlynhasach.Controllers
         // Lấy tất cả sách
         public List<Sach> GetAllSach()
         {
-            List<Sach> listSach = new List<Sach>();
-            // Dùng LEFT JOIN để lấy tên từ các bảng phụ
-            string query = @"
-                SELECT s.MaSach, s.TenSach, 
-                       s.MaTL, tl.TenTL, 
-                       s.MaTG, tg.TenTG, 
-                       s.MaNXB, nxb.TenNXB, 
-                       s.NamXB, s.GiaNhap, s.SoLuongTon, s.GiaBan 
-                FROM Sach s
-                LEFT JOIN theloai tl ON s.MaTL = tl.MaTL
-                LEFT JOIN tacgia tg ON s.MaTG = tg.MaTG
-                LEFT JOIN nhaxuatban nxb ON s.MaNXB = nxb.MaNXB";
-
+            List<Sach> list = new List<Sach>();
+            DatabaseHelper db = new DatabaseHelper();
+            string query = "SELECT * FROM Sach"; // Hoặc câu query của bạn
             DataTable dt = db.ExecuteQuery(query);
 
             foreach (DataRow row in dt.Rows)
@@ -34,24 +24,20 @@ namespace quanlynhasach.Controllers
                 s.MaSach = Convert.ToInt32(row["MaSach"]);
                 s.TenSach = row["TenSach"].ToString();
 
-                // Lấy Mã (để lưu)
+                // MẸO CHỐNG LỖI DBNULL: Nếu dữ liệu trong DB là NULL thì gán bằng 0, ngược lại thì Convert
                 s.MaTL = row["MaTL"] != DBNull.Value ? Convert.ToInt32(row["MaTL"]) : 0;
                 s.MaTG = row["MaTG"] != DBNull.Value ? Convert.ToInt32(row["MaTG"]) : 0;
                 s.MaNXB = row["MaNXB"] != DBNull.Value ? Convert.ToInt32(row["MaNXB"]) : 0;
 
-                // Lấy Tên (để hiển thị)
-                s.TenTL = row["TenTL"].ToString();
-                s.TenTG = row["TenTG"].ToString();
-                s.TenNXB = row["TenNXB"].ToString();
+                // Cột NamXB đang bị NULL của bạn sẽ được an toàn đi qua đây
+                s.NamXB = row["NamXB"] != DBNull.Value ? Convert.ToInt32(row["NamXB"]) : 0;
+                s.GiaNhap = row["GiaNhap"] != DBNull.Value ? Convert.ToInt32(row["GiaNhap"]) : 0;
+                s.GiaBan = row["GiaBan"] != DBNull.Value ? Convert.ToInt32(row["GiaBan"]) : 0;
+                s.SoLuongTon = row["SoLuongTon"] != DBNull.Value ? Convert.ToInt32(row["SoLuongTon"]) : 0;
 
-                s.NamXB = Convert.ToInt32(row["NamXB"]);
-                s.GiaNhap = Convert.ToInt32(row["GiaNhap"]);
-                s.SoLuongTon = Convert.ToInt32(row["SoLuongTon"]);
-                s.GiaBan = Convert.ToInt32(row["GiaBan"]);
-
-                listSach.Add(s);
+                list.Add(s);
             }
-            return listSach;
+            return list;
         }
 
         // TÌM KIẾM SÁCH (Mới thêm)
@@ -99,14 +85,16 @@ namespace quanlynhasach.Controllers
         {
             try
             {
-                // Tạm thời gán cứng MaTL=1, MaTG=1, MaNXB=1, GiaNhap=0 để test CRUD cơ bản trước
-                string query = $"INSERT INTO Sach (TenSach, MaTL, MaTG, MaNXB, GiaNhap, GiaBan, SoLuongTon) " +
-                               $"VALUES ('{s.TenSach}', 1, 1, 1, 0, {s.GiaBan}, {s.SoLuongTon})";
+                // Đã bổ sung đầy đủ NamXB và GiaNhap vào câu lệnh INSERT
+                string query = $"INSERT INTO Sach (TenSach, MaTL, MaTG, MaNXB, NamXB, GiaNhap, SoLuongTon, GiaBan) " +
+                               $"VALUES (N'{s.TenSach}', {s.MaTL}, {s.MaTG}, {s.MaNXB}, {s.NamXB}, {s.GiaNhap}, {s.SoLuongTon}, {s.GiaBan})";
 
+                DatabaseHelper db = new DatabaseHelper();
                 return db.ExecuteNonQuery(query) > 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("Lỗi thêm sách: " + ex.Message);
                 return false;
             }
         }
@@ -116,13 +104,24 @@ namespace quanlynhasach.Controllers
         {
             try
             {
-                string query = $"UPDATE Sach SET TenSach = '{s.TenSach}', GiaBan = {s.GiaBan}, SoLuongTon = {s.SoLuongTon} " +
+                // Đã bổ sung đầy đủ NamXB và GiaNhap vào câu lệnh UPDATE
+                string query = $"UPDATE Sach SET " +
+                               $"TenSach = N'{s.TenSach}', " +
+                               $"MaTL = {s.MaTL}, " +
+                               $"MaTG = {s.MaTG}, " +
+                               $"MaNXB = {s.MaNXB}, " +
+                               $"NamXB = {s.NamXB}, " +
+                               $"GiaNhap = {s.GiaNhap}, " +
+                               $"SoLuongTon = {s.SoLuongTon}, " +
+                               $"GiaBan = {s.GiaBan} " +
                                $"WHERE MaSach = {s.MaSach}";
 
+                DatabaseHelper db = new DatabaseHelper();
                 return db.ExecuteNonQuery(query) > 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("Lỗi sửa sách: " + ex.Message);
                 return false;
             }
         }

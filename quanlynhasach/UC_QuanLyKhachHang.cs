@@ -21,25 +21,18 @@ namespace quanlynhasach
             FormatDataGridView(dgvKhachHang);
             SetupColumns();
             LoadData();
-
-            btnThem.Click += btnThem_Click;
-            btnSua.Click += btnSua_Click;
-            btnXoa.Click += btnXoa_Click;
-            btnLamMoi.Click += btnLamMoi_Click;
             dgvKhachHang.CellClick += dgvKhachHang_CellClick;
         }
 
         private void SetupComboBox()
         {
             // Dictionary để gán Tên hạng đi kèm với Mã hạng
-            Dictionary<int, string> hangThanhVien = new Dictionary<int, string>();
-            hangThanhVien.Add(1, "Khách vãng lai");
-            hangThanhVien.Add(2, "Khách hàng thân thiết");
-            hangThanhVien.Add(3, "Thành viên CLB");
+            quanlynhasach.Data.DatabaseHelper db = new quanlynhasach.Data.DatabaseHelper();
+            System.Data.DataTable dt = db.ExecuteQuery("SELECT MaHang, TenHang FROM HangThanhVien");
 
-            cboHangThanhVien.DataSource = new BindingSource(hangThanhVien, null);
-            cboHangThanhVien.DisplayMember = "Value"; // Hiện tên
-            cboHangThanhVien.ValueMember = "Key";   // Lưu mã ngầm
+            cboHangThanhVien.DataSource = dt;
+            cboHangThanhVien.DisplayMember = "TenHang"; // Hiển thị Chữ
+            cboHangThanhVien.ValueMember = "MaHang";    // Lưu ngầm Số
         }
 
         #region UI & Dữ liệu
@@ -114,17 +107,103 @@ namespace quanlynhasach
 
         private void btnThem_Click(object sender, EventArgs e)
         {
+            string hoTen = txtHoTen.Text.Trim();
+            string sdt = txtSDT.Text.Trim();
 
+            if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(sdt))
+            {
+                MessageBox.Show("Vui lòng nhập đủ thông tin!"); return;
+            }
+
+            // 1. MỚI: RÀO CHẮN BẮT BUỘC SĐT PHẢI ĐÚNG 10 SỐ (Chỉ chứa số)
+            if (sdt.Length != 10 || !System.Text.RegularExpressions.Regex.IsMatch(sdt, @"^\d{10}$"))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ! Vui lòng nhập đúng 10 chữ số (ví dụ: 0987654321).", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. CHECK TRÙNG SĐT
+            if (khController.KiemTraTrungSdt(sdt))
+            {
+                MessageBox.Show("Số điện thoại này đã được đăng ký cho một khách hàng khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int diem = 0;
+            int.TryParse(txtDiemTichLuy.Text, out diem);
+
+            KhachHang kh = new KhachHang
+            {
+                HoTen = hoTen,
+                SoDienThoai = sdt,
+                DiemTichLuy = diem,
+                // Cách mới để lấy Mã Hạng ẩn bên dưới ComboBox
+                MaHang = Convert.ToInt32(cboHangThanhVien.SelectedValue)
+            };
+
+            if (khController.AddKhachHang(kh))
+            {
+                MessageBox.Show("Thêm khách hàng thành công!");
+                btnLamMoi_Click(null, null);
+            }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(lblMaKH.Text)) return;
 
+            string hoTen = txtHoTen.Text.Trim();
+            string sdt = txtSDT.Text.Trim();
+            int maKHHienTai = int.Parse(lblMaKH.Text);
+
+            if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(sdt))
+            {
+                MessageBox.Show("Vui lòng nhập đủ thông tin!"); return;
+            }
+
+            // 1. MỚI: Check form SĐT 10 số
+            if (sdt.Length != 10 || !System.Text.RegularExpressions.Regex.IsMatch(sdt, @"^\d{10}$"))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ! Vui lòng nhập đúng 10 chữ số.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Check trùng (Loại trừ chính khách hàng đang được sửa ra)
+            if (khController.KiemTraTrungSdt(sdt, maKHHienTai))
+            {
+                MessageBox.Show("Số điện thoại này đã được đăng ký cho một khách hàng khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int diem = 0;
+            int.TryParse(txtDiemTichLuy.Text, out diem);
+
+            KhachHang kh = new KhachHang
+            {
+                MaKH = maKHHienTai,
+                HoTen = hoTen,
+                SoDienThoai = sdt,
+                DiemTichLuy = diem,
+                // Lấy Mã Hạng ẩn bên dưới ComboBox
+                MaHang = Convert.ToInt32(cboHangThanhVien.SelectedValue)
+            };
+
+            if (khController.UpdateKhachHang(kh))
+            {
+                MessageBox.Show("Cập nhật thành công!");
+                btnLamMoi_Click(null, null);
+            }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(lblMaKH.Text)) return;
 
+            if (MessageBox.Show("Xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                khController.DeleteKhachHang(int.Parse(lblMaKH.Text));
+                btnLamMoi_Click(null, null);
+            }
         }
 
         private void dgvKhachHang_CellClick(object sender, DataGridViewCellEventArgs e)
