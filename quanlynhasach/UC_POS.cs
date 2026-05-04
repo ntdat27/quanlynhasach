@@ -152,46 +152,70 @@ namespace quanlynhasach
         private void KiemTraKhachHang()
         {
             string sdt = txtSoDienThoai.Text.Trim();
+
             if (string.IsNullOrEmpty(sdt))
             {
-                phanTramGiamHienTai = 0; maKhachHangHienTai = null;
-                TinhTongTien(); return;
+                phanTramGiamHienTai = 0;
+                maKhachHangHienTai = null;
+                lblTenKhachDisplay.Text = "Khách hàng: Khách vãng lai";
+                lblHangThanhVien.Text = "Hạng: N/A"; // Hiện hạng mặc định
+                lblHangThanhVien.ForeColor = Color.Gray;
             }
-
-            KhachHang kh = khController.GetKhachHangBySdt(sdt);
-            if (kh != null)
+            else
             {
-                if (maKhachHangHienTai != kh.MaKH)
+                // Sử dụng Controller để lấy thông tin khách hàng đầy đủ
+                KhachHang kh = khController.GetKhachHangBySdt(sdt);
+
+                if (kh != null)
                 {
-                    phanTramGiamHienTai = kh.PhanTramGiam; maKhachHangHienTai = kh.MaKH;
-                    MessageBox.Show($"Khách hàng VIP: {kh.HoTen}\nChiết khấu: {kh.PhanTramGiam}%", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    phanTramGiamHienTai = kh.PhanTramGiam;
+                    maKhachHangHienTai = kh.MaKH;
+
+                    lblTenKhachDisplay.Text = "Khách hàng: " + kh.HoTen;
+
+                    // HIỂN THỊ HẠNG THÀNH VIÊN Ở ĐÂY
+                    lblHangThanhVien.Text = "Hạng: " + kh.TenHang; // Ví dụ: Hạng: Thành viên Bạc
+                    lblHangThanhVien.ForeColor = Color.FromArgb(48, 63, 159); // Màu xanh đậm cho sang
+                }
+                else
+                {
+                    phanTramGiamHienTai = 0;
+                    maKhachHangHienTai = null;
+                    lblTenKhachDisplay.Text = "Khách hàng: Không tìm thấy";
+                    lblHangThanhVien.Text = "Hạng: N/A";
+                    lblHangThanhVien.ForeColor = Color.Gray;
                 }
             }
-            else { phanTramGiamHienTai = 0; maKhachHangHienTai = null; }
+
+            // CUỐI CÙNG: Gọi tính tiền để cập nhật số tiền giảm theo hạng vừa tìm được
             TinhTongTien();
         }
 
         private void TinhTongTien()
         {
-            int tongTienHang = 0;
+            long tongTienHang = 0;
+
+            // 1. Tính tiền gốc từ giỏ hàng
             foreach (DataGridViewRow row in dgvGioHang.Rows)
             {
-                tongTienHang += Convert.ToInt32(row.Cells["ThanhTien"].Value);
+                if (row.Cells["ThanhTien"].Value != null)
+                {
+                    tongTienHang += Convert.ToInt64(row.Cells["ThanhTien"].Value);
+                }
             }
 
-            int tienGiam = (tongTienHang * phanTramGiamHienTai) / 100;
-            int khachCanTra = tongTienHang - tienGiam;
+            // 2. Tính toán dựa trên % giảm giá đã được xác định ở hàm KiemTraKhachHang
+            long soTienDuocGiam = (tongTienHang * phanTramGiamHienTai) / 100;
+            long thanhTien = tongTienHang - soTienDuocGiam;
 
-            if (phanTramGiamHienTai > 0)
-            {
-                lblTongTien.Text = string.Format("{0:N0} VNĐ (Giảm {1}%)", khachCanTra, phanTramGiamHienTai);
-                lblTongTien.ForeColor = Color.Red;
-            }
-            else
-            {
-                lblTongTien.Text = string.Format("{0:N0} VNĐ", khachCanTra);
-                lblTongTien.ForeColor = Color.Black;
-            }
+            // 3. Đổ dữ liệu lên giao diện
+            lblTamTinh.Text = string.Format("{0:N0} đ", tongTienHang);
+
+            // Hiển thị dòng Giảm giá có kèm % để khách dễ nhìn
+            lblGiamGia.Text = string.Format("- {0:N0} đ ({1}%)", soTienDuocGiam, phanTramGiamHienTai);
+
+            // Tổng tiền cuối cùng
+            lblTongCong.Text = string.Format("{0:N0} đ", thanhTien);
         }
 
         // ========================================================
@@ -383,8 +407,8 @@ namespace quanlynhasach
                 txtSoDienThoai.Clear();
                 phanTramGiamHienTai = 0;
                 maKhachHangHienTai = null;
-                lblTongTien.Text = "0 VNĐ";
-                lblTongTien.ForeColor = Color.Black;
+                lblTongCong.Text = "0 VNĐ";
+                lblTongCong.ForeColor = Color.Black;
 
                 LoadDanhSachSach(); // Gọi lại kho sách để cập nhật số tồn mới
             }

@@ -32,11 +32,18 @@
             this.txtTimKiem = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.dgvSach = new System.Windows.Forms.DataGridView();
             this.materialCard1 = new ReaLTaiizor.Controls.MaterialCard();
+            this.label1 = new System.Windows.Forms.Label();
             this.txtSoDienThoai = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.btnThanhToan = new ReaLTaiizor.Controls.MaterialButton();
-            this.lblTongTien = new ReaLTaiizor.Controls.MaterialLabel();
+            this.lblTongCong = new ReaLTaiizor.Controls.MaterialLabel();
             this.dgvGioHang = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblGiamGia = new ReaLTaiizor.Controls.MaterialLabel();
+            this.lblTamTinh = new ReaLTaiizor.Controls.MaterialLabel();
+            this.lblTenKhachDisplay = new ReaLTaiizor.Controls.MaterialLabel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lblHangThanhVien = new ReaLTaiizor.Controls.MaterialLabel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -114,10 +121,17 @@
             // materialCard1
             // 
             this.materialCard1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard1.Controls.Add(this.lblHangThanhVien);
+            this.materialCard1.Controls.Add(this.label4);
+            this.materialCard1.Controls.Add(this.label3);
+            this.materialCard1.Controls.Add(this.label2);
+            this.materialCard1.Controls.Add(this.lblTenKhachDisplay);
+            this.materialCard1.Controls.Add(this.lblTamTinh);
+            this.materialCard1.Controls.Add(this.lblGiamGia);
             this.materialCard1.Controls.Add(this.label1);
             this.materialCard1.Controls.Add(this.txtSoDienThoai);
             this.materialCard1.Controls.Add(this.btnThanhToan);
-            this.materialCard1.Controls.Add(this.lblTongTien);
+            this.materialCard1.Controls.Add(this.lblTongCong);
             this.materialCard1.Depth = 0;
             this.materialCard1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.materialCard1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -129,6 +143,16 @@
             this.materialCard1.Size = new System.Drawing.Size(390, 287);
             this.materialCard1.TabIndex = 1;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(13, 202);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(113, 24);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Thành Tiền:";
+            // 
             // txtSoDienThoai
             // 
             this.txtSoDienThoai.AnimateReadOnly = false;
@@ -139,9 +163,9 @@
             this.txtSoDienThoai.Depth = 0;
             this.txtSoDienThoai.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.txtSoDienThoai.HideSelection = true;
-            this.txtSoDienThoai.Hint = "Nhập SĐT giảm giá";
+            this.txtSoDienThoai.Hint = "Nhập SĐT để giảm giá";
             this.txtSoDienThoai.LeadingIcon = null;
-            this.txtSoDienThoai.Location = new System.Drawing.Point(17, 17);
+            this.txtSoDienThoai.Location = new System.Drawing.Point(123, 17);
             this.txtSoDienThoai.MaxLength = 32767;
             this.txtSoDienThoai.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
             this.txtSoDienThoai.Name = "txtSoDienThoai";
@@ -168,7 +192,7 @@
             this.btnThanhToan.HighEmphasis = true;
             this.btnThanhToan.Icon = null;
             this.btnThanhToan.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            this.btnThanhToan.Location = new System.Drawing.Point(199, 213);
+            this.btnThanhToan.Location = new System.Drawing.Point(139, 231);
             this.btnThanhToan.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnThanhToan.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.btnThanhToan.Name = "btnThanhToan";
@@ -181,17 +205,17 @@
             this.btnThanhToan.UseVisualStyleBackColor = true;
             this.btnThanhToan.Click += new System.EventHandler(this.btnThanhToan_Click);
             // 
-            // lblTongTien
+            // lblTongCong
             // 
-            this.lblTongTien.AutoSize = true;
-            this.lblTongTien.Depth = 0;
-            this.lblTongTien.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.lblTongTien.Location = new System.Drawing.Point(154, 88);
-            this.lblTongTien.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            this.lblTongTien.Name = "lblTongTien";
-            this.lblTongTien.Size = new System.Drawing.Size(46, 19);
-            this.lblTongTien.TabIndex = 0;
-            this.lblTongTien.Text = "0 VND";
+            this.lblTongCong.AutoSize = true;
+            this.lblTongCong.Depth = 0;
+            this.lblTongCong.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblTongCong.Location = new System.Drawing.Point(276, 208);
+            this.lblTongCong.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.lblTongCong.Name = "lblTongCong";
+            this.lblTongCong.Size = new System.Drawing.Size(46, 19);
+            this.lblTongCong.TabIndex = 0;
+            this.lblTongCong.Text = "0 VND";
             // 
             // dgvGioHang
             // 
@@ -201,15 +225,83 @@
             this.dgvGioHang.Size = new System.Drawing.Size(385, 350);
             this.dgvGioHang.TabIndex = 0;
             // 
-            // label1
+            // lblGiamGia
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(13, 88);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(113, 24);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Thành Tiền:";
+            this.lblGiamGia.AutoSize = true;
+            this.lblGiamGia.Depth = 0;
+            this.lblGiamGia.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblGiamGia.Location = new System.Drawing.Point(276, 175);
+            this.lblGiamGia.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.lblGiamGia.Name = "lblGiamGia";
+            this.lblGiamGia.Size = new System.Drawing.Size(46, 19);
+            this.lblGiamGia.TabIndex = 5;
+            this.lblGiamGia.Text = "0 VND";
+            // 
+            // lblTamTinh
+            // 
+            this.lblTamTinh.AutoSize = true;
+            this.lblTamTinh.Depth = 0;
+            this.lblTamTinh.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblTamTinh.Location = new System.Drawing.Point(276, 141);
+            this.lblTamTinh.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.lblTamTinh.Name = "lblTamTinh";
+            this.lblTamTinh.Size = new System.Drawing.Size(46, 19);
+            this.lblTamTinh.TabIndex = 6;
+            this.lblTamTinh.Text = "0 VND";
+            // 
+            // lblTenKhachDisplay
+            // 
+            this.lblTenKhachDisplay.AutoSize = true;
+            this.lblTenKhachDisplay.Depth = 0;
+            this.lblTenKhachDisplay.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblTenKhachDisplay.Location = new System.Drawing.Point(14, 104);
+            this.lblTenKhachDisplay.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.lblTenKhachDisplay.Name = "lblTenKhachDisplay";
+            this.lblTenKhachDisplay.Size = new System.Drawing.Size(88, 19);
+            this.lblTenKhachDisplay.TabIndex = 7;
+            this.lblTenKhachDisplay.Text = "Khách Hàng";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(13, 136);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(88, 24);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Tạm tính:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(13, 169);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(92, 24);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Giảm Giá:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(17, 41);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(92, 24);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Nhập Mã:";
+            // 
+            // lblHangThanhVien
+            // 
+            this.lblHangThanhVien.AutoSize = true;
+            this.lblHangThanhVien.Depth = 0;
+            this.lblHangThanhVien.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lblHangThanhVien.Location = new System.Drawing.Point(234, 104);
+            this.lblHangThanhVien.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.lblHangThanhVien.Name = "lblHangThanhVien";
+            this.lblHangThanhVien.Size = new System.Drawing.Size(39, 19);
+            this.lblHangThanhVien.TabIndex = 11;
+            this.lblHangThanhVien.Text = "Hạng";
             // 
             // UC_POS
             // 
@@ -238,8 +330,15 @@
         private ReaLTaiizor.Controls.MaterialButton btnThanhToan;
         private ReaLTaiizor.Controls.MaterialCard materialCard1;
         private System.Windows.Forms.DataGridView dgvGioHang;
-        private ReaLTaiizor.Controls.MaterialLabel lblTongTien;
+        private ReaLTaiizor.Controls.MaterialLabel lblTongCong;
         private ReaLTaiizor.Controls.MaterialTextBoxEdit txtSoDienThoai;
         private System.Windows.Forms.Label label1;
+        private ReaLTaiizor.Controls.MaterialLabel lblGiamGia;
+        private ReaLTaiizor.Controls.MaterialLabel lblTamTinh;
+        private ReaLTaiizor.Controls.MaterialLabel lblTenKhachDisplay;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private ReaLTaiizor.Controls.MaterialLabel lblHangThanhVien;
     }
 }

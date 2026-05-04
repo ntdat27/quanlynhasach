@@ -36,7 +36,7 @@ namespace quanlynhasach
             {
                 btnQuanLySach.Visible = false;
                 btnMenuNhanVien.Visible = false;
-                btnMenuKhachHang.Visible = false;
+                btnMenuHome.Visible = false;
             }
 
         }
