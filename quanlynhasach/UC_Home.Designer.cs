@@ -47,6 +47,7 @@
             this.dgvSapHetHang = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
+            this.label7 = new System.Windows.Forms.Label();
             this.materialCard1.SuspendLayout();
             this.materialCard2.SuspendLayout();
             this.materialCard3.SuspendLayout();
@@ -281,10 +282,21 @@
             this.btnXuatExcel.UseVisualStyleBackColor = true;
             this.btnXuatExcel.Click += new System.EventHandler(this.btnXuatExcel_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(8, 343);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(193, 24);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "Top 5 Sách Bán Chạy";
+            // 
             // UC_Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.btnXuatExcel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvSapHetHang);
@@ -333,5 +345,6 @@
         private System.Windows.Forms.DataGridView dgvSapHetHang;
         private System.Windows.Forms.Label label1;
         private ReaLTaiizor.Controls.MaterialButton btnXuatExcel;
+        private System.Windows.Forms.Label label7;
     }
 }

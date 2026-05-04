@@ -4,6 +4,12 @@ using System.Drawing;
 using System.Windows.Forms;
 using quanlynhasach.Controllers;
 using quanlynhasach.Models;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.IO.Font;
+using iText.Kernel.Font;
 
 namespace quanlynhasach
 {
@@ -368,6 +374,99 @@ namespace quanlynhasach
         // ========================================================
         // NÚT THANH TOÁN (Lưu xuống Database)
         // ========================================================
+        private bool IsFileLocked(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath)) return false;
+            try
+            {
+                using (System.IO.FileStream stream = System.IO.File.Open(filePath, System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (System.IO.IOException) { return true; }
+            return false;
+        }
+        private void ExportInvoiceToPDF(string filePath)
+        {
+            try
+            {
+                // 1. Kiểm tra quyền ghi file (đề phòng file đang mở)
+                if (IsFileLocked(filePath))
+                {
+                    MessageBox.Show("File này đang được mở bởi một chương trình khác!", "Lỗi");
+                    return;
+                }
+
+                using (PdfWriter writer = new PdfWriter(filePath))
+                {
+                    using (PdfDocument pdf = new PdfDocument(writer))
+                    {
+                        Document document = new Document(pdf);
+
+                        // 2. Nạp Font chuẩn xác (Sửa tên file arial.ttf, arialbd.ttf, ariali.ttf)
+                        string path = @"C:\Windows\Fonts\";
+                        PdfFont fontNormal = PdfFontFactory.CreateFont(path + "arial.ttf", PdfEncodings.IDENTITY_H);
+                        PdfFont fontBold = PdfFontFactory.CreateFont(path + "arialbd.ttf", PdfEncodings.IDENTITY_H);
+                        PdfFont fontItalic = PdfFontFactory.CreateFont(path + "ariali.ttf", PdfEncodings.IDENTITY_H);
+
+                        document.SetFont(fontNormal);
+
+                        // --- BẮT ĐẦU VẼ HÓA ĐƠN ---
+                        document.Add(new Paragraph("HÓA ĐƠN")
+                            .SetTextAlignment(TextAlignment.CENTER)
+                            .SetFontSize(20)
+                            .SetFont(fontBold)); // Dùng biến fontBold đã nạp
+
+                        document.Add(new Paragraph("Nhà Sách Thư Quán").SetTextAlignment(TextAlignment.CENTER));
+                        document.Add(new Paragraph("--------------------------------------------------").SetTextAlignment(TextAlignment.CENTER));
+
+                        // Thông tin khách hàng
+                        document.Add(new Paragraph(lblTenKhachDisplay.Text));
+                        document.Add(new Paragraph(lblHangThanhVien.Text)); // Đã có Hạng thành viên như bạn muốn!
+                        document.Add(new Paragraph($"Ngày lập: {DateTime.Now:dd/MM/yyyy HH:mm}"));
+                        document.Add(new Paragraph("\n"));
+
+                        // Bảng sản phẩm
+                        Table table = new Table(4).UseAllAvailableWidth();
+                        table.AddHeaderCell(new Cell().Add(new Paragraph("Tên sách").SetFont(fontBold)));
+                        table.AddHeaderCell(new Cell().Add(new Paragraph("SL").SetFont(fontBold)));
+                        table.AddHeaderCell(new Cell().Add(new Paragraph("Đơn giá").SetFont(fontBold)));
+                        table.AddHeaderCell(new Cell().Add(new Paragraph("Thành tiền").SetFont(fontBold)));
+
+                        foreach (DataGridViewRow row in dgvGioHang.Rows)
+                        {
+                            table.AddCell(row.Cells["TenSach"].Value.ToString());
+                            table.AddCell(row.Cells["SoLuong"].Value.ToString());
+                            table.AddCell(string.Format("{0:N0}", row.Cells["DonGia"].Value));
+                            table.AddCell(string.Format("{0:N0}", row.Cells["ThanhTien"].Value));
+                        }
+                        document.Add(table);
+
+                        // Tổng kết tiền
+                        document.Add(new Paragraph("\n"));
+                        document.Add(new Paragraph($"Tạm tính: {lblTamTinh.Text}").SetTextAlignment(TextAlignment.RIGHT));
+                        document.Add(new Paragraph($"Giảm giá: {lblGiamGia.Text}").SetTextAlignment(TextAlignment.RIGHT));
+                        document.Add(new Paragraph($"TỔNG CỘNG: {lblTongCong.Text}")
+                            .SetTextAlignment(TextAlignment.RIGHT)
+                            .SetFontSize(14)
+                            .SetFont(fontBold));
+
+                        document.Add(new Paragraph("\nCảm ơn quý khách và hẹn gặp lại!")
+                            .SetTextAlignment(TextAlignment.CENTER)
+                            .SetFont(fontItalic));
+
+                        document.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Hiện lỗi chi tiết để dễ "bắt bệnh"
+                MessageBox.Show("Lỗi tạo PDF: " + ex.Message + "\n" + ex.InnerException?.Message);
+            }
+        }
+
         private void btnThanhToan_Click(object sender, EventArgs e)
         {
             if (dgvGioHang.Rows.Count == 0)
@@ -402,7 +501,22 @@ namespace quanlynhasach
 
             if (result)
             {
-                MessageBox.Show("Thanh toán thành công! Hệ thống đã cập nhật tồn kho.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult dr = MessageBox.Show("Thanh toán thành công! Bạn có muốn xuất hóa đơn PDF không?",
+            "In hóa đơn", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (dr == DialogResult.Yes)
+                {
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.Filter = "PDF Files (*.pdf)|*.pdf";
+                    sfd.FileName = $"HD_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        ExportInvoiceToPDF(sfd.FileName);
+                        // Mở file sau khi lưu xong
+                        System.Diagnostics.Process.Start(sfd.FileName);
+                    }
+                }
                 dgvGioHang.Rows.Clear();
                 txtSoDienThoai.Clear();
                 phanTramGiamHienTai = 0;
