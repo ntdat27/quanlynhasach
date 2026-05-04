@@ -46,6 +46,7 @@
             this.dgvTopSach = new System.Windows.Forms.DataGridView();
             this.dgvSapHetHang = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
             this.materialCard1.SuspendLayout();
             this.materialCard2.SuspendLayout();
             this.materialCard3.SuspendLayout();
@@ -62,7 +63,7 @@
             this.materialCard1.Controls.Add(this.label2);
             this.materialCard1.Depth = 0;
             this.materialCard1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard1.Location = new System.Drawing.Point(16, 180);
+            this.materialCard1.Location = new System.Drawing.Point(418, 153);
             this.materialCard1.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard1.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.materialCard1.Name = "materialCard1";
@@ -97,7 +98,7 @@
             this.materialCard2.Controls.Add(this.label3);
             this.materialCard2.Depth = 0;
             this.materialCard2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard2.Location = new System.Drawing.Point(212, 180);
+            this.materialCard2.Location = new System.Drawing.Point(614, 153);
             this.materialCard2.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard2.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.materialCard2.Name = "materialCard2";
@@ -132,7 +133,7 @@
             this.materialCard3.Controls.Add(this.label4);
             this.materialCard3.Depth = 0;
             this.materialCard3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard3.Location = new System.Drawing.Point(413, 180);
+            this.materialCard3.Location = new System.Drawing.Point(815, 153);
             this.materialCard3.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard3.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.materialCard3.Name = "materialCard3";
@@ -244,7 +245,7 @@
             // dgvSapHetHang
             // 
             this.dgvSapHetHang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvSapHetHang.Location = new System.Drawing.Point(601, 194);
+            this.dgvSapHetHang.Location = new System.Drawing.Point(12, 180);
             this.dgvSapHetHang.Name = "dgvSapHetHang";
             this.dgvSapHetHang.Size = new System.Drawing.Size(385, 150);
             this.dgvSapHetHang.TabIndex = 7;
@@ -253,16 +254,38 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(601, 167);
+            this.label1.Location = new System.Drawing.Point(12, 153);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(256, 24);
             this.label1.TabIndex = 8;
             this.label1.Text = "Cảnh báo sách sắp hết hàng ";
             // 
+            // btnXuatExcel
+            // 
+            this.btnXuatExcel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnXuatExcel.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnXuatExcel.Depth = 0;
+            this.btnXuatExcel.HighEmphasis = true;
+            this.btnXuatExcel.Icon = null;
+            this.btnXuatExcel.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnXuatExcel.Location = new System.Drawing.Point(871, 260);
+            this.btnXuatExcel.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnXuatExcel.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnXuatExcel.Name = "btnXuatExcel";
+            this.btnXuatExcel.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnXuatExcel.Size = new System.Drawing.Size(106, 36);
+            this.btnXuatExcel.TabIndex = 9;
+            this.btnXuatExcel.Text = "XUẤT EXCEL";
+            this.btnXuatExcel.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnXuatExcel.UseAccentColor = false;
+            this.btnXuatExcel.UseVisualStyleBackColor = true;
+            this.btnXuatExcel.Click += new System.EventHandler(this.btnXuatExcel_Click);
+            // 
             // UC_Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnXuatExcel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvSapHetHang);
             this.Controls.Add(this.dgvTopSach);
@@ -309,5 +332,6 @@
         private System.Windows.Forms.DataGridView dgvTopSach;
         private System.Windows.Forms.DataGridView dgvSapHetHang;
         private System.Windows.Forms.Label label1;
+        private ReaLTaiizor.Controls.MaterialButton btnXuatExcel;
     }
 }

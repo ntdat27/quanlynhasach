@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using ClosedXML.Excel;
 using quanlynhasach.Controllers;
 using quanlynhasach.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace quanlynhasach
 {
@@ -221,5 +223,103 @@ namespace quanlynhasach
             }
         }
         #endregion
+        // Hàm chuyển DataGridView thành DataTable (Chỉ lấy cột đang hiển thị)
+        private DataTable ConvertDgvToDataTable(DataGridView dgv)
+        {
+            DataTable dt = new DataTable();
+
+            // 1. Tạo cột cho Excel dựa trên các cột đang hiện (Visible = true) của DGV
+            foreach (DataGridViewColumn col in dgv.Columns)
+            {
+                if (col.Visible)
+                {
+                    dt.Columns.Add(col.HeaderText);
+                }
+            }
+
+            // 2. Lấy dữ liệu từng dòng
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                if (!row.IsNewRow) // Bỏ qua dòng trống cuối cùng
+                {
+                    DataRow dr = dt.NewRow();
+                    int colIndex = 0;
+                    for (int i = 0; i < dgv.Columns.Count; i++)
+                    {
+                        if (dgv.Columns[i].Visible)
+                        {
+                            dr[colIndex] = row.Cells[i].Value ?? "";
+                            colIndex++;
+                        }
+                    }
+                    dt.Rows.Add(dr);
+                }
+            }
+            return dt;
+        }
+
+        private void btnXuatExcel_Click(object sender, EventArgs e)
+        {
+            if (dgvKhachHang.Rows.Count == 0) return;
+
+            DataTable dtExport = ConvertDgvToDataTable(dgvKhachHang);
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Excel Workbook|*.xlsx";
+            sfd.FileName = "KhachHang_" + DateTime.Now.ToString("ddMMyyyy");
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (var workbook = new XLWorkbook())
+                    {
+                        var worksheet = workbook.Worksheets.Add("Khách Hàng");
+
+                        worksheet.Cell("A1").Value = "DANH SÁCH KHÁCH HÀNG THÂN THIẾT";
+                        worksheet.Range("A1:F1").Merge();
+                        worksheet.Cell("A1").Style.Font.Bold = true;
+                        worksheet.Cell("A1").Style.Font.FontSize = 16;
+                        worksheet.Cell("A1").Style.Font.FontColor = XLColor.White;
+                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.Purple; // Nền tím cho khách hàng VIP
+                        worksheet.Cell("A1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        var table = worksheet.Cell(3, 1).InsertTable(dtExport);
+                        table.Theme = XLTableTheme.TableStyleMedium12;
+
+                        worksheet.Columns().AdjustToContents();
+                        workbook.SaveAs(sfd.FileName);
+                        MessageBox.Show("Xuất danh sách Khách hàng thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
+            }
+        }
+
+        private void btnTimKiem_Click(object sender, EventArgs e)
+        {
+            string tuKhoaTen = txtHoTen.Text.Trim(); // Giả sử tên ô nhập là txtHoTen
+            string tuKhoaSdt = txtSDT.Text.Trim(); // Giả sử tên ô nhập là txtSoDienThoai
+
+            // Gọi Controller để lấy dữ liệu
+            // (Đổi thành khachHangController.SearchKhachHang(...) trả về List nếu code cũ của bạn dùng List)
+            DataTable dtKetQua = khController.SearchKhachHang(tuKhoaTen, tuKhoaSdt);
+
+            // Xóa dữ liệu cũ trên lưới
+            dgvKhachHang.Rows.Clear();
+
+            // Đổ dữ liệu mới vào
+            foreach (DataRow row in dtKetQua.Rows)
+            {
+                dgvKhachHang.Rows.Add(
+                    row["MaKH"],
+                    row["HoTen"],
+                    row["SoDienThoai"],
+                    row["DiemTichLuy"],
+                    row["TenHang"],
+                    row["PhanTramGiam"]
+                );
+            }
+        }
     }
 }

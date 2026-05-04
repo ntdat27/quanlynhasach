@@ -91,5 +91,27 @@ namespace quanlynhasach.Controllers
             string query = $"DELETE FROM KhachHang WHERE MaKH={maKH}";
             return db.ExecuteNonQuery(query) > 0;
         }
+        public DataTable SearchKhachHang(string tenKH, string sdt)
+        {
+            try
+            {
+                // Nối với bảng hangthanhvien để lấy được Tên Hạng và Giảm Giá y như lúc Load tất cả
+                string query = $@"
+                    SELECT k.MaKH, k.HoTen, k.SoDienThoai, k.DiemTichLuy, 
+                           t.TenHang, t.PhanTramGiam
+                    FROM khachhang k
+                    LEFT JOIN hangthanhvien t ON k.MaHang = t.MaHang
+                    WHERE k.HoTen LIKE N'%{tenKH}%' 
+                      AND k.SoDienThoai LIKE '%{sdt}%'";
+
+                DatabaseHelper db = new DatabaseHelper();
+                return db.ExecuteQuery(query);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi tìm kiếm: " + ex.Message);
+                return new DataTable();
+            }
+        }
     }
 }

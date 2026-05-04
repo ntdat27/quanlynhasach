@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using ClosedXML.Excel;
 
 namespace quanlynhasach
 {
@@ -185,6 +186,40 @@ namespace quanlynhasach
                 }
             }
         }
+        // Hàm chuyển DataGridView thành DataTable (Chỉ lấy cột đang hiển thị)
+        private DataTable ConvertDgvToDataTable(DataGridView dgv)
+        {
+            DataTable dt = new DataTable();
+
+            // 1. Tạo cột cho Excel dựa trên các cột đang hiện (Visible = true) của DGV
+            foreach (DataGridViewColumn col in dgv.Columns)
+            {
+                if (col.Visible)
+                {
+                    dt.Columns.Add(col.HeaderText);
+                }
+            }
+
+            // 2. Lấy dữ liệu từng dòng
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                if (!row.IsNewRow) // Bỏ qua dòng trống cuối cùng
+                {
+                    DataRow dr = dt.NewRow();
+                    int colIndex = 0;
+                    for (int i = 0; i < dgv.Columns.Count; i++)
+                    {
+                        if (dgv.Columns[i].Visible)
+                        {
+                            dr[colIndex] = row.Cells[i].Value ?? "";
+                            colIndex++;
+                        }
+                    }
+                    dt.Rows.Add(dr);
+                }
+            }
+            return dt;
+        }
 
         private void dgvDanhSachSach_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -228,5 +263,74 @@ namespace quanlynhasach
             cboNXB.ValueMember = "MaNXB";
         }
         #endregion
+
+        private void btnXuatExcel_Click(object sender, EventArgs e)
+        {
+            if (dgvDanhSachSach.Rows.Count == 0) return;
+
+            // Dùng hàm bùa chú để lấy dữ liệu đang thấy trên màn hình (Đã áp dụng Tìm kiếm)
+            DataTable dtExport = ConvertDgvToDataTable(dgvDanhSachSach);
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Excel Workbook|*.xlsx";
+            sfd.Title = "Lưu danh sách Sách";
+            sfd.FileName = "KhoSach_" + DateTime.Now.ToString("ddMMyyyy");
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (var workbook = new XLWorkbook())
+                    {
+                        var worksheet = workbook.Worksheets.Add("Kho Sách");
+
+                        worksheet.Cell("A1").Value = "DANH SÁCH SÁCH TRONG KHO";
+                        worksheet.Range("A1:G1").Merge(); // Gộp 7 ô
+                        worksheet.Cell("A1").Style.Font.Bold = true;
+                        worksheet.Cell("A1").Style.Font.FontSize = 16;
+                        worksheet.Cell("A1").Style.Font.FontColor = XLColor.White;
+                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.MidnightBlue;
+                        worksheet.Cell("A1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        var table = worksheet.Cell(3, 1).InsertTable(dtExport);
+                        table.Theme = XLTableTheme.TableStyleMedium2;
+
+                        worksheet.Columns().AdjustToContents();
+                        workbook.SaveAs(sfd.FileName);
+                        MessageBox.Show("Xuất danh sách Sách thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
+            }
+        }
+
+        private void btnTimKiem_Click(object sender, EventArgs e)
+        {
+            string tuKhoa = txtTenSach.Text.Trim();
+
+            // Gọi cái hàm SearchSach xịn xò mà bạn đã viết sẵn trong Controller
+            List<Models.Sach> listKetQua = sachController.SearchSach(tuKhoa);
+
+            // 1. Dọn sạch bảng dữ liệu cũ
+            dgvDanhSachSach.Rows.Clear();
+
+            // 2. Đổ dữ liệu tìm được vào bảng
+            foreach (Models.Sach s in listKetQua)
+            {
+                // ĐÃ FIX LỖI Ở ĐÂY: Truyền đúng Mã (MaTL, MaTG, MaNXB) 
+                // và đưa SoLuongTon lên trước GiaBan cho khớp với SetupColumns!
+                dgvDanhSachSach.Rows.Add(
+                    s.MaSach,
+                    s.TenSach,
+                    s.MaTL,       // Sửa từ s.TenTL thành s.MaTL
+                    s.MaTG,       // Sửa từ s.TenTG thành s.MaTG
+                    s.MaNXB,      // Sửa từ s.TenNXB thành s.MaNXB
+                    s.NamXB,
+                    s.GiaNhap,
+                    s.SoLuongTon, // Đưa tồn kho lên trước
+                    s.GiaBan      // Để giá bán xuống cuối
+                );
+            }
+        }
     }
 }

@@ -29,6 +29,20 @@
         private void InitializeComponent()
         {
             this.materialCard1 = new ReaLTaiizor.Controls.MaterialCard();
+            this.cboNXB = new ReaLTaiizor.Controls.MaterialComboBox();
+            this.cboTacGia = new ReaLTaiizor.Controls.MaterialComboBox();
+            this.cboTheLoai = new ReaLTaiizor.Controls.MaterialComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtNamXB = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
+            this.txtGiaNhap = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
+            this.label1 = new System.Windows.Forms.Label();
+            this.bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             this.btnSua = new ReaLTaiizor.Controls.MaterialButton();
             this.btnXoa = new ReaLTaiizor.Controls.MaterialButton();
             this.btnLamMoi = new ReaLTaiizor.Controls.MaterialButton();
@@ -38,20 +52,8 @@
             this.txtGiaBan = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.txtTenSach = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.dgvDanhSachSach = new System.Windows.Forms.DataGridView();
-            this.bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtGiaNhap = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
-            this.txtNamXB = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.cboTheLoai = new ReaLTaiizor.Controls.MaterialComboBox();
-            this.cboTacGia = new ReaLTaiizor.Controls.MaterialComboBox();
-            this.cboNXB = new ReaLTaiizor.Controls.MaterialComboBox();
+            this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
+            this.btnTimKiem = new ReaLTaiizor.Controls.MaterialButton();
             this.materialCard1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDanhSachSach)).BeginInit();
             this.SuspendLayout();
@@ -59,6 +61,8 @@
             // materialCard1
             // 
             this.materialCard1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard1.Controls.Add(this.btnTimKiem);
+            this.materialCard1.Controls.Add(this.btnXuatExcel);
             this.materialCard1.Controls.Add(this.cboNXB);
             this.materialCard1.Controls.Add(this.cboTacGia);
             this.materialCard1.Controls.Add(this.cboTheLoai);
@@ -91,6 +95,224 @@
             this.materialCard1.Padding = new System.Windows.Forms.Padding(14);
             this.materialCard1.Size = new System.Drawing.Size(1000, 466);
             this.materialCard1.TabIndex = 0;
+            // 
+            // cboNXB
+            // 
+            this.cboNXB.AutoResize = false;
+            this.cboNXB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.cboNXB.Depth = 0;
+            this.cboNXB.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cboNXB.DropDownHeight = 174;
+            this.cboNXB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboNXB.DropDownWidth = 121;
+            this.cboNXB.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.cboNXB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.cboNXB.FormattingEnabled = true;
+            this.cboNXB.IntegralHeight = false;
+            this.cboNXB.ItemHeight = 43;
+            this.cboNXB.Location = new System.Drawing.Point(17, 192);
+            this.cboNXB.MaxDropDownItems = 4;
+            this.cboNXB.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.cboNXB.Name = "cboNXB";
+            this.cboNXB.Size = new System.Drawing.Size(250, 49);
+            this.cboNXB.StartIndex = 0;
+            this.cboNXB.TabIndex = 33;
+            // 
+            // cboTacGia
+            // 
+            this.cboTacGia.AutoResize = false;
+            this.cboTacGia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.cboTacGia.Depth = 0;
+            this.cboTacGia.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cboTacGia.DropDownHeight = 174;
+            this.cboTacGia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboTacGia.DropDownWidth = 121;
+            this.cboTacGia.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.cboTacGia.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.cboTacGia.FormattingEnabled = true;
+            this.cboTacGia.IntegralHeight = false;
+            this.cboTacGia.ItemHeight = 43;
+            this.cboTacGia.Location = new System.Drawing.Point(785, 101);
+            this.cboTacGia.MaxDropDownItems = 4;
+            this.cboTacGia.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.cboTacGia.Name = "cboTacGia";
+            this.cboTacGia.Size = new System.Drawing.Size(250, 49);
+            this.cboTacGia.StartIndex = 0;
+            this.cboTacGia.TabIndex = 32;
+            // 
+            // cboTheLoai
+            // 
+            this.cboTheLoai.AutoResize = false;
+            this.cboTheLoai.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.cboTheLoai.Depth = 0;
+            this.cboTheLoai.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cboTheLoai.DropDownHeight = 174;
+            this.cboTheLoai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboTheLoai.DropDownWidth = 121;
+            this.cboTheLoai.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.cboTheLoai.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.cboTheLoai.FormattingEnabled = true;
+            this.cboTheLoai.IntegralHeight = false;
+            this.cboTheLoai.ItemHeight = 43;
+            this.cboTheLoai.Location = new System.Drawing.Point(529, 101);
+            this.cboTheLoai.MaxDropDownItems = 4;
+            this.cboTheLoai.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.cboTheLoai.Name = "cboTheLoai";
+            this.cboTheLoai.Size = new System.Drawing.Size(250, 49);
+            this.cboTheLoai.StartIndex = 0;
+            this.cboTheLoai.TabIndex = 31;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(17, 259);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(83, 24);
+            this.label8.TabIndex = 30;
+            this.label8.Text = "Tồn Kho";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(781, 166);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(76, 24);
+            this.label7.TabIndex = 29;
+            this.label7.Text = "Giá Bán";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(529, 166);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(89, 24);
+            this.label6.TabIndex = 28;
+            this.label6.Text = "Giá Nhập";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(273, 166);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(132, 24);
+            this.label5.TabIndex = 27;
+            this.label5.Text = "Năm Xuất Bản";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(17, 166);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(127, 24);
+            this.label4.TabIndex = 26;
+            this.label4.Text = "Nhà Xuất Bản";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(781, 74);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(75, 24);
+            this.label3.TabIndex = 25;
+            this.label3.Text = "Tác Giả";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(525, 74);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(84, 24);
+            this.label2.TabIndex = 24;
+            this.label2.Text = "Thể Loại";
+            // 
+            // txtNamXB
+            // 
+            this.txtNamXB.AnimateReadOnly = false;
+            this.txtNamXB.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtNamXB.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtNamXB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.txtNamXB.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+            this.txtNamXB.Depth = 0;
+            this.txtNamXB.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtNamXB.HideSelection = true;
+            this.txtNamXB.LeadingIcon = null;
+            this.txtNamXB.Location = new System.Drawing.Point(273, 193);
+            this.txtNamXB.MaxLength = 32767;
+            this.txtNamXB.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.txtNamXB.Name = "txtNamXB";
+            this.txtNamXB.PasswordChar = '\0';
+            this.txtNamXB.PrefixSuffixText = null;
+            this.txtNamXB.ReadOnly = false;
+            this.txtNamXB.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtNamXB.SelectedText = "";
+            this.txtNamXB.SelectionLength = 0;
+            this.txtNamXB.SelectionStart = 0;
+            this.txtNamXB.ShortcutsEnabled = true;
+            this.txtNamXB.Size = new System.Drawing.Size(250, 48);
+            this.txtNamXB.TabIndex = 21;
+            this.txtNamXB.TabStop = false;
+            this.txtNamXB.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtNamXB.TrailingIcon = null;
+            this.txtNamXB.UseSystemPasswordChar = false;
+            // 
+            // txtGiaNhap
+            // 
+            this.txtGiaNhap.AnimateReadOnly = false;
+            this.txtGiaNhap.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtGiaNhap.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtGiaNhap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.txtGiaNhap.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+            this.txtGiaNhap.Depth = 0;
+            this.txtGiaNhap.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtGiaNhap.HideSelection = true;
+            this.txtGiaNhap.LeadingIcon = null;
+            this.txtGiaNhap.Location = new System.Drawing.Point(529, 193);
+            this.txtGiaNhap.MaxLength = 32767;
+            this.txtGiaNhap.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.txtGiaNhap.Name = "txtGiaNhap";
+            this.txtGiaNhap.PasswordChar = '\0';
+            this.txtGiaNhap.PrefixSuffixText = null;
+            this.txtGiaNhap.ReadOnly = false;
+            this.txtGiaNhap.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtGiaNhap.SelectedText = "";
+            this.txtGiaNhap.SelectionLength = 0;
+            this.txtGiaNhap.SelectionStart = 0;
+            this.txtGiaNhap.ShortcutsEnabled = true;
+            this.txtGiaNhap.Size = new System.Drawing.Size(250, 48);
+            this.txtGiaNhap.TabIndex = 20;
+            this.txtGiaNhap.TabStop = false;
+            this.txtGiaNhap.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtGiaNhap.TrailingIcon = null;
+            this.txtGiaNhap.UseSystemPasswordChar = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(17, 74);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(92, 24);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Tên Sách";
+            // 
+            // bigLabel1
+            // 
+            this.bigLabel1.AutoSize = true;
+            this.bigLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.bigLabel1.Font = new System.Drawing.Font("Segoe UI", 25F);
+            this.bigLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.bigLabel1.Location = new System.Drawing.Point(17, 14);
+            this.bigLabel1.Name = "bigLabel1";
+            this.bigLabel1.Size = new System.Drawing.Size(272, 46);
+            this.bigLabel1.TabIndex = 15;
+            this.bigLabel1.Text = "Thông Tin Sách -";
             // 
             // btnSua
             // 
@@ -285,223 +507,47 @@
             this.dgvDanhSachSach.Size = new System.Drawing.Size(1000, 228);
             this.dgvDanhSachSach.TabIndex = 1;
             // 
-            // bigLabel1
+            // btnXuatExcel
             // 
-            this.bigLabel1.AutoSize = true;
-            this.bigLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.bigLabel1.Font = new System.Drawing.Font("Segoe UI", 25F);
-            this.bigLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.bigLabel1.Location = new System.Drawing.Point(17, 14);
-            this.bigLabel1.Name = "bigLabel1";
-            this.bigLabel1.Size = new System.Drawing.Size(272, 46);
-            this.bigLabel1.TabIndex = 15;
-            this.bigLabel1.Text = "Thông Tin Sách -";
+            this.btnXuatExcel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnXuatExcel.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnXuatExcel.Depth = 0;
+            this.btnXuatExcel.HighEmphasis = true;
+            this.btnXuatExcel.Icon = null;
+            this.btnXuatExcel.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnXuatExcel.Location = new System.Drawing.Point(312, 410);
+            this.btnXuatExcel.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnXuatExcel.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnXuatExcel.Name = "btnXuatExcel";
+            this.btnXuatExcel.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnXuatExcel.Size = new System.Drawing.Size(106, 36);
+            this.btnXuatExcel.TabIndex = 34;
+            this.btnXuatExcel.Text = "XUẤT EXCEL";
+            this.btnXuatExcel.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnXuatExcel.UseAccentColor = false;
+            this.btnXuatExcel.UseVisualStyleBackColor = true;
+            this.btnXuatExcel.Click += new System.EventHandler(this.btnXuatExcel_Click);
             // 
-            // label1
+            // btnTimKiem
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(17, 74);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 24);
-            this.label1.TabIndex = 18;
-            this.label1.Text = "Tên Sách";
-            // 
-            // txtGiaNhap
-            // 
-            this.txtGiaNhap.AnimateReadOnly = false;
-            this.txtGiaNhap.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtGiaNhap.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtGiaNhap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.txtGiaNhap.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
-            this.txtGiaNhap.Depth = 0;
-            this.txtGiaNhap.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.txtGiaNhap.HideSelection = true;
-            this.txtGiaNhap.LeadingIcon = null;
-            this.txtGiaNhap.Location = new System.Drawing.Point(529, 193);
-            this.txtGiaNhap.MaxLength = 32767;
-            this.txtGiaNhap.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.txtGiaNhap.Name = "txtGiaNhap";
-            this.txtGiaNhap.PasswordChar = '\0';
-            this.txtGiaNhap.PrefixSuffixText = null;
-            this.txtGiaNhap.ReadOnly = false;
-            this.txtGiaNhap.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtGiaNhap.SelectedText = "";
-            this.txtGiaNhap.SelectionLength = 0;
-            this.txtGiaNhap.SelectionStart = 0;
-            this.txtGiaNhap.ShortcutsEnabled = true;
-            this.txtGiaNhap.Size = new System.Drawing.Size(250, 48);
-            this.txtGiaNhap.TabIndex = 20;
-            this.txtGiaNhap.TabStop = false;
-            this.txtGiaNhap.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.txtGiaNhap.TrailingIcon = null;
-            this.txtGiaNhap.UseSystemPasswordChar = false;
-            // 
-            // txtNamXB
-            // 
-            this.txtNamXB.AnimateReadOnly = false;
-            this.txtNamXB.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtNamXB.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtNamXB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.txtNamXB.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
-            this.txtNamXB.Depth = 0;
-            this.txtNamXB.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.txtNamXB.HideSelection = true;
-            this.txtNamXB.LeadingIcon = null;
-            this.txtNamXB.Location = new System.Drawing.Point(273, 193);
-            this.txtNamXB.MaxLength = 32767;
-            this.txtNamXB.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.txtNamXB.Name = "txtNamXB";
-            this.txtNamXB.PasswordChar = '\0';
-            this.txtNamXB.PrefixSuffixText = null;
-            this.txtNamXB.ReadOnly = false;
-            this.txtNamXB.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtNamXB.SelectedText = "";
-            this.txtNamXB.SelectionLength = 0;
-            this.txtNamXB.SelectionStart = 0;
-            this.txtNamXB.ShortcutsEnabled = true;
-            this.txtNamXB.Size = new System.Drawing.Size(250, 48);
-            this.txtNamXB.TabIndex = 21;
-            this.txtNamXB.TabStop = false;
-            this.txtNamXB.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.txtNamXB.TrailingIcon = null;
-            this.txtNamXB.UseSystemPasswordChar = false;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(525, 74);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(84, 24);
-            this.label2.TabIndex = 24;
-            this.label2.Text = "Thể Loại";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(781, 74);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 24);
-            this.label3.TabIndex = 25;
-            this.label3.Text = "Tác Giả";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(17, 166);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(127, 24);
-            this.label4.TabIndex = 26;
-            this.label4.Text = "Nhà Xuất Bản";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(273, 166);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(132, 24);
-            this.label5.TabIndex = 27;
-            this.label5.Text = "Năm Xuất Bản";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(529, 166);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(89, 24);
-            this.label6.TabIndex = 28;
-            this.label6.Text = "Giá Nhập";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(781, 166);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(76, 24);
-            this.label7.TabIndex = 29;
-            this.label7.Text = "Giá Bán";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(17, 259);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(83, 24);
-            this.label8.TabIndex = 30;
-            this.label8.Text = "Tồn Kho";
-            // 
-            // cboTheLoai
-            // 
-            this.cboTheLoai.AutoResize = false;
-            this.cboTheLoai.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.cboTheLoai.Depth = 0;
-            this.cboTheLoai.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cboTheLoai.DropDownHeight = 174;
-            this.cboTheLoai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboTheLoai.DropDownWidth = 121;
-            this.cboTheLoai.Font = new System.Drawing.Font("Roboto Medium", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.cboTheLoai.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.cboTheLoai.FormattingEnabled = true;
-            this.cboTheLoai.IntegralHeight = false;
-            this.cboTheLoai.ItemHeight = 43;
-            this.cboTheLoai.Location = new System.Drawing.Point(529, 101);
-            this.cboTheLoai.MaxDropDownItems = 4;
-            this.cboTheLoai.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.cboTheLoai.Name = "cboTheLoai";
-            this.cboTheLoai.Size = new System.Drawing.Size(250, 49);
-            this.cboTheLoai.StartIndex = 0;
-            this.cboTheLoai.TabIndex = 31;
-            // 
-            // cboTacGia
-            // 
-            this.cboTacGia.AutoResize = false;
-            this.cboTacGia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.cboTacGia.Depth = 0;
-            this.cboTacGia.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cboTacGia.DropDownHeight = 174;
-            this.cboTacGia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboTacGia.DropDownWidth = 121;
-            this.cboTacGia.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.cboTacGia.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.cboTacGia.FormattingEnabled = true;
-            this.cboTacGia.IntegralHeight = false;
-            this.cboTacGia.ItemHeight = 43;
-            this.cboTacGia.Location = new System.Drawing.Point(785, 101);
-            this.cboTacGia.MaxDropDownItems = 4;
-            this.cboTacGia.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.cboTacGia.Name = "cboTacGia";
-            this.cboTacGia.Size = new System.Drawing.Size(250, 49);
-            this.cboTacGia.StartIndex = 0;
-            this.cboTacGia.TabIndex = 32;
-            // 
-            // cboNXB
-            // 
-            this.cboNXB.AutoResize = false;
-            this.cboNXB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.cboNXB.Depth = 0;
-            this.cboNXB.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cboNXB.DropDownHeight = 174;
-            this.cboNXB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboNXB.DropDownWidth = 121;
-            this.cboNXB.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.cboNXB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.cboNXB.FormattingEnabled = true;
-            this.cboNXB.IntegralHeight = false;
-            this.cboNXB.ItemHeight = 43;
-            this.cboNXB.Location = new System.Drawing.Point(17, 192);
-            this.cboNXB.MaxDropDownItems = 4;
-            this.cboNXB.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.cboNXB.Name = "cboNXB";
-            this.cboNXB.Size = new System.Drawing.Size(250, 49);
-            this.cboNXB.StartIndex = 0;
-            this.cboNXB.TabIndex = 33;
+            this.btnTimKiem.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnTimKiem.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnTimKiem.Depth = 0;
+            this.btnTimKiem.HighEmphasis = true;
+            this.btnTimKiem.Icon = null;
+            this.btnTimKiem.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnTimKiem.Location = new System.Drawing.Point(910, 410);
+            this.btnTimKiem.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnTimKiem.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnTimKiem.Name = "btnTimKiem";
+            this.btnTimKiem.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnTimKiem.Size = new System.Drawing.Size(86, 36);
+            this.btnTimKiem.TabIndex = 37;
+            this.btnTimKiem.Text = "Tìm Kiếm";
+            this.btnTimKiem.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnTimKiem.UseAccentColor = false;
+            this.btnTimKiem.UseVisualStyleBackColor = true;
+            this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
             // 
             // UC_QuanLySach
             // 
@@ -544,5 +590,7 @@
         private ReaLTaiizor.Controls.MaterialComboBox cboNXB;
         private ReaLTaiizor.Controls.MaterialComboBox cboTacGia;
         private ReaLTaiizor.Controls.MaterialComboBox cboTheLoai;
+        private ReaLTaiizor.Controls.MaterialButton btnXuatExcel;
+        private ReaLTaiizor.Controls.MaterialButton btnTimKiem;
     }
 }

@@ -34,9 +34,10 @@
             this.dgvHoaDon = new System.Windows.Forms.DataGridView();
             this.bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             this.materialCard4 = new ReaLTaiizor.Controls.MaterialCard();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.txtTimSdt = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHoaDon)).BeginInit();
             this.materialCard4.SuspendLayout();
             this.SuspendLayout();
@@ -67,7 +68,7 @@
             this.btnLocHoaDon.HighEmphasis = true;
             this.btnLocHoaDon.Icon = null;
             this.btnLocHoaDon.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            this.btnLocHoaDon.Location = new System.Drawing.Point(834, 53);
+            this.btnLocHoaDon.Location = new System.Drawing.Point(686, 47);
             this.btnLocHoaDon.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnLocHoaDon.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.btnLocHoaDon.Name = "btnLocHoaDon";
@@ -105,6 +106,7 @@
             // materialCard4
             // 
             this.materialCard4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard4.Controls.Add(this.btnXuatExcel);
             this.materialCard4.Controls.Add(this.txtTimSdt);
             this.materialCard4.Controls.Add(this.label2);
             this.materialCard4.Controls.Add(this.label1);
@@ -121,26 +123,6 @@
             this.materialCard4.Padding = new System.Windows.Forms.Padding(14);
             this.materialCard4.Size = new System.Drawing.Size(925, 100);
             this.materialCard4.TabIndex = 16;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.label1.Location = new System.Drawing.Point(17, 27);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 24);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Từ Ngày";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.label2.Location = new System.Drawing.Point(219, 27);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(94, 24);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Đến Ngày";
             // 
             // txtTimSdt
             // 
@@ -172,6 +154,47 @@
             this.txtTimSdt.TrailingIcon = null;
             this.txtTimSdt.UseSystemPasswordChar = false;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.label2.Location = new System.Drawing.Point(219, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(94, 24);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Đến Ngày";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.label1.Location = new System.Drawing.Point(17, 27);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(82, 24);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Từ Ngày";
+            // 
+            // btnXuatExcel
+            // 
+            this.btnXuatExcel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnXuatExcel.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnXuatExcel.Depth = 0;
+            this.btnXuatExcel.HighEmphasis = true;
+            this.btnXuatExcel.Icon = null;
+            this.btnXuatExcel.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnXuatExcel.Location = new System.Drawing.Point(801, 47);
+            this.btnXuatExcel.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnXuatExcel.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnXuatExcel.Name = "btnXuatExcel";
+            this.btnXuatExcel.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnXuatExcel.Size = new System.Drawing.Size(106, 36);
+            this.btnXuatExcel.TabIndex = 17;
+            this.btnXuatExcel.Text = "XUẤT EXCEL";
+            this.btnXuatExcel.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnXuatExcel.UseAccentColor = false;
+            this.btnXuatExcel.UseVisualStyleBackColor = true;
+            this.btnXuatExcel.Click += new System.EventHandler(this.btnXuatExcel_Click);
+            // 
             // UC_QuanLyHoaDon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -200,5 +223,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private ReaLTaiizor.Controls.MaterialTextBoxEdit txtTimSdt;
+        private ReaLTaiizor.Controls.MaterialButton btnXuatExcel;
     }
 }

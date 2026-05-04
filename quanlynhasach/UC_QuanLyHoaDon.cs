@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -103,6 +104,67 @@ namespace quanlynhasach
                 // Mở form Chi tiết và truyền Mã HĐ sang
                 frmChiTietHoaDon fChiTiet = new frmChiTietHoaDon(maHD);
                 fChiTiet.ShowDialog(); // ShowDialog để nó hiện đè lên, bắt người dùng xem xong phải tắt đi
+            }
+        }
+
+        private void btnXuatExcel_Click(object sender, EventArgs e)
+        {
+            // BÍ QUYẾT: Lấy thẳng dữ liệu từ DataSource của bảng (đã được lọc trước đó)
+            if (dgvHoaDon.DataSource == null)
+            {
+                MessageBox.Show("Không có dữ liệu để xuất!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DataTable dtExport = (DataTable)dgvHoaDon.DataSource;
+
+            if (dtExport.Rows.Count == 0)
+            {
+                MessageBox.Show("Bảng dữ liệu đang trống, hãy lọc dữ liệu trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Excel Workbook|*.xlsx";
+            sfd.Title = "Lưu danh sách hóa đơn";
+            sfd.FileName = "DanhSachHoaDon_" + DateTime.Now.ToString("ddMMyyyy_HHmm");
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (var workbook = new XLWorkbook())
+                    {
+                        var worksheet = workbook.Worksheets.Add("Lịch Sử Bán Hàng");
+
+                        // Trang trí Tiêu đề
+                        worksheet.Cell("A1").Value = "BÁO CÁO LỊCH SỬ BÁN HÀNG";
+                        worksheet.Range("A1:G1").Merge(); // Gộp ô từ A đến G (tùy số cột của bạn)
+                        worksheet.Cell("A1").Style.Font.Bold = true;
+                        worksheet.Cell("A1").Style.Font.FontSize = 16;
+                        worksheet.Cell("A1").Style.Font.FontColor = XLColor.White;
+                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.Teal; // Nền xanh mòng két
+                        worksheet.Cell("A1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        // Thêm dòng thông tin bộ lọc (Hiển thị thời gian lọc)
+                        worksheet.Cell("A2").Value = $"Lọc từ: {dtpTuNgay.Value:dd/MM/yyyy} - Đến: {dtpDenNgay.Value:dd/MM/yyyy}";
+                        worksheet.Range("A2:G2").Merge();
+                        worksheet.Cell("A2").Style.Font.Italic = true;
+
+                        // Đổ DataTable vào Excel bắt đầu từ ô A4
+                        var table = worksheet.Cell(4, 1).InsertTable(dtExport);
+                        table.Theme = XLTableTheme.TableStyleMedium16; // Giao diện bảng xịn xò
+
+                        worksheet.Columns().AdjustToContents(); // Tự động giãn cột
+
+                        workbook.SaveAs(sfd.FileName);
+                        MessageBox.Show("Xuất file Excel thành công!", "Tuyệt vời", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi xuất Excel: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

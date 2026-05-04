@@ -93,5 +93,25 @@ namespace quanlynhasach.Controllers
             }
             catch { return false; }
         }
+        public DataTable SearchNhanVien(string tenNV, string sdt)
+        {
+            try
+            {
+                // Đã sửa lại đúng 6 cột có trong Database của bạn
+                string query = $@"
+                    SELECT MaNV, HoTen, SoDienThoai, TaiKhoan, MatKhau, ChucVu 
+                    FROM NhanVien 
+                    WHERE HoTen LIKE N'%{tenNV}%' 
+                      AND SoDienThoai LIKE '%{sdt}%'";
+
+                quanlynhasach.Data.DatabaseHelper db = new quanlynhasach.Data.DatabaseHelper();
+                return db.ExecuteQuery(query);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi tìm kiếm nhân viên: " + ex.Message);
+                return new DataTable();
+            }
+        }
     }
 }

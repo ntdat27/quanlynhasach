@@ -29,6 +29,11 @@
         private void InitializeComponent()
         {
             this.materialCard1 = new ReaLTaiizor.Controls.MaterialCard();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             this.cboHangThanhVien = new ReaLTaiizor.Controls.MaterialComboBox();
             this.btnSua = new ReaLTaiizor.Controls.MaterialButton();
             this.btnXoa = new ReaLTaiizor.Controls.MaterialButton();
@@ -39,11 +44,8 @@
             this.txtSDT = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.txtHoTen = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.dgvKhachHang = new System.Windows.Forms.DataGridView();
-            this.bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
+            this.btnTimKiem = new ReaLTaiizor.Controls.MaterialButton();
             this.materialCard1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKhachHang)).BeginInit();
             this.SuspendLayout();
@@ -51,6 +53,8 @@
             // materialCard1
             // 
             this.materialCard1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard1.Controls.Add(this.btnTimKiem);
+            this.materialCard1.Controls.Add(this.btnXuatExcel);
             this.materialCard1.Controls.Add(this.label5);
             this.materialCard1.Controls.Add(this.label4);
             this.materialCard1.Controls.Add(this.label3);
@@ -75,6 +79,58 @@
             this.materialCard1.Padding = new System.Windows.Forms.Padding(14);
             this.materialCard1.Size = new System.Drawing.Size(1000, 512);
             this.materialCard1.TabIndex = 3;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(781, 72);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(160, 24);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "Hạng Thành Viên";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(529, 73);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(131, 24);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Điểm Tích Lũy";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(273, 72);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(130, 24);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Số Điện Thoại";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(21, 72);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(98, 24);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Họ và Tên";
+            // 
+            // bigLabel1
+            // 
+            this.bigLabel1.AutoSize = true;
+            this.bigLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.bigLabel1.Font = new System.Drawing.Font("Segoe UI", 25F);
+            this.bigLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.bigLabel1.Location = new System.Drawing.Point(17, 14);
+            this.bigLabel1.Name = "bigLabel1";
+            this.bigLabel1.Size = new System.Drawing.Size(382, 46);
+            this.bigLabel1.TabIndex = 13;
+            this.bigLabel1.Text = "Thông Tin Khách Hàng -";
             // 
             // cboHangThanhVien
             // 
@@ -291,57 +347,47 @@
             this.dgvKhachHang.Size = new System.Drawing.Size(1000, 477);
             this.dgvKhachHang.TabIndex = 4;
             // 
-            // bigLabel1
+            // btnXuatExcel
             // 
-            this.bigLabel1.AutoSize = true;
-            this.bigLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.bigLabel1.Font = new System.Drawing.Font("Segoe UI", 25F);
-            this.bigLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.bigLabel1.Location = new System.Drawing.Point(17, 14);
-            this.bigLabel1.Name = "bigLabel1";
-            this.bigLabel1.Size = new System.Drawing.Size(382, 46);
-            this.bigLabel1.TabIndex = 13;
-            this.bigLabel1.Text = "Thông Tin Khách Hàng -";
+            this.btnXuatExcel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnXuatExcel.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnXuatExcel.Depth = 0;
+            this.btnXuatExcel.HighEmphasis = true;
+            this.btnXuatExcel.Icon = null;
+            this.btnXuatExcel.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnXuatExcel.Location = new System.Drawing.Point(324, 156);
+            this.btnXuatExcel.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnXuatExcel.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnXuatExcel.Name = "btnXuatExcel";
+            this.btnXuatExcel.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnXuatExcel.Size = new System.Drawing.Size(106, 36);
+            this.btnXuatExcel.TabIndex = 35;
+            this.btnXuatExcel.Text = "XUẤT EXCEL";
+            this.btnXuatExcel.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnXuatExcel.UseAccentColor = false;
+            this.btnXuatExcel.UseVisualStyleBackColor = true;
+            this.btnXuatExcel.Click += new System.EventHandler(this.btnXuatExcel_Click);
             // 
-            // label1
+            // btnTimKiem
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(21, 72);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(98, 24);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Họ và Tên";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(273, 72);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(130, 24);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Số Điện Thoại";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(529, 73);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(131, 24);
-            this.label4.TabIndex = 17;
-            this.label4.Text = "Điểm Tích Lũy";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(781, 72);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(160, 24);
-            this.label5.TabIndex = 18;
-            this.label5.Text = "Hạng Thành Viên";
+            this.btnTimKiem.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnTimKiem.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnTimKiem.Depth = 0;
+            this.btnTimKiem.HighEmphasis = true;
+            this.btnTimKiem.Icon = null;
+            this.btnTimKiem.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnTimKiem.Location = new System.Drawing.Point(900, 158);
+            this.btnTimKiem.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnTimKiem.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnTimKiem.Name = "btnTimKiem";
+            this.btnTimKiem.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnTimKiem.Size = new System.Drawing.Size(83, 36);
+            this.btnTimKiem.TabIndex = 36;
+            this.btnTimKiem.Text = "Tìm Kiếm";
+            this.btnTimKiem.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnTimKiem.UseAccentColor = false;
+            this.btnTimKiem.UseVisualStyleBackColor = true;
+            this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
             // 
             // UC_QuanLyKhachHang
             // 
@@ -376,5 +422,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private ReaLTaiizor.Controls.BigLabel bigLabel1;
+        private ReaLTaiizor.Controls.MaterialButton btnXuatExcel;
+        private ReaLTaiizor.Controls.MaterialButton btnTimKiem;
     }
 }
