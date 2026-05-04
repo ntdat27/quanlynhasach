@@ -102,5 +102,46 @@ namespace quanlynhasach.Controllers
                 return new DataTable();
             }
         }
+        public DataTable GetThongTinChungHoaDon(int maHD)
+        {
+            string query = $@"
+                SELECT h.MaHD, h.NgayLap, h.TongTien, h.PhanTramGiam, h.TienGiam, h.ThanhToan,
+                       IFNULL(k.HoTen, N'Khách vãng lai') AS TenKhach,
+                       IFNULL(k.SoDienThoai, '') AS SdtKhach,
+                       IFNULL(nv.HoTen, N'Không xác định') AS TenNhanVien,
+                       IFNULL(tv.TenHang, N'Khách vãng lai') AS TenHang
+                FROM hoadon h
+                LEFT JOIN khachhang k ON h.MaKH = k.MaKH
+                LEFT JOIN hangthanhvien tv ON k.MaHang = tv.MaHang
+                LEFT JOIN nhanvien nv ON h.MaNV = nv.MaNV
+                WHERE h.MaHD = {maHD}";
+            return db.ExecuteQuery(query);
+        }
+
+        // 2. Lấy thông tin Detail (Danh sách các cuốn sách)
+        public DataTable GetDanhSachSachTrongHoaDon(int maHD)
+        {
+            string query = $@"
+                SELECT s.TenSach AS 'Tên Sách', c.SoLuongBan AS 'SL',
+                       c.GiaBan AS 'Đơn Giá', c.ThanhTien AS 'Thành Tiền'
+                FROM chitiethoadon c
+                JOIN sach s ON c.MaSach = s.MaSach
+                WHERE c.MaHD = {maHD}";
+            return db.ExecuteQuery(query);
+        }
+        public DataTable GetSachSapHetHang(int mucBaoDong = 5)
+        {
+            try
+            {
+                string query = $"SELECT MaSach AS 'Mã', TenSach AS 'Tên Sách', SoLuongTon AS 'Tồn Kho' " +
+                               $"FROM sach WHERE SoLuongTon <= {mucBaoDong} " +
+                               $"ORDER BY SoLuongTon ASC";
+                return db.ExecuteQuery(query);
+            }
+            catch
+            {
+                return new DataTable();
+            }
+        }
     }
 }

@@ -107,6 +107,12 @@
     <Compile Include="Controllers\SachController.cs" />
     <Compile Include="Controllers\ThongKeController.cs" />
     <Compile Include="Data\DatabaseHelper.cs" />
+    <Compile Include="frmChiTietHoaDon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmChiTietHoaDon.Designer.cs">
+      <DependentUpon>frmChiTietHoaDon.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,6 +145,12 @@
     <Compile Include="UC_POS.Designer.cs">
       <DependentUpon>UC_POS.cs</DependentUpon>
     </Compile>
+    <Compile Include="UC_QuanLyHoaDon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_QuanLyHoaDon.Designer.cs">
+      <DependentUpon>UC_QuanLyHoaDon.cs</DependentUpon>
+    </Compile>
     <Compile Include="UC_QuanLyKhachHang.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -157,6 +169,9 @@
     <Compile Include="UC_QuanLySach.Designer.cs">
       <DependentUpon>UC_QuanLySach.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="frmChiTietHoaDon.resx">
+      <DependentUpon>frmChiTietHoaDon.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,6 +193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UC_POS.resx">
       <DependentUpon>UC_POS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_QuanLyHoaDon.resx">
+      <DependentUpon>UC_QuanLyHoaDon.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_QuanLyKhachHang.resx">
       <DependentUpon>UC_QuanLyKhachHang.cs</DependentUpon>

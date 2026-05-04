@@ -14,6 +14,7 @@ namespace quanlynhasach
         {
             InitializeComponent();
             FormatDataGridView(dgvTopSach);
+            FormatDataGridView(dgvSapHetHang);
             LoadThongKe();
         }
         private void FormatDataGridView(DataGridView dgv)
@@ -49,6 +50,16 @@ namespace quanlynhasach
             // 3. Đổ dữ liệu vào bảng Top 5 Sách bán chạy
             DataTable dtTopSach = thongKeController.GetTop5SachBanChay();
             dgvTopSach.DataSource = dtTopSach;
+            DataTable dtHetHang = thongKeController.GetSachSapHetHang();
+            dgvSapHetHang.DataSource = dtHetHang;
+            if (dgvSapHetHang.Columns.Count > 0)
+            {
+                dgvSapHetHang.Columns["Tên Sách"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dgvSapHetHang.Columns["Mã"].Width = 50;
+                dgvSapHetHang.Columns["Tồn Kho"].Width = 80;
+                dgvSapHetHang.Columns["Tồn Kho"].DefaultCellStyle.ForeColor = System.Drawing.Color.Red; // Tô đỏ cột số lượng
+                dgvSapHetHang.Columns["Tồn Kho"].DefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            }
 
             // Làm đẹp cho bảng (Nếu có dữ liệu)
             if (dgvTopSach.Columns.Count > 0)

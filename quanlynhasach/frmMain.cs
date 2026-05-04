@@ -97,5 +97,10 @@ namespace quanlynhasach
         {
             AddUserControl(new UC_QuanLyKhachHang());
         }
+
+        private void btnQuanLyHoaDon_Click(object sender, EventArgs e)
+        {
+            AddUserControl(new UC_QuanLyHoaDon());
+        }
     }
 }

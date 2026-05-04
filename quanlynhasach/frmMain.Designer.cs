@@ -35,6 +35,7 @@
             this.btnMenuNhanVien = new ReaLTaiizor.Controls.MaterialButton();
             this.btnQuanLySach = new ReaLTaiizor.Controls.MaterialButton();
             this.btnMenuPOS = new ReaLTaiizor.Controls.MaterialButton();
+            this.btnQuanLyHoaDon = new ReaLTaiizor.Controls.MaterialButton();
             this.pnlSidebar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,6 +50,7 @@
             // pnlSidebar
             // 
             this.pnlSidebar.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.pnlSidebar.Controls.Add(this.btnQuanLyHoaDon);
             this.pnlSidebar.Controls.Add(this.btnMenuHome);
             this.pnlSidebar.Controls.Add(this.btnMenuKhachHang);
             this.pnlSidebar.Controls.Add(this.btnMenuNhanVien);
@@ -165,6 +167,27 @@
             this.btnMenuPOS.UseVisualStyleBackColor = true;
             this.btnMenuPOS.Click += new System.EventHandler(this.btnMenuPOS_Click);
             // 
+            // btnQuanLyHoaDon
+            // 
+            this.btnQuanLyHoaDon.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnQuanLyHoaDon.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnQuanLyHoaDon.Depth = 0;
+            this.btnQuanLyHoaDon.HighEmphasis = true;
+            this.btnQuanLyHoaDon.Icon = null;
+            this.btnQuanLyHoaDon.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnQuanLyHoaDon.Location = new System.Drawing.Point(16, 198);
+            this.btnQuanLyHoaDon.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnQuanLyHoaDon.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnQuanLyHoaDon.Name = "btnQuanLyHoaDon";
+            this.btnQuanLyHoaDon.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnQuanLyHoaDon.Size = new System.Drawing.Size(180, 36);
+            this.btnQuanLyHoaDon.TabIndex = 5;
+            this.btnQuanLyHoaDon.Text = "QUẢN LÝ HÓA ĐƠN";
+            this.btnQuanLyHoaDon.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnQuanLyHoaDon.UseAccentColor = false;
+            this.btnQuanLyHoaDon.UseVisualStyleBackColor = true;
+            this.btnQuanLyHoaDon.Click += new System.EventHandler(this.btnQuanLyHoaDon_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -189,6 +212,7 @@
         private ReaLTaiizor.Controls.MaterialButton btnMenuNhanVien;
         private ReaLTaiizor.Controls.MaterialButton btnMenuKhachHang;
         private ReaLTaiizor.Controls.MaterialButton btnMenuHome;
+        private ReaLTaiizor.Controls.MaterialButton btnQuanLyHoaDon;
     }
 }
 
