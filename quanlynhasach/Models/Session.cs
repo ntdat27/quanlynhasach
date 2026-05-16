@@ -16,6 +16,5 @@ namespace quanlynhasach.Models
             HoTen = "";
             ChucVu = "";
         }
-        public static NhanVien CurrentUser { get; set; } = null;
     }
 }

@@ -1,10 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace quanlynhasach.Data
 {
@@ -12,7 +8,7 @@ namespace quanlynhasach.Data
     {
         private readonly string connectionString = "Server=localhost;Database=quanlynhasach;Uid=root;Pwd=;";
 
-        public DataTable ExecuteQuery(string query)
+        public DataTable ExecuteQuery(string query, MySqlParameter[] parameters = null)
         {
             DataTable dt = new DataTable();
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -20,6 +16,10 @@ namespace quanlynhasach.Data
                 conn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
+                    if (parameters != null)
+                    {
+                        cmd.Parameters.AddRange(parameters);
+                    }
                     using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
                     {
                         adapter.Fill(dt);
@@ -29,7 +29,7 @@ namespace quanlynhasach.Data
             return dt;
         }
 
-        public int ExecuteNonQuery(string query)
+        public int ExecuteNonQuery(string query, MySqlParameter[] parameters = null)
         {
             int result = 0;
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -37,12 +37,17 @@ namespace quanlynhasach.Data
                 conn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
+                    if (parameters != null)
+                    {
+                        cmd.Parameters.AddRange(parameters);
+                    }
                     result = cmd.ExecuteNonQuery();
                 }
             }
             return result;
         }
-        public int ExecuteScalar(string query)
+
+        public int ExecuteScalar(string query, MySqlParameter[] parameters = null)
         {
             int result = 0;
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -50,6 +55,10 @@ namespace quanlynhasach.Data
                 conn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
+                    if (parameters != null)
+                    {
+                        cmd.Parameters.AddRange(parameters);
+                    }
                     object obj = cmd.ExecuteScalar();
                     if (obj != null && obj != DBNull.Value)
                     {

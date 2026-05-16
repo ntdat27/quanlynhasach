@@ -23,12 +23,13 @@ namespace quanlynhasach
             dgvDanhSachSach.CellClick += dgvDanhSachSach_CellClick;
             KiemTraPhanQuyen();
         }
+
         private void KiemTraPhanQuyen()
         {
-            // Ép đích danh đến đúng thư mục Models
-            if (quanlynhasach.Models.Session.CurrentUser != null)
+            // Gọi trực tiếp biến tĩnh Session.MaNV và Session.ChucVu
+            if (quanlynhasach.Models.Session.MaNV > 0)
             {
-                string role = quanlynhasach.Models.Session.CurrentUser.ChucVu;
+                string role = quanlynhasach.Models.Session.ChucVu;
                 bool laQuanLy = (role == "Admin" || role == "Quản lý kho");
 
                 btnThem.Enabled = laQuanLy;
@@ -155,7 +156,6 @@ namespace quanlynhasach
             Sach s = new Sach
             {
                 TenSach = txtTenSach.Text.Trim(),
-                // Đọc trực tiếp từ TextBox thay vì ComboBox
                 MaTL = GetOrInsertValue("theloai", "TenTL", "MaTL", txtTheLoai.Text),
                 MaTG = GetOrInsertValue("tacgia", "TenTG", "MaTG", txtTacGia.Text),
                 MaNXB = GetOrInsertValue("nhaxuatban", "TenNXB", "MaNXB", txtNXB.Text),
@@ -255,7 +255,6 @@ namespace quanlynhasach
                 lblMaSach.Text = row.Cells["MaSach"].Value.ToString();
                 txtTenSach.Text = row.Cells["TenSach"].Value?.ToString();
 
-                // Đổ ID ngầm và tra DB lấy tên chữ lên các TextBox
                 txtTheLoai.Text = GetNameFromDB("theloai", "TenTL", "MaTL", Convert.ToInt32(row.Cells["MaTL"].Value ?? 0));
                 txtTacGia.Text = GetNameFromDB("tacgia", "TenTG", "MaTG", Convert.ToInt32(row.Cells["MaTG"].Value ?? 0));
                 txtNXB.Text = GetNameFromDB("nhaxuatban", "TenNXB", "MaNXB", Convert.ToInt32(row.Cells["MaNXB"].Value ?? 0));
@@ -318,30 +317,27 @@ namespace quanlynhasach
 
         private void btnNhapHang_Click(object sender, EventArgs e)
         {
-            // 1. Kiểm tra cực kỳ an toàn xem ID sách đang chọn có phải là một con số hợp lệ không
             if (!int.TryParse(lblMaSach.Text, out int maSach))
             {
                 MessageBox.Show("Vui lòng click chọn một cuốn sách từ danh sách bên dưới trước khi nhập hàng!");
                 return;
             }
 
-            // 2. Hiển thị hộp thoại nhập số lượng
             string input = Microsoft.VisualBasic.Interaction.InputBox("Nhập số lượng sách cộng thêm vào kho:", "Nhập hàng", "0");
 
-            // 3. Kiểm tra xem người dùng có nhập đúng số không (chống nhập chữ vào hộp thoại)
             if (int.TryParse(input, out int soLuongThem) && soLuongThem > 0)
             {
                 if (sachController.NhapHang(maSach, soLuongThem))
                 {
                     MessageBox.Show($"Đã nhập thêm {soLuongThem} cuốn vào kho thành công!");
-                    LoadData(); // Load lại bảng để thấy số lượng tồn kho tăng lên
+                    LoadData();
                 }
                 else
                 {
                     MessageBox.Show("Lỗi khi kết nối CSDL để nhập hàng!");
                 }
             }
-            else if (!string.IsNullOrEmpty(input)) // Chỉ báo lỗi nếu người dùng có gõ chữ bậy bạ (bỏ qua nếu bấm Cancel)
+            else if (!string.IsNullOrEmpty(input))
             {
                 MessageBox.Show("Số lượng nhập vào phải là một con số hợp lệ lớn hơn 0!");
             }

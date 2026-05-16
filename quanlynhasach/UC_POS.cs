@@ -86,7 +86,7 @@ namespace quanlynhasach
 
             dgvGioHang.Columns.Add("TenSach", "Tên sách");
             dgvGioHang.Columns["TenSach"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvGioHang.Columns["TenSach"].ReadOnly = true; 
+            dgvGioHang.Columns["TenSach"].ReadOnly = true;
 
             DataGridViewButtonColumn btnTru = new DataGridViewButtonColumn();
             btnTru.Name = "colTru";
@@ -136,7 +136,6 @@ namespace quanlynhasach
             }
         }
 
-        
         private void txtSoDienThoai_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter) KiemTraKhachHang();
@@ -156,7 +155,7 @@ namespace quanlynhasach
                 phanTramGiamHienTai = 0;
                 maKhachHangHienTai = null;
                 lblTenKhachDisplay.Text = "Khách hàng: Khách vãng lai";
-                lblHangThanhVien.Text = "Hạng: N/A"; 
+                lblHangThanhVien.Text = "Hạng: N/A";
                 lblHangThanhVien.ForeColor = Color.Gray;
             }
             else
@@ -170,8 +169,8 @@ namespace quanlynhasach
 
                     lblTenKhachDisplay.Text = "Khách hàng: " + kh.HoTen;
 
-                    lblHangThanhVien.Text = "Hạng: " + kh.TenHang; 
-                    lblHangThanhVien.ForeColor = Color.FromArgb(48, 63, 159); 
+                    lblHangThanhVien.Text = "Hạng: " + kh.TenHang;
+                    lblHangThanhVien.ForeColor = Color.FromArgb(48, 63, 159);
                 }
                 else
                 {
@@ -319,7 +318,7 @@ namespace quanlynhasach
                 if (soLuongMoi > tonKho)
                 {
                     MessageBox.Show($"Chỉ còn {tonKho} quyển trong kho! Đã tự động điều chỉnh về số lượng tối đa.", "Vượt quá Tồn Kho", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    row.Cells["SoLuong"].Value = tonKho; 
+                    row.Cells["SoLuong"].Value = tonKho;
                     row.Cells["ThanhTien"].Value = tonKho * donGia;
                 }
                 else
@@ -383,7 +382,7 @@ namespace quanlynhasach
                         document.Add(new Paragraph("HÓA ĐƠN")
                             .SetTextAlignment(TextAlignment.CENTER)
                             .SetFontSize(20)
-                            .SetFont(fontBold)); 
+                            .SetFont(fontBold));
 
                         document.Add(new Paragraph("Nhà Sách Thư Quán").SetTextAlignment(TextAlignment.CENTER));
                         document.Add(new Paragraph("--------------------------------------------------").SetTextAlignment(TextAlignment.CENTER));
@@ -457,7 +456,9 @@ namespace quanlynhasach
 
             int tienGiam = (tongTienHang * phanTramGiamHienTai) / 100;
             int khachCanTra = tongTienHang - tienGiam;
-            int maNhanVien = 1;
+
+            // Đã sửa lại lỗi bất đồng bộ khi gọi Session
+            int maNhanVien = quanlynhasach.Models.Session.MaNV > 0 ? quanlynhasach.Models.Session.MaNV : 1;
 
             HoaDonController hdController = new HoaDonController();
             bool result = hdController.ThanhToan(maKhachHangHienTai, maNhanVien, tongTienHang, phanTramGiamHienTai, tienGiam, khachCanTra, listChiTiet);
@@ -486,7 +487,7 @@ namespace quanlynhasach
                 lblTongCong.Text = "0 VNĐ";
                 lblTongCong.ForeColor = Color.Black;
 
-                LoadDanhSachSach(); 
+                LoadDanhSachSach();
             }
             else
             {

@@ -1,7 +1,7 @@
-﻿// [Thay thế toàn bộ nội dung file Controllers/SachController.cs]
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using MySql.Data.MySqlClient;
 using quanlynhasach.Data;
 using quanlynhasach.Models;
 
@@ -26,15 +26,19 @@ namespace quanlynhasach.Controllers
         public List<Sach> SearchSach(string keyword)
         {
             List<Sach> listSach = new List<Sach>();
-            string query = $@"
+            string query = @"
                 SELECT s.* FROM Sach s
                 LEFT JOIN theloai tl ON s.MaTL = tl.MaTL
                 LEFT JOIN tacgia tg ON s.MaTG = tg.MaTG
-                WHERE s.TenSach LIKE '%{keyword}%' 
-                   OR tl.TenTL LIKE '%{keyword}%' 
-                   OR tg.TenTG LIKE '%{keyword}%'";
+                WHERE s.TenSach LIKE @keyword 
+                   OR tl.TenTL LIKE @keyword 
+                   OR tg.TenTG LIKE @keyword";
 
-            DataTable dt = db.ExecuteQuery(query);
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@keyword", "%" + keyword + "%")
+            };
+
+            DataTable dt = db.ExecuteQuery(query, parameters);
             foreach (DataRow row in dt.Rows)
             {
                 listSach.Add(MapRowToSach(row));
@@ -58,34 +62,63 @@ namespace quanlynhasach.Controllers
             };
         }
 
-        // CHỨC NĂNG QUAN TRỌNG: NHẬP HÀNG (Cộng dồn số lượng)
         public bool NhapHang(int maSach, int soLuongThem)
         {
             try
             {
-                string query = $"UPDATE Sach SET SoLuongTon = SoLuongTon + {soLuongThem} WHERE MaSach = {maSach}";
-                return db.ExecuteNonQuery(query) > 0;
+                string query = "UPDATE Sach SET SoLuongTon = SoLuongTon + @soLuongThem WHERE MaSach = @maSach";
+                MySqlParameter[] parameters = {
+                    new MySqlParameter("@soLuongThem", soLuongThem),
+                    new MySqlParameter("@maSach", maSach)
+                };
+                return db.ExecuteNonQuery(query, parameters) > 0;
             }
             catch { return false; }
         }
 
         public bool AddSach(Sach s)
         {
-            string safeTen = s.TenSach.Replace("'", "''");
-            string query = $"INSERT INTO Sach (TenSach, MaTL, MaTG, MaNXB, NamXB, GiaNhap, SoLuongTon, GiaBan) " +
-                           $"VALUES (N'{safeTen}', {s.MaTL}, {s.MaTG}, {s.MaNXB}, {s.NamXB}, {s.GiaNhap}, {s.SoLuongTon}, {s.GiaBan})";
-            return db.ExecuteNonQuery(query) > 0;
+            string query = "INSERT INTO Sach (TenSach, MaTL, MaTG, MaNXB, NamXB, GiaNhap, SoLuongTon, GiaBan) " +
+                           "VALUES (@tenSach, @maTL, @maTG, @maNXB, @namXB, @giaNhap, @soLuongTon, @giaBan)";
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@tenSach", s.TenSach),
+                new MySqlParameter("@maTL", s.MaTL),
+                new MySqlParameter("@maTG", s.MaTG),
+                new MySqlParameter("@maNXB", s.MaNXB),
+                new MySqlParameter("@namXB", s.NamXB),
+                new MySqlParameter("@giaNhap", s.GiaNhap),
+                new MySqlParameter("@soLuongTon", s.SoLuongTon),
+                new MySqlParameter("@giaBan", s.GiaBan)
+            };
+            return db.ExecuteNonQuery(query, parameters) > 0;
         }
 
         public bool UpdateSach(Sach s)
         {
-            string safeTen = s.TenSach.Replace("'", "''");
-            string query = $"UPDATE Sach SET TenSach = N'{safeTen}', MaTL = {s.MaTL}, MaTG = {s.MaTG}, " +
-                           $"MaNXB = {s.MaNXB}, NamXB = {s.NamXB}, GiaNhap = {s.GiaNhap}, " +
-                           $"SoLuongTon = {s.SoLuongTon}, GiaBan = {s.GiaBan} WHERE MaSach = {s.MaSach}";
-            return db.ExecuteNonQuery(query) > 0;
+            string query = "UPDATE Sach SET TenSach = @tenSach, MaTL = @maTL, MaTG = @maTG, " +
+                           "MaNXB = @maNXB, NamXB = @namXB, GiaNhap = @giaNhap, " +
+                           "SoLuongTon = @soLuongTon, GiaBan = @giaBan WHERE MaSach = @maSach";
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@tenSach", s.TenSach),
+                new MySqlParameter("@maTL", s.MaTL),
+                new MySqlParameter("@maTG", s.MaTG),
+                new MySqlParameter("@maNXB", s.MaNXB),
+                new MySqlParameter("@namXB", s.NamXB),
+                new MySqlParameter("@giaNhap", s.GiaNhap),
+                new MySqlParameter("@soLuongTon", s.SoLuongTon),
+                new MySqlParameter("@giaBan", s.GiaBan),
+                new MySqlParameter("@maSach", s.MaSach)
+            };
+            return db.ExecuteNonQuery(query, parameters) > 0;
         }
 
-        public bool DeleteSach(int maSach) => db.ExecuteNonQuery($"DELETE FROM Sach WHERE MaSach = {maSach}") > 0;
+        public bool DeleteSach(int maSach)
+        {
+            string query = "DELETE FROM Sach WHERE MaSach = @maSach";
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@maSach", maSach)
+            };
+            return db.ExecuteNonQuery(query, parameters) > 0;
+        }
     }
 }
