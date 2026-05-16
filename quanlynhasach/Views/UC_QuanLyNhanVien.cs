@@ -1,10 +1,13 @@
 ﻿using ClosedXML.Excel;
+using MySql.Data.MySqlClient;
 using quanlynhasach.Controllers;
 using quanlynhasach.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace quanlynhasach
@@ -20,14 +23,12 @@ namespace quanlynhasach
             cboChucVu.Items.Clear();
             cboChucVu.Items.Add("Admin");
             cboChucVu.Items.Add("Nhân viên");
-            cboChucVu.SelectedIndex = 0; 
-
+            cboChucVu.SelectedIndex = 0;
 
             FormatDataGridView(dgvNhanVien);
             SetupColumns();
             LoadData();
 
-         
             dgvNhanVien.CellClick += dgvNhanVien_CellClick;
         }
 
@@ -65,9 +66,9 @@ namespace quanlynhasach
             dgvNhanVien.Columns.Add("TaiKhoan", "Tài khoản");
             dgvNhanVien.Columns["TaiKhoan"].Width = 150;
 
-            // Cột mật khẩu thực tế không nên hiển thị, nhưng nếu hiển thị thì thay bằng dấu sao ***
+            // Cột mật khẩu ẩn đi hoàn toàn khỏi tầm mắt nhưng vẫn giữ giá trị hash ngầm để lôi lại khi Sửa
             dgvNhanVien.Columns.Add("MatKhau", "Mật khẩu");
-            dgvNhanVien.Columns["MatKhau"].Visible = false; // Ẩn luôn cho bảo mật
+            dgvNhanVien.Columns["MatKhau"].Visible = false;
 
             dgvNhanVien.Columns.Add("ChucVu", "Chức vụ");
             dgvNhanVien.Columns["ChucVu"].Width = 120;
@@ -81,7 +82,6 @@ namespace quanlynhasach
                 List<NhanVien> ds = nvController.GetAllNhanVien();
                 foreach (var nv in ds)
                 {
-                    // Truyền đủ các cột tương ứng
                     dgvNhanVien.Rows.Add(nv.MaNV, nv.HoTen, nv.SoDienThoai, nv.TaiKhoan, nv.MatKhau, nv.ChucVu);
                 }
             }
@@ -89,6 +89,15 @@ namespace quanlynhasach
             {
                 MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
             }
+        }
+
+        // Hàm hỗ trợ lọc rác khoảng trắng và viết hoa chữ đầu từng từ cho Họ Tên
+        private string ChuanHoaHoTen(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return "";
+            text = Regex.Replace(text.Trim(), @"\s+", " ");
+            TextInfo textInfo = new CultureInfo("vi-VN", false).TextInfo;
+            return textInfo.ToTitleCase(text.ToLower());
         }
         #endregion
 
@@ -106,31 +115,47 @@ namespace quanlynhasach
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            string hoTen = txtHoTen.Text.Trim();
+            string hoTen = ChuanHoaHoTen(txtHoTen.Text);
             string sdt = txtSDT.Text.Trim();
             string taiKhoan = txtTaiKhoan.Text.Trim();
             string matKhau = txtMatKhau.Text.Trim();
             string chucVu = cboChucVu.Text;
 
-            // 1. Check rỗng
+            // 1. Kiểm tra rỗng trường bắt buộc
             if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(taiKhoan) || string.IsNullOrEmpty(matKhau))
             {
-                MessageBox.Show("Vui lòng điền đủ thông tin!", "Cảnh báo"); return;
+                MessageBox.Show("Vui lòng điền đủ thông tin họ tên, tài khoản và mật khẩu!", "Cảnh báo");
+                return;
             }
 
-            // 2. CHECK TRÙNG SĐT HOẶC TÀI KHOẢN TRƯỚC KHI LƯU
+            // 2. Chặn tài khoản chứa khoảng trắng rác ở giữa
+            if (taiKhoan.Contains(" "))
+            {
+                MessageBox.Show("Tài khoản đăng nhập không được chứa khoảng trắng!", "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // 3. Ép định dạng SĐT chuẩn di động Việt Nam (10 số, bắt đầu bằng số 0)
+            if (!Regex.IsMatch(sdt, @"^0\d{9}$"))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ! Phải bao gồm đúng 10 chữ số và bắt đầu bằng số 0.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // 4. CHECK TRÙNG SĐT HOẶC TÀI KHOẢN TRƯỚC KHI LƯU
             if (nvController.KiemTraTrung(taiKhoan, sdt))
             {
                 MessageBox.Show("Tài khoản hoặc Số điện thoại này đã được sử dụng cho một nhân viên khác! Vui lòng chọn cái khác.", "Lỗi trùng lặp", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return; // Dừng lại luôn, không chạy xuống lệnh Add nữa
+                return;
             }
 
-            // 3. Nếu qua ải thì lưu vào DB
+            // 5. Thêm mới và Ghi Log hệ thống
             NhanVien nv = new NhanVien { HoTen = hoTen, SoDienThoai = sdt, TaiKhoan = taiKhoan, MatKhau = matKhau, ChucVu = chucVu };
             if (nvController.AddNhanVien(nv))
             {
-                MessageBox.Show("Thêm thành công!");
-                LoadData(); // Load lại bảng
+                LichSuController.GhiLog(Session.MaNV, $"Thêm mới nhân viên: {hoTen} ({taiKhoan})");
+                MessageBox.Show("Thêm nhân viên mới thành công!");
+                btnLamMoi_Click(null, null);
             }
         }
 
@@ -138,44 +163,59 @@ namespace quanlynhasach
         {
             if (string.IsNullOrEmpty(lblMaNV.Text)) return;
 
-            int maNVHienTai = int.Parse(lblMaNV.Text); // Mã của nhân viên đang chọn trên bảng
+            int maNVHienTai = int.Parse(lblMaNV.Text);
 
-            // Lấy toàn bộ dữ liệu từ các ô nhập liệu
-            string hoTen = txtHoTen.Text.Trim();
+            string hoTen = ChuanHoaHoTen(txtHoTen.Text);
             string sdt = txtSDT.Text.Trim();
             string taiKhoan = txtTaiKhoan.Text.Trim();
-            string matKhau = txtMatKhau.Text.Trim();
+            string matKhauMoi = txtMatKhau.Text.Trim();
             string chucVu = cboChucVu.Text;
 
-            // 1. Check rỗng
-            if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(taiKhoan) || string.IsNullOrEmpty(matKhau))
+            if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(taiKhoan))
             {
-                MessageBox.Show("Vui lòng điền đủ thông tin!", "Cảnh báo"); return;
+                MessageBox.Show("Vui lòng điền đủ thông tin Họ tên và Tài khoản!", "Cảnh báo");
+                return;
             }
 
-            // 2. Check trùng (loại trừ chính nhân viên này ra)
+            if (taiKhoan.Contains(" "))
+            {
+                MessageBox.Show("Tài khoản đăng nhập không được chứa khoảng trắng!", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!Regex.IsMatch(sdt, @"^0\d{9}$"))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ! Phải bao gồm đúng 10 số và bắt đầu bằng số 0.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (nvController.KiemTraTrung(taiKhoan, sdt, maNVHienTai))
             {
                 MessageBox.Show("Tài khoản hoặc Số điện thoại này đã bị trùng với một người khác!", "Lỗi trùng lặp", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // 3. ĐOẠN BỊ THIẾU CỦA BẠN ĐÂY: Lưu xuống DB
+            // GIẢI QUYẾT BẢO MẬT: Nếu ô mật khẩu trống, lấy lại chuỗi hash cũ lưu ngầm trong hàng đang chọn
+            if (string.IsNullOrEmpty(matKhauMoi))
+            {
+                matKhauMoi = dgvNhanVien.CurrentRow.Cells["MatKhau"].Value.ToString();
+            }
+
             NhanVien nv = new NhanVien
             {
                 MaNV = maNVHienTai,
                 HoTen = hoTen,
                 SoDienThoai = sdt,
                 TaiKhoan = taiKhoan,
-                MatKhau = matKhau,
+                MatKhau = matKhauMoi,
                 ChucVu = chucVu
             };
 
             if (nvController.UpdateNhanVien(nv))
             {
+                LichSuController.GhiLog(Session.MaNV, $"Cập nhật thông tin nhân viên có ID: {maNVHienTai}");
                 MessageBox.Show("Cập nhật thông tin thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadData(); // Load lại bảng để thấy chữ thay đổi
-                btnLamMoi_Click(null, null); // Xóa trắng các ô TextBox sau khi sửa xong
+                btnLamMoi_Click(null, null);
             }
             else
             {
@@ -186,19 +226,28 @@ namespace quanlynhasach
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(lblMaNV.Text)) return;
+            int maNVCanXoa = int.Parse(lblMaNV.Text);
 
-            DialogResult dr = MessageBox.Show("Bạn có chắc muốn xóa nhân viên này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            // Không cho phép tự xóa tài khoản của chính mình khi đang thao tác
+            if (maNVCanXoa == Session.MaNV)
+            {
+                MessageBox.Show("Bạn không thể tự xóa tài khoản của chính mình khi đang đăng nhập hệ thống!", "Cảnh báo bảo vệ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DialogResult dr = MessageBox.Show("Bạn có chắc muốn xóa nhân viên này khỏi hệ thống?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dr == DialogResult.Yes)
             {
-                if (nvController.DeleteNhanVien(int.Parse(lblMaNV.Text)))
+                if (nvController.DeleteNhanVien(maNVCanXoa))
                 {
-                    MessageBox.Show("Đã xóa nhân viên!");
+                    LichSuController.GhiLog(Session.MaNV, $"Xóa nhân viên có ID: {maNVCanXoa}");
+                    MessageBox.Show("Đã xóa nhân viên thành công!");
                     btnLamMoi_Click(null, null);
                 }
             }
         }
 
-        // Khi click vào dòng trong bảng
+        // Khi click vào dòng trong bảng dgvNhanVien
         private void dgvNhanVien_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -208,12 +257,14 @@ namespace quanlynhasach
                 txtHoTen.Text = row.Cells["HoTen"].Value.ToString();
                 txtSDT.Text = row.Cells["SoDienThoai"].Value.ToString();
                 txtTaiKhoan.Text = row.Cells["TaiKhoan"].Value.ToString();
-                txtMatKhau.Text = row.Cells["MatKhau"].Value.ToString(); // Kéo mật khẩu lên lại ô textbox để sửa
                 cboChucVu.SelectedItem = row.Cells["ChucVu"].Value.ToString();
+
+                // GIẢI PHÁP CHÍ MẠNG: Bỏ trống hoàn toàn ô mật khẩu, không kéo chuỗi hash 64 ký tự lên TextBox nữa
+                txtMatKhau.Text = "";
             }
         }
-
         #endregion
+
         private DataTable ConvertDgvToDataTable(DataGridView dgv)
         {
             DataTable dt = new DataTable();
@@ -228,7 +279,7 @@ namespace quanlynhasach
 
             foreach (DataGridViewRow row in dgv.Rows)
             {
-                if (!row.IsNewRow) 
+                if (!row.IsNewRow)
                 {
                     DataRow dr = dt.NewRow();
                     int colIndex = 0;
@@ -245,6 +296,7 @@ namespace quanlynhasach
             }
             return dt;
         }
+
         private void btnXuatExcel_Click(object sender, EventArgs e)
         {
             if (dgvNhanVien.Rows.Count == 0) return;
@@ -268,7 +320,7 @@ namespace quanlynhasach
                         worksheet.Cell("A1").Style.Font.Bold = true;
                         worksheet.Cell("A1").Style.Font.FontSize = 16;
                         worksheet.Cell("A1").Style.Font.FontColor = XLColor.White;
-                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.DarkGreen; 
+                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.DarkGreen;
                         worksheet.Cell("A1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
                         var table = worksheet.Cell(3, 1).InsertTable(dtExport);
@@ -286,7 +338,7 @@ namespace quanlynhasach
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             string tuKhoaTen = txtHoTen.Text.Trim();
-            string tuKhoaSdt = txtSDT.Text.Trim(); 
+            string tuKhoaSdt = txtSDT.Text.Trim();
 
             DataTable dtKetQua = nvController.SearchNhanVien(tuKhoaTen, tuKhoaSdt);
 
