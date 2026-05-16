@@ -494,5 +494,28 @@ namespace quanlynhasach
                 MessageBox.Show("Có lỗi xảy ra khi lưu hóa đơn xuống Database!", "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void btnThemKhachHang_Click(object sender, EventArgs e)
+        {
+            Form frmPopup = new Form();
+            frmPopup.Text = "Quản lý Khách Hàng";
+            frmPopup.Size = new Size(1100, 650); // Chiều rộng và cao tùy bạn chỉnh
+            frmPopup.StartPosition = FormStartPosition.CenterParent;
+            frmPopup.FormBorderStyle = FormBorderStyle.FixedDialog;
+            frmPopup.MaximizeBox = false;
+            frmPopup.MinimizeBox = false;
+
+            // Khởi tạo UC_QuanLyKhachHang và cho lấp đầy Form ảo
+            UC_QuanLyKhachHang ucKH = new UC_QuanLyKhachHang();
+            ucKH.Dock = DockStyle.Fill;
+            frmPopup.Controls.Add(ucKH);
+
+            // ShowDialog buộc người dùng phải tắt form này đi thì mới bấm được bên ngoài
+            frmPopup.ShowDialog();
+
+            // QUAN TRỌNG: Sau khi form tắt (đã thêm khách xong), 
+            // tự động chạy lại hàm kiểm tra để load thông tin khách hàng mới vào POS ngay lập tức
+            KiemTraKhachHang();
+        }
     }
 }

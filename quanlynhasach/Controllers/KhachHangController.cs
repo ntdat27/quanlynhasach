@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using MySql.Data.MySqlClient;
 using quanlynhasach.Data;
 using quanlynhasach.Models;
 
@@ -12,13 +13,14 @@ namespace quanlynhasach.Controllers
 
         public KhachHang GetKhachHangBySdt(string sdt)
         {
-            string query = $@"SELECT kh.MaKH, kh.HoTen, kh.SoDienThoai, kh.DiemTichLuy, kh.MaHang, 
+            string query = @"SELECT kh.MaKH, kh.HoTen, kh.SoDienThoai, kh.DiemTichLuy, kh.MaHang, 
                                      tv.TenHang, tv.PhanTramGiam 
                               FROM KhachHang kh 
                               LEFT JOIN HangThanhVien tv ON kh.MaHang = tv.MaHang 
-                              WHERE kh.SoDienThoai = '{sdt}'";
+                              WHERE kh.SoDienThoai = @sdt";
 
-            DataTable dt = db.ExecuteQuery(query);
+            MySqlParameter[] parameters = { new MySqlParameter("@sdt", sdt) };
+            DataTable dt = db.ExecuteQuery(query, parameters);
 
             if (dt.Rows.Count > 0)
             {
@@ -62,46 +64,68 @@ namespace quanlynhasach.Controllers
             }
             return list;
         }
+
         public bool KiemTraTrungSdt(string sdt, int maKHIgnore = 0)
         {
-            string query = $"SELECT MaKH FROM KhachHang WHERE SoDienThoai = '{sdt}' AND MaKH != {maKHIgnore}";
-            DataTable dt = db.ExecuteQuery(query);
+            string query = "SELECT MaKH FROM KhachHang WHERE SoDienThoai = @sdt AND MaKH != @maKHIgnore";
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@sdt", sdt),
+                new MySqlParameter("@maKHIgnore", maKHIgnore)
+            };
+            DataTable dt = db.ExecuteQuery(query, parameters);
             return dt.Rows.Count > 0;
         }
 
         public bool AddKhachHang(KhachHang kh)
         {
-            string query = $"INSERT INTO KhachHang (HoTen, SoDienThoai, DiemTichLuy, MaHang) " +
-                           $"VALUES (N'{kh.HoTen}', '{kh.SoDienThoai}', {kh.DiemTichLuy}, {kh.MaHang})";
-            return db.ExecuteNonQuery(query) > 0;
+            string query = "INSERT INTO KhachHang (HoTen, SoDienThoai, DiemTichLuy, MaHang) VALUES (@hoTen, @soDienThoai, @diem, @maHang)";
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@hoTen", kh.HoTen),
+                new MySqlParameter("@soDienThoai", kh.SoDienThoai),
+                new MySqlParameter("@diem", kh.DiemTichLuy),
+                new MySqlParameter("@maHang", kh.MaHang)
+            };
+            return db.ExecuteNonQuery(query, parameters) > 0;
         }
 
         public bool UpdateKhachHang(KhachHang kh)
         {
-            string query = $"UPDATE KhachHang SET HoTen=N'{kh.HoTen}', SoDienThoai='{kh.SoDienThoai}', " +
-                           $"DiemTichLuy={kh.DiemTichLuy}, MaHang={kh.MaHang} WHERE MaKH={kh.MaKH}";
-            return db.ExecuteNonQuery(query) > 0;
+            string query = "UPDATE KhachHang SET HoTen=@hoTen, SoDienThoai=@soDienThoai, DiemTichLuy=@diem, MaHang=@maHang WHERE MaKH=@maKH";
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@hoTen", kh.HoTen),
+                new MySqlParameter("@soDienThoai", kh.SoDienThoai),
+                new MySqlParameter("@diem", kh.DiemTichLuy),
+                new MySqlParameter("@maHang", kh.MaHang),
+                new MySqlParameter("@maKH", kh.MaKH)
+            };
+            return db.ExecuteNonQuery(query, parameters) > 0;
         }
 
         public bool DeleteKhachHang(int maKH)
         {
-            string query = $"DELETE FROM KhachHang WHERE MaKH={maKH}";
-            return db.ExecuteNonQuery(query) > 0;
+            string query = "DELETE FROM KhachHang WHERE MaKH=@maKH";
+            MySqlParameter[] parameters = { new MySqlParameter("@maKH", maKH) };
+            return db.ExecuteNonQuery(query, parameters) > 0;
         }
+
         public DataTable SearchKhachHang(string tenKH, string sdt)
         {
             try
             {
-                string query = $@"
+                string query = @"
                     SELECT k.MaKH, k.HoTen, k.SoDienThoai, k.DiemTichLuy, 
                            t.TenHang, t.PhanTramGiam
                     FROM khachhang k
                     LEFT JOIN hangthanhvien t ON k.MaHang = t.MaHang
-                    WHERE k.HoTen LIKE N'%{tenKH}%' 
-                      AND k.SoDienThoai LIKE '%{sdt}%'";
+                    WHERE k.HoTen LIKE @tenKH 
+                      AND k.SoDienThoai LIKE @sdt";
 
-                DatabaseHelper db = new DatabaseHelper();
-                return db.ExecuteQuery(query);
+                MySqlParameter[] parameters = {
+                    new MySqlParameter("@tenKH", "%" + tenKH + "%"),
+                    new MySqlParameter("@sdt", "%" + sdt + "%")
+                };
+
+                return db.ExecuteQuery(query, parameters);
             }
             catch (Exception ex)
             {
