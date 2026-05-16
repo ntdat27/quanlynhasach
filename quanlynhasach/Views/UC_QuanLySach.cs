@@ -1,4 +1,6 @@
-﻿using quanlynhasach.Controllers;
+﻿using ClosedXML.Excel;
+using MySql.Data.MySqlClient;
+using quanlynhasach.Controllers;
 using quanlynhasach.Data;
 using quanlynhasach.Models;
 using System;
@@ -6,7 +8,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using ClosedXML.Excel;
 
 namespace quanlynhasach
 {
@@ -105,17 +106,22 @@ namespace quanlynhasach
         {
             if (string.IsNullOrWhiteSpace(textValue)) return 0;
             DatabaseHelper db = new DatabaseHelper();
-            string safeText = textValue.Trim().Replace("'", "''");
-            string checkQuery = $"SELECT {idColumn} FROM {tableName} WHERE {nameColumn} = N'{safeText}'";
-            DataTable dt = db.ExecuteQuery(checkQuery);
+
+            // Tên bảng và tên cột bắt buộc phải nối chuỗi (vì SQL không cho parameter hóa tên bảng), 
+            // nhưng DỮ LIỆU người dùng nhập (textValue) thì bắt buộc phải dùng @parameter.
+            string checkQuery = $"SELECT {idColumn} FROM {tableName} WHERE {nameColumn} = @textValue";
+            MySqlParameter[] checkParams = { new MySqlParameter("@textValue", textValue.Trim()) };
+
+            DataTable dt = db.ExecuteQuery(checkQuery, checkParams);
             if (dt.Rows.Count > 0)
             {
                 return Convert.ToInt32(dt.Rows[0][idColumn]);
             }
             else
             {
-                string insertQuery = $"INSERT INTO {tableName} ({nameColumn}) VALUES (N'{safeText}'); SELECT LAST_INSERT_ID();";
-                return db.ExecuteScalar(insertQuery);
+                string insertQuery = $"INSERT INTO {tableName} ({nameColumn}) VALUES (@textValue); SELECT LAST_INSERT_ID();";
+                MySqlParameter[] insertParams = { new MySqlParameter("@textValue", textValue.Trim()) };
+                return db.ExecuteScalar(insertQuery, insertParams);
             }
         }
 
@@ -124,7 +130,11 @@ namespace quanlynhasach
         {
             if (id <= 0) return "";
             DatabaseHelper db = new DatabaseHelper();
-            DataTable dt = db.ExecuteQuery($"SELECT {nameCol} FROM {tableName} WHERE {idCol} = {id}");
+
+            string query = $"SELECT {nameCol} FROM {tableName} WHERE {idCol} = @id";
+            MySqlParameter[] parameters = { new MySqlParameter("@id", id) };
+
+            DataTable dt = db.ExecuteQuery(query, parameters);
             if (dt.Rows.Count > 0) return dt.Rows[0][0].ToString();
             return "";
         }
