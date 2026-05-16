@@ -75,6 +75,7 @@ namespace quanlynhasach.Controllers
                         }
 
                         // Nếu mọi thứ suôn sẻ, Commit (lưu thực sự) toàn bộ dữ liệu
+                        LichSuController.GhiLog(maNV, $"Thanh toán thành công Hóa đơn ID: {maHD} - Số tiền: {thanhToan:N0}đ");
                         transaction.Commit();
                         return true;
                     }

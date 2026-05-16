@@ -36,6 +36,8 @@
             this.btnMenuKhachHang = new ReaLTaiizor.Controls.MaterialButton();
             this.btnMenuNhanVien = new ReaLTaiizor.Controls.MaterialButton();
             this.btnMenuPOS = new ReaLTaiizor.Controls.MaterialButton();
+            this.btnLichSuHeThong = new ReaLTaiizor.Controls.MaterialButton();
+            this.btnDangXuat = new ReaLTaiizor.Controls.MaterialButton();
             this.pnlSidebar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,6 +52,8 @@
             // pnlSidebar
             // 
             this.pnlSidebar.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.pnlSidebar.Controls.Add(this.btnDangXuat);
+            this.pnlSidebar.Controls.Add(this.btnLichSuHeThong);
             this.pnlSidebar.Controls.Add(this.btnQuanLySach);
             this.pnlSidebar.Controls.Add(this.btnQuanLyHoaDon);
             this.pnlSidebar.Controls.Add(this.btnMenuHome);
@@ -188,6 +192,48 @@
             this.btnMenuPOS.UseVisualStyleBackColor = true;
             this.btnMenuPOS.Click += new System.EventHandler(this.btnMenuPOS_Click);
             // 
+            // btnLichSuHeThong
+            // 
+            this.btnLichSuHeThong.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnLichSuHeThong.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnLichSuHeThong.Depth = 0;
+            this.btnLichSuHeThong.HighEmphasis = true;
+            this.btnLichSuHeThong.Icon = null;
+            this.btnLichSuHeThong.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnLichSuHeThong.Location = new System.Drawing.Point(16, 294);
+            this.btnLichSuHeThong.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnLichSuHeThong.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnLichSuHeThong.Name = "btnLichSuHeThong";
+            this.btnLichSuHeThong.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnLichSuHeThong.Size = new System.Drawing.Size(153, 36);
+            this.btnLichSuHeThong.TabIndex = 3;
+            this.btnLichSuHeThong.Text = "Lịch Sử Hệ Thống";
+            this.btnLichSuHeThong.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnLichSuHeThong.UseAccentColor = false;
+            this.btnLichSuHeThong.UseVisualStyleBackColor = true;
+            this.btnLichSuHeThong.Click += new System.EventHandler(this.btnLichSuHeThong_Click);
+            // 
+            // btnDangXuat
+            // 
+            this.btnDangXuat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnDangXuat.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnDangXuat.Depth = 0;
+            this.btnDangXuat.HighEmphasis = true;
+            this.btnDangXuat.Icon = null;
+            this.btnDangXuat.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnDangXuat.Location = new System.Drawing.Point(16, 591);
+            this.btnDangXuat.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnDangXuat.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnDangXuat.Name = "btnDangXuat";
+            this.btnDangXuat.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnDangXuat.Size = new System.Drawing.Size(103, 36);
+            this.btnDangXuat.TabIndex = 4;
+            this.btnDangXuat.Text = "Đăng Xuất";
+            this.btnDangXuat.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnDangXuat.UseAccentColor = false;
+            this.btnDangXuat.UseVisualStyleBackColor = true;
+            this.btnDangXuat.Click += new System.EventHandler(this.btnDangXuat_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -213,6 +259,8 @@
         private ReaLTaiizor.Controls.MaterialButton btnMenuKhachHang;
         private ReaLTaiizor.Controls.MaterialButton btnMenuHome;
         private ReaLTaiizor.Controls.MaterialButton btnQuanLyHoaDon;
+        private ReaLTaiizor.Controls.MaterialButton btnLichSuHeThong;
+        private ReaLTaiizor.Controls.MaterialButton btnDangXuat;
     }
 }
 

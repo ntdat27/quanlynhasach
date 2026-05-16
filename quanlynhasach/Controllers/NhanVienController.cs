@@ -56,6 +56,7 @@ namespace quanlynhasach.Controllers
                     Session.TaiKhoan = row["TaiKhoan"].ToString();
                     Session.HoTen = row["HoTen"].ToString();
                     Session.ChucVu = row["ChucVu"].ToString();
+                    LichSuController.GhiLog(Session.MaNV, "Đăng nhập vào hệ thống");
 
                     return true;
                 }

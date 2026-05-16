@@ -48,6 +48,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
             this.label7 = new System.Windows.Forms.Label();
+            this.dtpTuNgay = new ReaLTaiizor.Controls.PoisonDateTime();
+            this.dtpDenNgay = new ReaLTaiizor.Controls.PoisonDateTime();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.btnLoc = new ReaLTaiizor.Controls.MaterialButton();
             this.materialCard1.SuspendLayout();
             this.materialCard2.SuspendLayout();
             this.materialCard3.SuspendLayout();
@@ -191,11 +196,11 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(104, 14);
+            this.label5.Location = new System.Drawing.Point(147, 14);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(189, 24);
+            this.label5.Size = new System.Drawing.Size(105, 24);
             this.label5.TabIndex = 0;
-            this.label5.Text = "Doanh Thu Hôm Nay";
+            this.label5.Text = "Doanh Thu";
             // 
             // materialCard5
             // 
@@ -226,11 +231,11 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(154, 14);
+            this.label6.Location = new System.Drawing.Point(191, 14);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(157, 24);
+            this.label6.Size = new System.Drawing.Size(73, 24);
             this.label6.TabIndex = 0;
-            this.label6.Text = "Số Đơn Hôm Nay";
+            this.label6.Text = "Số Đơn";
             // 
             // dgvTopSach
             // 
@@ -269,7 +274,7 @@
             this.btnXuatExcel.HighEmphasis = true;
             this.btnXuatExcel.Icon = null;
             this.btnXuatExcel.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            this.btnXuatExcel.Location = new System.Drawing.Point(871, 260);
+            this.btnXuatExcel.Location = new System.Drawing.Point(880, 244);
             this.btnXuatExcel.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnXuatExcel.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.btnXuatExcel.Name = "btnXuatExcel";
@@ -292,10 +297,76 @@
             this.label7.TabIndex = 10;
             this.label7.Text = "Top 5 Sách Bán Chạy";
             // 
+            // dtpTuNgay
+            // 
+            this.dtpTuNgay.FontSize = ReaLTaiizor.Extension.Poison.PoisonDateTimeSize.Medium;
+            this.dtpTuNgay.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpTuNgay.Location = new System.Drawing.Point(418, 301);
+            this.dtpTuNgay.MinimumSize = new System.Drawing.Size(0, 29);
+            this.dtpTuNgay.Name = "dtpTuNgay";
+            this.dtpTuNgay.Size = new System.Drawing.Size(200, 29);
+            this.dtpTuNgay.TabIndex = 11;
+            // 
+            // dtpDenNgay
+            // 
+            this.dtpDenNgay.FontSize = ReaLTaiizor.Extension.Poison.PoisonDateTimeSize.Medium;
+            this.dtpDenNgay.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDenNgay.Location = new System.Drawing.Point(634, 301);
+            this.dtpDenNgay.MinimumSize = new System.Drawing.Size(0, 29);
+            this.dtpDenNgay.Name = "dtpDenNgay";
+            this.dtpDenNgay.Size = new System.Drawing.Size(200, 29);
+            this.dtpDenNgay.TabIndex = 12;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.label8.Location = new System.Drawing.Point(414, 274);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(82, 24);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "Từ Ngày";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.label9.Location = new System.Drawing.Point(630, 274);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(94, 24);
+            this.label9.TabIndex = 14;
+            this.label9.Text = "Đến Ngày";
+            // 
+            // btnLoc
+            // 
+            this.btnLoc.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnLoc.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnLoc.Depth = 0;
+            this.btnLoc.HighEmphasis = true;
+            this.btnLoc.Icon = null;
+            this.btnLoc.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnLoc.Location = new System.Drawing.Point(841, 301);
+            this.btnLoc.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnLoc.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnLoc.Name = "btnLoc";
+            this.btnLoc.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnLoc.Size = new System.Drawing.Size(64, 36);
+            this.btnLoc.TabIndex = 15;
+            this.btnLoc.Text = "Lọc";
+            this.btnLoc.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnLoc.UseAccentColor = false;
+            this.btnLoc.UseVisualStyleBackColor = true;
+            this.btnLoc.Click += new System.EventHandler(this.btnLoc_Click);
+            // 
             // UC_Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnLoc);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.dtpDenNgay);
+            this.Controls.Add(this.dtpTuNgay);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.btnXuatExcel);
             this.Controls.Add(this.label1);
@@ -346,5 +417,10 @@
         private System.Windows.Forms.Label label1;
         private ReaLTaiizor.Controls.MaterialButton btnXuatExcel;
         private System.Windows.Forms.Label label7;
+        private ReaLTaiizor.Controls.PoisonDateTime dtpTuNgay;
+        private ReaLTaiizor.Controls.PoisonDateTime dtpDenNgay;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private ReaLTaiizor.Controls.MaterialButton btnLoc;
     }
 }

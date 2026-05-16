@@ -118,7 +118,15 @@ namespace quanlynhasach.Controllers
             MySqlParameter[] parameters = {
                 new MySqlParameter("@maSach", maSach)
             };
-            return db.ExecuteNonQuery(query, parameters) > 0;
+            bool result = db.ExecuteNonQuery(query, parameters) > 0;
+
+            // THÊM ĐOẠN NÀY:
+            if (result && quanlynhasach.Models.Session.MaNV > 0)
+            {
+                LichSuController.GhiLog(quanlynhasach.Models.Session.MaNV, $"Xóa sách có mã ID: {maSach}");
+            }
+
+            return result;
         }
     }
 }
