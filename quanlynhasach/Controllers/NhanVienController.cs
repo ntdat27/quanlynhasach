@@ -13,16 +13,12 @@ namespace quanlynhasach.Controllers
     {
         private DatabaseHelper db = new DatabaseHelper();
 
-        // 1. Hàm băm mật khẩu chuẩn bảo mật SHA-256
         public string HashPassword(string password)
         {
             if (string.IsNullOrEmpty(password)) return "";
             using (SHA256 sha256Hash = SHA256.Create())
             {
-                // Chuyển mật khẩu thành mảng byte và băm
                 byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-                // Chuyển mảng byte trở lại thành chuỗi Hex (ký tự dạng số và chữ a-f)
                 StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < bytes.Length; i++)
                 {
@@ -32,14 +28,43 @@ namespace quanlynhasach.Controllers
             }
         }
 
+        // TÍNH NĂNG MỚI: Đổi mật khẩu cho nhân viên đang đăng nhập
+        public bool DoiMatKhau(int maNV, string matKhauCu, string matKhauMoi)
+        {
+            try
+            {
+                // 1. Kiểm tra xem mật khẩu cũ nhập vào có khớp với DB không
+                string hashedCu = HashPassword(matKhauCu);
+                string checkQuery = "SELECT COUNT(*) FROM NhanVien WHERE MaNV = @maNV AND MatKhau = @matKhauCu";
+                MySqlParameter[] checkParams = {
+                    new MySqlParameter("@maNV", maNV),
+                    new MySqlParameter("@matKhauCu", hashedCu)
+                };
+
+                int count = db.ExecuteScalar(checkQuery, checkParams);
+                if (count == 0) return false; // Sai mật khẩu cũ
+
+                // 2. Nếu đúng mật khẩu cũ, tiến hành cập nhật mật khẩu mới (đã băm)
+                string hashedMoi = HashPassword(matKhauMoi);
+                string updateQuery = "UPDATE NhanVien SET MatKhau = @matKhauMoi WHERE MaNV = @maNV";
+                MySqlParameter[] updateParams = {
+                    new MySqlParameter("@matKhauMoi", hashedMoi),
+                    new MySqlParameter("@maNV", maNV)
+                };
+
+                return db.ExecuteNonQuery(updateQuery, updateParams) > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool DangNhap(string taiKhoan, string matKhau)
         {
             try
             {
-                // Băm mật khẩu người dùng vừa nhập vào ô TextBox
                 string hashedPass = HashPassword(matKhau);
-
-                // Đem mật khẩu ĐÃ BĂM đi so sánh với mật khẩu trong Database
                 string query = "SELECT MaNV, TaiKhoan, HoTen, ChucVu FROM NhanVien WHERE TaiKhoan = @taiKhoan AND MatKhau = @matKhau";
                 MySqlParameter[] parameters = {
                     new MySqlParameter("@taiKhoan", taiKhoan),
@@ -51,13 +76,12 @@ namespace quanlynhasach.Controllers
                 if (dt.Rows.Count > 0)
                 {
                     DataRow row = dt.Rows[0];
-
                     Session.MaNV = Convert.ToInt32(row["MaNV"]);
                     Session.TaiKhoan = row["TaiKhoan"].ToString();
                     Session.HoTen = row["HoTen"].ToString();
                     Session.ChucVu = row["ChucVu"].ToString();
-                    LichSuController.GhiLog(Session.MaNV, "Đăng nhập vào hệ thống");
 
+                    LichSuController.GhiLog(Session.MaNV, "Đăng nhập vào hệ thống");
                     return true;
                 }
                 return false;
@@ -108,9 +132,7 @@ namespace quanlynhasach.Controllers
         {
             try
             {
-                // Mã hóa mật khẩu trước khi Insert vào bảng
                 string hashedPass = HashPassword(nv.MatKhau);
-
                 string query = "INSERT INTO NhanVien (HoTen, SoDienThoai, TaiKhoan, MatKhau, ChucVu) VALUES (@hoTen, @soDienThoai, @taiKhoan, @matKhau, @chucVu)";
                 MySqlParameter[] parameters = {
                     new MySqlParameter("@hoTen", nv.HoTen),
@@ -129,9 +151,6 @@ namespace quanlynhasach.Controllers
             try
             {
                 string hashedPass = nv.MatKhau;
-                // Kiểm tra: Chuỗi băm SHA-256 luôn dài 64 ký tự. 
-                // Nếu độ dài khác 64, nghĩa là Admin vừa gõ một mật khẩu mới tinh (vd: "1234"), ta cần băm nó ra.
-                // Nếu độ dài đã là 64, nghĩa là Admin chỉ cập nhật tên/sdt mà không đổi mật khẩu, ta giữ nguyên.
                 if (nv.MatKhau.Length != 64)
                 {
                     hashedPass = HashPassword(nv.MatKhau);
