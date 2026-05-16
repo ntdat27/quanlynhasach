@@ -91,7 +91,6 @@ namespace quanlynhasach
             }
         }
 
-        // Hàm hỗ trợ lọc rác khoảng trắng và viết hoa chữ đầu từng từ cho Họ Tên
         private string ChuanHoaHoTen(string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return "";
@@ -108,7 +107,11 @@ namespace quanlynhasach
             txtHoTen.Clear();
             txtSDT.Clear();
             txtTaiKhoan.Clear();
+
+            // THAY ĐỔI: Xóa chữ và MỞ KHÓA lại ô mật khẩu để nhập cho nhân viên mới hoàn toàn
             txtMatKhau.Clear();
+            txtMatKhau.Enabled = true;
+
             cboChucVu.SelectedIndex = 0;
             LoadData();
         }
@@ -121,35 +124,30 @@ namespace quanlynhasach
             string matKhau = txtMatKhau.Text.Trim();
             string chucVu = cboChucVu.Text;
 
-            // 1. Kiểm tra rỗng trường bắt buộc
             if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(taiKhoan) || string.IsNullOrEmpty(matKhau))
             {
                 MessageBox.Show("Vui lòng điền đủ thông tin họ tên, tài khoản và mật khẩu!", "Cảnh báo");
                 return;
             }
 
-            // 2. Chặn tài khoản chứa khoảng trắng rác ở giữa
             if (taiKhoan.Contains(" "))
             {
                 MessageBox.Show("Tài khoản đăng nhập không được chứa khoảng trắng!", "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // 3. Ép định dạng SĐT chuẩn di động Việt Nam (10 số, bắt đầu bằng số 0)
             if (!Regex.IsMatch(sdt, @"^0\d{9}$"))
             {
                 MessageBox.Show("Số điện thoại không hợp lệ! Phải bao gồm đúng 10 chữ số và bắt đầu bằng số 0.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // 4. CHECK TRÙNG SĐT HOẶC TÀI KHOẢN TRƯỚC KHI LƯU
             if (nvController.KiemTraTrung(taiKhoan, sdt))
             {
                 MessageBox.Show("Tài khoản hoặc Số điện thoại này đã được sử dụng cho một nhân viên khác! Vui lòng chọn cái khác.", "Lỗi trùng lặp", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // 5. Thêm mới và Ghi Log hệ thống
             NhanVien nv = new NhanVien { HoTen = hoTen, SoDienThoai = sdt, TaiKhoan = taiKhoan, MatKhau = matKhau, ChucVu = chucVu };
             if (nvController.AddNhanVien(nv))
             {
@@ -168,7 +166,6 @@ namespace quanlynhasach
             string hoTen = ChuanHoaHoTen(txtHoTen.Text);
             string sdt = txtSDT.Text.Trim();
             string taiKhoan = txtTaiKhoan.Text.Trim();
-            string matKhauMoi = txtMatKhau.Text.Trim();
             string chucVu = cboChucVu.Text;
 
             if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(taiKhoan))
@@ -195,11 +192,9 @@ namespace quanlynhasach
                 return;
             }
 
-            // GIẢI QUYẾT BẢO MẬT: Nếu ô mật khẩu trống, lấy lại chuỗi hash cũ lưu ngầm trong hàng đang chọn
-            if (string.IsNullOrEmpty(matKhauMoi))
-            {
-                matKhauMoi = dgvNhanVien.CurrentRow.Cells["MatKhau"].Value.ToString();
-            }
+            // THAY ĐỔI: Vì ô mật khẩu đã bị khóa cứng (Enabled = false) nên khi bấm Sửa, 
+            // hệ thống mặc định lôi lại chuỗi mã hóa mật khẩu cũ đang có sẵn ở dòng DataGridView để nộp lên DB
+            string matKhauGiuNguyen = dgvNhanVien.CurrentRow.Cells["MatKhau"].Value.ToString();
 
             NhanVien nv = new NhanVien
             {
@@ -207,7 +202,7 @@ namespace quanlynhasach
                 HoTen = hoTen,
                 SoDienThoai = sdt,
                 TaiKhoan = taiKhoan,
-                MatKhau = matKhauMoi,
+                MatKhau = matKhauGiuNguyen, // Giữ nguyên, không đổi mật khẩu ở form này
                 ChucVu = chucVu
             };
 
@@ -228,7 +223,6 @@ namespace quanlynhasach
             if (string.IsNullOrEmpty(lblMaNV.Text)) return;
             int maNVCanXoa = int.Parse(lblMaNV.Text);
 
-            // Không cho phép tự xóa tài khoản của chính mình khi đang thao tác
             if (maNVCanXoa == Session.MaNV)
             {
                 MessageBox.Show("Bạn không thể tự xóa tài khoản của chính mình khi đang đăng nhập hệ thống!", "Cảnh báo bảo vệ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -259,8 +253,9 @@ namespace quanlynhasach
                 txtTaiKhoan.Text = row.Cells["TaiKhoan"].Value.ToString();
                 cboChucVu.SelectedItem = row.Cells["ChucVu"].Value.ToString();
 
-                // GIẢI PHÁP CHÍ MẠNG: Bỏ trống hoàn toàn ô mật khẩu, không kéo chuỗi hash 64 ký tự lên TextBox nữa
+                // THAY ĐỔI: Khóa cứng và làm xám/đen ô mật khẩu lại để chặn không cho nhập sửa lung tung
                 txtMatKhau.Text = "";
+                txtMatKhau.Enabled = false;
             }
         }
         #endregion
