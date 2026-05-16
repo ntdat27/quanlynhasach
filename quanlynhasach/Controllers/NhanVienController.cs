@@ -13,7 +13,6 @@ namespace quanlynhasach.Controllers
         {
             try
             {
-                // Dùng đúng các cột trong bảng NhanVien (Sửa maGV thành MaNV)
                 string query = $"SELECT MaNV, TaiKhoan, HoTen, ChucVu FROM NhanVien WHERE TaiKhoan = '{taiKhoan}' AND MatKhau = '{matKhau}'";
                 DataTable dt = db.ExecuteQuery(query);
 
@@ -21,15 +20,14 @@ namespace quanlynhasach.Controllers
                 {
                     DataRow row = dt.Rows[0];
                     
-                    // Nạp thông tin vào Session chuẩn xác nhất
                     Session.MaNV = Convert.ToInt32(row["MaNV"]);
                     Session.TaiKhoan = row["TaiKhoan"].ToString();
                     Session.HoTen = row["HoTen"].ToString();
                     Session.ChucVu = row["ChucVu"].ToString();
                     
-                    return true; // Đăng nhập thành công
+                    return true; 
                 }
-                return false; // Sai tài khoản/mật khẩu
+                return false; 
             }
             catch (Exception)
             {
@@ -62,7 +60,7 @@ namespace quanlynhasach.Controllers
                               WHERE (TaiKhoan = '{taiKhoan}' OR SoDienThoai = '{soDienThoai}') 
                               AND MaNV != {maNVIgnore}";
             DataTable dt = db.ExecuteQuery(query);
-            return dt.Rows.Count > 0; // Trả về true nếu bị trùng
+            return dt.Rows.Count > 0; 
         }
         public bool AddNhanVien(NhanVien nv)
         {
@@ -97,7 +95,6 @@ namespace quanlynhasach.Controllers
         {
             try
             {
-                // Đã sửa lại đúng 6 cột có trong Database của bạn
                 string query = $@"
                     SELECT MaNV, HoTen, SoDienThoai, TaiKhoan, MatKhau, ChucVu 
                     FROM NhanVien 

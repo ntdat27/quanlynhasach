@@ -4,7 +4,7 @@ namespace quanlynhasach.Models
 {
     public static class Session
     {
-        public static int MaNV { get; set; } // Sửa chuẩn lại thành MaNV
+        public static int MaNV { get; set; }
         public static string TaiKhoan { get; set; }
         public static string HoTen { get; set; }
         public static string ChucVu { get; set; }
@@ -16,5 +16,6 @@ namespace quanlynhasach.Models
             HoTen = "";
             ChucVu = "";
         }
+        public static NhanVien CurrentUser { get; set; } = null;
     }
 }

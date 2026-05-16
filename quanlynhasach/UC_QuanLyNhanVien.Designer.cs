@@ -30,6 +30,8 @@
         {
             this.txtHoTen = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.materialCard1 = new ReaLTaiizor.Controls.MaterialCard();
+            this.btnTimKiem = new ReaLTaiizor.Controls.MaterialButton();
+            this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -46,8 +48,6 @@
             this.txtTaiKhoan = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.txtSDT = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.dgvNhanVien = new System.Windows.Forms.DataGridView();
-            this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
-            this.btnTimKiem = new ReaLTaiizor.Controls.MaterialButton();
             this.materialCard1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNhanVien)).BeginInit();
             this.SuspendLayout();
@@ -111,8 +111,50 @@
             this.materialCard1.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             this.materialCard1.Name = "materialCard1";
             this.materialCard1.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard1.Size = new System.Drawing.Size(1000, 407);
+            this.materialCard1.Size = new System.Drawing.Size(1000, 307);
             this.materialCard1.TabIndex = 2;
+            // 
+            // btnTimKiem
+            // 
+            this.btnTimKiem.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnTimKiem.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnTimKiem.Depth = 0;
+            this.btnTimKiem.HighEmphasis = true;
+            this.btnTimKiem.Icon = null;
+            this.btnTimKiem.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnTimKiem.Location = new System.Drawing.Point(896, 262);
+            this.btnTimKiem.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnTimKiem.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnTimKiem.Name = "btnTimKiem";
+            this.btnTimKiem.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnTimKiem.Size = new System.Drawing.Size(86, 36);
+            this.btnTimKiem.TabIndex = 38;
+            this.btnTimKiem.Text = "Tìm Kiếm";
+            this.btnTimKiem.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnTimKiem.UseAccentColor = false;
+            this.btnTimKiem.UseVisualStyleBackColor = true;
+            this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
+            // 
+            // btnXuatExcel
+            // 
+            this.btnXuatExcel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnXuatExcel.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnXuatExcel.Depth = 0;
+            this.btnXuatExcel.HighEmphasis = true;
+            this.btnXuatExcel.Icon = null;
+            this.btnXuatExcel.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnXuatExcel.Location = new System.Drawing.Point(324, 262);
+            this.btnXuatExcel.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnXuatExcel.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnXuatExcel.Name = "btnXuatExcel";
+            this.btnXuatExcel.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnXuatExcel.Size = new System.Drawing.Size(106, 36);
+            this.btnXuatExcel.TabIndex = 35;
+            this.btnXuatExcel.Text = "XUẤT EXCEL";
+            this.btnXuatExcel.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnXuatExcel.UseAccentColor = false;
+            this.btnXuatExcel.UseVisualStyleBackColor = true;
+            this.btnXuatExcel.Click += new System.EventHandler(this.btnXuatExcel_Click);
             // 
             // label5
             // 
@@ -120,9 +162,9 @@
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(269, 178);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(89, 24);
+            this.label5.Size = new System.Drawing.Size(113, 24);
             this.label5.TabIndex = 21;
-            this.label5.Text = "Mật Khẩu";
+            this.label5.Text = "Mật Khẩu (*)";
             // 
             // label4
             // 
@@ -130,9 +172,9 @@
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(17, 178);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(197, 24);
+            this.label4.Size = new System.Drawing.Size(221, 24);
             this.label4.TabIndex = 20;
-            this.label4.Text = "Tài Khoản Đăng Nhập";
+            this.label4.Text = "Tài Khoản Đăng Nhập (*)";
             // 
             // label2
             // 
@@ -150,9 +192,9 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(273, 83);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(130, 24);
+            this.label3.Size = new System.Drawing.Size(154, 24);
             this.label3.TabIndex = 18;
-            this.label3.Text = "Số Điện Thoại";
+            this.label3.Text = "Số Điện Thoại (*)";
             // 
             // label1
             // 
@@ -386,52 +428,10 @@
             // 
             this.dgvNhanVien.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvNhanVien.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dgvNhanVien.Location = new System.Drawing.Point(0, 307);
+            this.dgvNhanVien.Location = new System.Drawing.Point(0, 341);
             this.dgvNhanVien.Name = "dgvNhanVien";
-            this.dgvNhanVien.Size = new System.Drawing.Size(1000, 393);
+            this.dgvNhanVien.Size = new System.Drawing.Size(1000, 359);
             this.dgvNhanVien.TabIndex = 3;
-            // 
-            // btnXuatExcel
-            // 
-            this.btnXuatExcel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnXuatExcel.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnXuatExcel.Depth = 0;
-            this.btnXuatExcel.HighEmphasis = true;
-            this.btnXuatExcel.Icon = null;
-            this.btnXuatExcel.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            this.btnXuatExcel.Location = new System.Drawing.Point(324, 262);
-            this.btnXuatExcel.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnXuatExcel.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            this.btnXuatExcel.Name = "btnXuatExcel";
-            this.btnXuatExcel.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnXuatExcel.Size = new System.Drawing.Size(106, 36);
-            this.btnXuatExcel.TabIndex = 35;
-            this.btnXuatExcel.Text = "XUẤT EXCEL";
-            this.btnXuatExcel.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnXuatExcel.UseAccentColor = false;
-            this.btnXuatExcel.UseVisualStyleBackColor = true;
-            this.btnXuatExcel.Click += new System.EventHandler(this.btnXuatExcel_Click);
-            // 
-            // btnTimKiem
-            // 
-            this.btnTimKiem.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnTimKiem.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnTimKiem.Depth = 0;
-            this.btnTimKiem.HighEmphasis = true;
-            this.btnTimKiem.Icon = null;
-            this.btnTimKiem.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            this.btnTimKiem.Location = new System.Drawing.Point(896, 262);
-            this.btnTimKiem.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnTimKiem.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            this.btnTimKiem.Name = "btnTimKiem";
-            this.btnTimKiem.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnTimKiem.Size = new System.Drawing.Size(86, 36);
-            this.btnTimKiem.TabIndex = 38;
-            this.btnTimKiem.Text = "Tìm Kiếm";
-            this.btnTimKiem.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnTimKiem.UseAccentColor = false;
-            this.btnTimKiem.UseVisualStyleBackColor = true;
-            this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
             // 
             // UC_QuanLyNhanVien
             // 

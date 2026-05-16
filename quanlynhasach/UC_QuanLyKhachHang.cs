@@ -17,7 +17,6 @@ namespace quanlynhasach
         {
             InitializeComponent();
 
-            // Cài đặt các option cho ComboBox Hạng Thành Viên
             SetupComboBox();
 
             FormatDataGridView(dgvKhachHang);
@@ -28,13 +27,12 @@ namespace quanlynhasach
 
         private void SetupComboBox()
         {
-            // Dictionary để gán Tên hạng đi kèm với Mã hạng
             quanlynhasach.Data.DatabaseHelper db = new quanlynhasach.Data.DatabaseHelper();
             System.Data.DataTable dt = db.ExecuteQuery("SELECT MaHang, TenHang FROM HangThanhVien");
 
             cboHangThanhVien.DataSource = dt;
-            cboHangThanhVien.DisplayMember = "TenHang"; // Hiển thị Chữ
-            cboHangThanhVien.ValueMember = "MaHang";    // Lưu ngầm Số
+            cboHangThanhVien.DisplayMember = "TenHang"; 
+            cboHangThanhVien.ValueMember = "MaHang";    
         }
 
         #region UI & Dữ liệu
@@ -103,7 +101,7 @@ namespace quanlynhasach
             txtHoTen.Clear();
             txtSDT.Clear();
             txtDiemTichLuy.Clear();
-            cboHangThanhVien.SelectedIndex = 0; // Mặc định về Khách vãng lai
+            cboHangThanhVien.SelectedIndex = 0; 
             LoadData();
         }
 
@@ -117,14 +115,12 @@ namespace quanlynhasach
                 MessageBox.Show("Vui lòng nhập đủ thông tin!"); return;
             }
 
-            // 1. MỚI: RÀO CHẮN BẮT BUỘC SĐT PHẢI ĐÚNG 10 SỐ (Chỉ chứa số)
             if (sdt.Length != 10 || !System.Text.RegularExpressions.Regex.IsMatch(sdt, @"^\d{10}$"))
             {
                 MessageBox.Show("Số điện thoại không hợp lệ! Vui lòng nhập đúng 10 chữ số (ví dụ: 0987654321).", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2. CHECK TRÙNG SĐT
             if (khController.KiemTraTrungSdt(sdt))
             {
                 MessageBox.Show("Số điện thoại này đã được đăng ký cho một khách hàng khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -139,7 +135,6 @@ namespace quanlynhasach
                 HoTen = hoTen,
                 SoDienThoai = sdt,
                 DiemTichLuy = diem,
-                // Cách mới để lấy Mã Hạng ẩn bên dưới ComboBox
                 MaHang = Convert.ToInt32(cboHangThanhVien.SelectedValue)
             };
 
@@ -163,14 +158,12 @@ namespace quanlynhasach
                 MessageBox.Show("Vui lòng nhập đủ thông tin!"); return;
             }
 
-            // 1. MỚI: Check form SĐT 10 số
             if (sdt.Length != 10 || !System.Text.RegularExpressions.Regex.IsMatch(sdt, @"^\d{10}$"))
             {
                 MessageBox.Show("Số điện thoại không hợp lệ! Vui lòng nhập đúng 10 chữ số.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2. Check trùng (Loại trừ chính khách hàng đang được sửa ra)
             if (khController.KiemTraTrungSdt(sdt, maKHHienTai))
             {
                 MessageBox.Show("Số điện thoại này đã được đăng ký cho một khách hàng khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -186,7 +179,6 @@ namespace quanlynhasach
                 HoTen = hoTen,
                 SoDienThoai = sdt,
                 DiemTichLuy = diem,
-                // Lấy Mã Hạng ẩn bên dưới ComboBox
                 MaHang = Convert.ToInt32(cboHangThanhVien.SelectedValue)
             };
 
@@ -218,17 +210,14 @@ namespace quanlynhasach
                 txtSDT.Text = row.Cells["SoDienThoai"].Value.ToString();
                 txtDiemTichLuy.Text = row.Cells["DiemTichLuy"].Value.ToString();
 
-                // Chọn lại giá trị cho ComboBox dựa vào Tên hạng
                 cboHangThanhVien.Text = row.Cells["TenHang"].Value.ToString();
             }
         }
         #endregion
-        // Hàm chuyển DataGridView thành DataTable (Chỉ lấy cột đang hiển thị)
         private DataTable ConvertDgvToDataTable(DataGridView dgv)
         {
             DataTable dt = new DataTable();
 
-            // 1. Tạo cột cho Excel dựa trên các cột đang hiện (Visible = true) của DGV
             foreach (DataGridViewColumn col in dgv.Columns)
             {
                 if (col.Visible)
@@ -237,10 +226,9 @@ namespace quanlynhasach
                 }
             }
 
-            // 2. Lấy dữ liệu từng dòng
             foreach (DataGridViewRow row in dgv.Rows)
             {
-                if (!row.IsNewRow) // Bỏ qua dòng trống cuối cùng
+                if (!row.IsNewRow) 
                 {
                     DataRow dr = dt.NewRow();
                     int colIndex = 0;
@@ -281,7 +269,7 @@ namespace quanlynhasach
                         worksheet.Cell("A1").Style.Font.Bold = true;
                         worksheet.Cell("A1").Style.Font.FontSize = 16;
                         worksheet.Cell("A1").Style.Font.FontColor = XLColor.White;
-                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.Purple; // Nền tím cho khách hàng VIP
+                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.Purple; 
                         worksheet.Cell("A1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
                         var table = worksheet.Cell(3, 1).InsertTable(dtExport);
@@ -298,17 +286,13 @@ namespace quanlynhasach
 
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
-            string tuKhoaTen = txtHoTen.Text.Trim(); // Giả sử tên ô nhập là txtHoTen
-            string tuKhoaSdt = txtSDT.Text.Trim(); // Giả sử tên ô nhập là txtSoDienThoai
+            string tuKhoaTen = txtHoTen.Text.Trim(); 
+            string tuKhoaSdt = txtSDT.Text.Trim(); 
 
-            // Gọi Controller để lấy dữ liệu
-            // (Đổi thành khachHangController.SearchKhachHang(...) trả về List nếu code cũ của bạn dùng List)
             DataTable dtKetQua = khController.SearchKhachHang(tuKhoaTen, tuKhoaSdt);
 
-            // Xóa dữ liệu cũ trên lưới
             dgvKhachHang.Rows.Clear();
 
-            // Đổ dữ liệu mới vào
             foreach (DataRow row in dtKetQua.Rows)
             {
                 dgvKhachHang.Rows.Add(

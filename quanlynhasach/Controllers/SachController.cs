@@ -1,4 +1,5 @@
-﻿using System;
+﻿// [Thay thế toàn bộ nội dung file Controllers/SachController.cs]
+using System;
 using System.Collections.Generic;
 using System.Data;
 using quanlynhasach.Data;
@@ -10,138 +11,81 @@ namespace quanlynhasach.Controllers
     {
         private DatabaseHelper db = new DatabaseHelper();
 
-        // Lấy tất cả sách
         public List<Sach> GetAllSach()
         {
             List<Sach> list = new List<Sach>();
-            DatabaseHelper db = new DatabaseHelper();
-            string query = "SELECT * FROM Sach"; // Hoặc câu query của bạn
+            string query = "SELECT * FROM Sach";
             DataTable dt = db.ExecuteQuery(query);
-
             foreach (DataRow row in dt.Rows)
             {
-                Sach s = new Sach();
-                s.MaSach = Convert.ToInt32(row["MaSach"]);
-                s.TenSach = row["TenSach"].ToString();
-
-                // MẸO CHỐNG LỖI DBNULL: Nếu dữ liệu trong DB là NULL thì gán bằng 0, ngược lại thì Convert
-                s.MaTL = row["MaTL"] != DBNull.Value ? Convert.ToInt32(row["MaTL"]) : 0;
-                s.MaTG = row["MaTG"] != DBNull.Value ? Convert.ToInt32(row["MaTG"]) : 0;
-                s.MaNXB = row["MaNXB"] != DBNull.Value ? Convert.ToInt32(row["MaNXB"]) : 0;
-
-                // Cột NamXB đang bị NULL của bạn sẽ được an toàn đi qua đây
-                s.NamXB = row["NamXB"] != DBNull.Value ? Convert.ToInt32(row["NamXB"]) : 0;
-                s.GiaNhap = row["GiaNhap"] != DBNull.Value ? Convert.ToInt32(row["GiaNhap"]) : 0;
-                s.GiaBan = row["GiaBan"] != DBNull.Value ? Convert.ToInt32(row["GiaBan"]) : 0;
-                s.SoLuongTon = row["SoLuongTon"] != DBNull.Value ? Convert.ToInt32(row["SoLuongTon"]) : 0;
-
-                list.Add(s);
+                list.Add(MapRowToSach(row));
             }
             return list;
         }
 
-        // TÌM KIẾM SÁCH (Mới thêm)
         public List<Sach> SearchSach(string keyword)
         {
             List<Sach> listSach = new List<Sach>();
             string query = $@"
-                SELECT s.MaSach, s.TenSach, 
-                       s.MaTL, tl.TenTL, 
-                       s.MaTG, tg.TenTG, 
-                       s.MaNXB, nxb.TenNXB, 
-                       s.NamXB, s.GiaNhap, s.SoLuongTon, s.GiaBan 
-                FROM Sach s
+                SELECT s.* FROM Sach s
                 LEFT JOIN theloai tl ON s.MaTL = tl.MaTL
                 LEFT JOIN tacgia tg ON s.MaTG = tg.MaTG
-                LEFT JOIN nhaxuatban nxb ON s.MaNXB = nxb.MaNXB
                 WHERE s.TenSach LIKE '%{keyword}%' 
                    OR tl.TenTL LIKE '%{keyword}%' 
                    OR tg.TenTG LIKE '%{keyword}%'";
-            // Tìm theo cả tên Tác giả và Thể loại cho VIP!
 
             DataTable dt = db.ExecuteQuery(query);
-
             foreach (DataRow row in dt.Rows)
             {
-                Sach s = new Sach();
-                s.MaSach = Convert.ToInt32(row["MaSach"]);
-                s.TenSach = row["TenSach"].ToString();
-
-                // MẸO CHỐNG LỖI DBNULL: Nếu dữ liệu trong DB là NULL thì gán bằng 0, ngược lại thì Convert
-                s.MaTL = row["MaTL"] != DBNull.Value ? Convert.ToInt32(row["MaTL"]) : 0;
-                s.MaTG = row["MaTG"] != DBNull.Value ? Convert.ToInt32(row["MaTG"]) : 0;
-                s.MaNXB = row["MaNXB"] != DBNull.Value ? Convert.ToInt32(row["MaNXB"]) : 0;
-
-                // Cột NamXB đang bị NULL của bạn sẽ được an toàn đi qua đây
-                s.NamXB = row["NamXB"] != DBNull.Value ? Convert.ToInt32(row["NamXB"]) : 0;
-                s.GiaNhap = row["GiaNhap"] != DBNull.Value ? Convert.ToInt32(row["GiaNhap"]) : 0;
-                s.GiaBan = row["GiaBan"] != DBNull.Value ? Convert.ToInt32(row["GiaBan"]) : 0;
-                s.SoLuongTon = row["SoLuongTon"] != DBNull.Value ? Convert.ToInt32(row["SoLuongTon"]) : 0;
-
-                listSach.Add(s);
+                listSach.Add(MapRowToSach(row));
             }
             return listSach;
         }
+
+        private Sach MapRowToSach(DataRow row)
+        {
+            return new Sach
+            {
+                MaSach = Convert.ToInt32(row["MaSach"]),
+                TenSach = row["TenSach"].ToString(),
+                MaTL = row["MaTL"] != DBNull.Value ? Convert.ToInt32(row["MaTL"]) : 0,
+                MaTG = row["MaTG"] != DBNull.Value ? Convert.ToInt32(row["MaTG"]) : 0,
+                MaNXB = row["MaNXB"] != DBNull.Value ? Convert.ToInt32(row["MaNXB"]) : 0,
+                NamXB = row["NamXB"] != DBNull.Value ? Convert.ToInt32(row["NamXB"]) : 0,
+                GiaNhap = row["GiaNhap"] != DBNull.Value ? Convert.ToInt32(row["GiaNhap"]) : 0,
+                GiaBan = row["GiaBan"] != DBNull.Value ? Convert.ToInt32(row["GiaBan"]) : 0,
+                SoLuongTon = row["SoLuongTon"] != DBNull.Value ? Convert.ToInt32(row["SoLuongTon"]) : 0
+            };
+        }
+
+        // CHỨC NĂNG QUAN TRỌNG: NHẬP HÀNG (Cộng dồn số lượng)
+        public bool NhapHang(int maSach, int soLuongThem)
+        {
+            try
+            {
+                string query = $"UPDATE Sach SET SoLuongTon = SoLuongTon + {soLuongThem} WHERE MaSach = {maSach}";
+                return db.ExecuteNonQuery(query) > 0;
+            }
+            catch { return false; }
+        }
+
         public bool AddSach(Sach s)
         {
-            try
-            {
-                // Đã bổ sung đầy đủ NamXB và GiaNhap vào câu lệnh INSERT
-                string query = $"INSERT INTO Sach (TenSach, MaTL, MaTG, MaNXB, NamXB, GiaNhap, SoLuongTon, GiaBan) " +
-                               $"VALUES (N'{s.TenSach}', {s.MaTL}, {s.MaTG}, {s.MaNXB}, {s.NamXB}, {s.GiaNhap}, {s.SoLuongTon}, {s.GiaBan})";
-
-                DatabaseHelper db = new DatabaseHelper();
-                return db.ExecuteNonQuery(query) > 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Lỗi thêm sách: " + ex.Message);
-                return false;
-            }
+            string safeTen = s.TenSach.Replace("'", "''");
+            string query = $"INSERT INTO Sach (TenSach, MaTL, MaTG, MaNXB, NamXB, GiaNhap, SoLuongTon, GiaBan) " +
+                           $"VALUES (N'{safeTen}', {s.MaTL}, {s.MaTG}, {s.MaNXB}, {s.NamXB}, {s.GiaNhap}, {s.SoLuongTon}, {s.GiaBan})";
+            return db.ExecuteNonQuery(query) > 0;
         }
 
-        // 2. Cập nhật Sách
         public bool UpdateSach(Sach s)
         {
-            try
-            {
-                // Đã bổ sung đầy đủ NamXB và GiaNhap vào câu lệnh UPDATE
-                string query = $"UPDATE Sach SET " +
-                               $"TenSach = N'{s.TenSach}', " +
-                               $"MaTL = {s.MaTL}, " +
-                               $"MaTG = {s.MaTG}, " +
-                               $"MaNXB = {s.MaNXB}, " +
-                               $"NamXB = {s.NamXB}, " +
-                               $"GiaNhap = {s.GiaNhap}, " +
-                               $"SoLuongTon = {s.SoLuongTon}, " +
-                               $"GiaBan = {s.GiaBan} " +
-                               $"WHERE MaSach = {s.MaSach}";
-
-                DatabaseHelper db = new DatabaseHelper();
-                return db.ExecuteNonQuery(query) > 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Lỗi sửa sách: " + ex.Message);
-                return false;
-            }
+            string safeTen = s.TenSach.Replace("'", "''");
+            string query = $"UPDATE Sach SET TenSach = N'{safeTen}', MaTL = {s.MaTL}, MaTG = {s.MaTG}, " +
+                           $"MaNXB = {s.MaNXB}, NamXB = {s.NamXB}, GiaNhap = {s.GiaNhap}, " +
+                           $"SoLuongTon = {s.SoLuongTon}, GiaBan = {s.GiaBan} WHERE MaSach = {s.MaSach}";
+            return db.ExecuteNonQuery(query) > 0;
         }
 
-        // 3. Xóa Sách
-        public bool DeleteSach(int maSach)
-        {
-            try
-            {
-                // Lưu ý: Nếu sách này đã từng được bán (nằm trong ChiTietHoaDon) thì sẽ không xóa được do vướng Khóa ngoại.
-                // Thực tế người ta thường dùng cột "TrangThai" để ẩn đi thay vì xóa cứng. Nhưng ở đây ta cứ làm xóa cơ bản trước.
-                string query = $"DELETE FROM Sach WHERE MaSach = {maSach}";
-
-                return db.ExecuteNonQuery(query) > 0;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
+        public bool DeleteSach(int maSach) => db.ExecuteNonQuery($"DELETE FROM Sach WHERE MaSach = {maSach}") > 0;
     }
 }

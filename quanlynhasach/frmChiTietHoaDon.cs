@@ -1,4 +1,4 @@
-﻿using quanlynhasach.Controllers; // Sửa theo namespace của bạn
+﻿using quanlynhasach.Controllers; 
 using ReaLTaiizor.Forms;
 using System;
 using System.Data;
@@ -12,12 +12,11 @@ namespace quanlynhasach
         private ThongKeController tkController = new ThongKeController();
         private int _maHD;
 
-        // Constructor nhận Mã Hóa Đơn từ bên kia truyền sang
         public frmChiTietHoaDon(int maHD)
         {
             InitializeComponent();
             _maHD = maHD;
-            this.StartPosition = FormStartPosition.CenterScreen; // Mở ra giữa màn hình
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "CHI TIẾT HÓA ĐƠN #" + maHD;
             FormatDataGridView(dgvChiTietSach);
             LoadChiTiet();
@@ -30,7 +29,7 @@ namespace quanlynhasach
             dgv.BackgroundColor = Color.White;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.AllowUserToAddRows = false;
-            dgv.RowHeadersVisible = false; // Tắt cái cột mũi tên thừa thãi bên trái
+            dgv.RowHeadersVisible = false;
             dgv.RowTemplate.Height = 35;
 
             dgv.EnableHeadersVisualStyles = false;
@@ -42,14 +41,12 @@ namespace quanlynhasach
 
         private void LoadChiTiet()
         {
-            // 1. Load thông tin Master (Người mua, bán)
             DataTable dtChung = tkController.GetThongTinChungHoaDon(_maHD);
             if (dtChung.Rows.Count > 0)
             {
                 DataRow row = dtChung.Rows[0];
                 lblNgay.Text = "Ngày lập: " + Convert.ToDateTime(row["NgayLap"]).ToString("dd/MM/yyyy HH:mm");
 
-                // Gộp luôn Tên khách + Hạng thành viên vào 1 dòng cho ngầu
                 string tenKhach = row["TenKhach"].ToString();
                 string hangTV = row["TenHang"].ToString();
                 lblKhach.Text = $"Khách hàng: {tenKhach} - [{hangTV}]";
@@ -57,16 +54,13 @@ namespace quanlynhasach
                 lblSdt.Text = "SĐT: " + row["SdtKhach"].ToString();
                 lblNhanVien.Text = "Thu ngân: " + row["TenNhanVien"].ToString();
 
-                // KHU VỰC TIỀN BẠC (Góc dưới bên phải)
                 decimal tongTien = Convert.ToDecimal(row["TongTien"]);
                 decimal phanTram = Convert.ToDecimal(row["PhanTramGiam"]);
                 decimal tienGiam = Convert.ToDecimal(row["TienGiam"]);
                 decimal thanhToan = Convert.ToDecimal(row["ThanhToan"]);
 
-                // Gán vào 3 cái Label ở góc dưới
                 lblTongTienHang.Text = $"Tổng tiền hàng: {tongTien:N0} VNĐ";
 
-                // Nếu có giảm giá thì hiện, không thì hiện 0 VNĐ
                 if (phanTram > 0)
                 {
                     lblGiamGia.Text = $"Giảm giá ({phanTram}%): -{tienGiam:N0} VNĐ";
@@ -78,7 +72,6 @@ namespace quanlynhasach
 
                 lblThanhToan.Text = $"Khách cần trả: {thanhToan:N0} VNĐ";
             }
-            // 2. Load danh sách Sách
             DataTable dtSach = tkController.GetDanhSachSachTrongHoaDon(_maHD);
             dgvChiTietSach.DataSource = dtSach;
 

@@ -1,7 +1,7 @@
-﻿using ReaLTaiizor.Colors; // Keep this for other color-related types
+﻿using ReaLTaiizor.Colors; 
 using ReaLTaiizor.Forms;
 using ReaLTaiizor.Manager;
-using ReaLTaiizor.Util;   // Chứa các Enum: Primary, Accent, TextShade
+using ReaLTaiizor.Util;   
 using System;
 using System.Windows.Forms;
 using static ReaLTaiizor.Controls.HopeTabPage;
@@ -16,22 +16,15 @@ namespace quanlynhasach
             SetupMaterialTheme();
             this.WindowState = FormWindowState.Maximized;
 
-            // 1. Phân quyền ngay khi form được khởi tạo
             PhanQuyenHeThong();
-            AddUserControl(new UC_Home()); // <--- THÊM DÒNG NÀY VÀO ĐÂY
+            AddUserControl(new UC_Home()); 
 
-            // 2. Mặc định mở màn hình TRANG CHỦ thay vì để trống
-            // (Đảm bảo bạn đã tạo file UC_Home.cs)
-
-            // 3. Hiển thị tên nhân viên đăng nhập lên tiêu đề của Form
-            // (Đảm bảo class Session đã được tạo và có dữ liệu từ lúc Login)
+    
             this.Text = $"Hệ Thống Nhà Sách - Xin chào: {Session.HoTen} ({Session.ChucVu})";
         }
 
         private void PhanQuyenHeThong()
         {
-            // Nếu chức vụ là "Nhân viên" thì ẩn các nút quản lý đi
-            // Tên nút phải khớp đúng với tên (Name) bạn đặt trong Designer
             if (Session.ChucVu == "Nhân viên")
             {
                 btnQuanLySach.Visible = false;
@@ -47,29 +40,23 @@ namespace quanlynhasach
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
 
-            // Viết đầy đủ đường dẫn System.Drawing.Color để C# không báo lỗi
             materialSkinManager.ColorScheme = new MaterialColorScheme(
-                System.Drawing.Color.FromArgb(63, 81, 181),   // primary: Xanh Indigo 500
-                System.Drawing.Color.FromArgb(48, 63, 159),   // darkPrimary: Xanh Indigo 700
-                System.Drawing.Color.FromArgb(197, 202, 233), // lightPrimary: Xanh Indigo 100
-                System.Drawing.Color.FromArgb(255, 64, 129),  // accent: Hồng Pink 200
-                System.Drawing.Color.White                    // textShade: Chữ màu trắng
+                System.Drawing.Color.FromArgb(63, 81, 181),   
+                System.Drawing.Color.FromArgb(48, 63, 159),  
+                System.Drawing.Color.FromArgb(197, 202, 233), 
+                System.Drawing.Color.FromArgb(255, 64, 129), 
+                System.Drawing.Color.White                   
             );
         }
 
         private void AddUserControl(UserControl uc)
         {
-            pnlContent.Controls.Clear(); // Xóa sạch màn hình cũ
-            uc.Dock = DockStyle.Fill;    // Phóng to màn hình mới lấp đầy vùng trống
-            pnlContent.Controls.Add(uc); // Gắn vào
+            pnlContent.Controls.Clear(); 
+            uc.Dock = DockStyle.Fill;   
+            pnlContent.Controls.Add(uc); 
             uc.BringToFront();
         }
 
-        // =====================================
-        // CÁC SỰ KIỆN CHUYỂN TRANG BÊN SIDEBAR
-        // =====================================
-
-        // Nút Trang Chủ mới thêm
         private void btnMenuHome_Click(object sender, EventArgs e)
         {
             AddUserControl(new UC_Home());

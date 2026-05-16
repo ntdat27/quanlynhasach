@@ -13,7 +13,6 @@ namespace quanlynhasach.Controllers
         {
             try
             {
-                // 1. Tạo Hóa Đơn và lấy lại Mã Hóa Đơn (LAST_INSERT_ID)
                 string khachHangId = maKH.HasValue ? maKH.Value.ToString() : "NULL";
 
                 string queryHoaDon = $"INSERT INTO HoaDon (MaKH, MaNV, TongTien, PhanTramGiam, TienGiam, ThanhToan) " +
@@ -22,7 +21,6 @@ namespace quanlynhasach.Controllers
 
                 int maHD = db.ExecuteScalar(queryHoaDon);
 
-                // 2. Chạy vòng lặp thêm Chi Tiết Hóa Đơn & Trừ Tồn Kho
                 foreach (var item in danhSachChiTiet)
                 {
                     string queryChiTiet = $"INSERT INTO ChiTietHoaDon (MaHD, MaSach, SoLuongBan, GiaBan, ThanhTien) " +
@@ -32,11 +30,11 @@ namespace quanlynhasach.Controllers
                     string queryTruKho = $"UPDATE Sach SET SoLuongTon = SoLuongTon - {item.SoLuongBan} WHERE MaSach = {item.MaSach}";
                     db.ExecuteNonQuery(queryTruKho);
                 }
-                return true; // Thành công
+                return true; 
             }
             catch (Exception)
             {
-                return false; // Thất bại
+                return false; 
             }
         }
     }

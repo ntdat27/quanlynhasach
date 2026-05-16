@@ -17,18 +17,16 @@ namespace quanlynhasach
         {
             InitializeComponent();
 
-            // Tự động thêm các option cho ComboBox Chức vụ
             cboChucVu.Items.Clear();
             cboChucVu.Items.Add("Admin");
             cboChucVu.Items.Add("Nhân viên");
-            cboChucVu.SelectedIndex = 0; // Chọn mặc định là Admin
+            cboChucVu.SelectedIndex = 0; 
 
 
             FormatDataGridView(dgvNhanVien);
             SetupColumns();
             LoadData();
 
-            // KÍCH HOẠT NÚT BẤM BẰNG CODE
          
             dgvNhanVien.CellClick += dgvNhanVien_CellClick;
         }
@@ -216,12 +214,10 @@ namespace quanlynhasach
         }
 
         #endregion
-        // Hàm chuyển DataGridView thành DataTable (Chỉ lấy cột đang hiển thị)
         private DataTable ConvertDgvToDataTable(DataGridView dgv)
         {
             DataTable dt = new DataTable();
 
-            // 1. Tạo cột cho Excel dựa trên các cột đang hiện (Visible = true) của DGV
             foreach (DataGridViewColumn col in dgv.Columns)
             {
                 if (col.Visible)
@@ -230,10 +226,9 @@ namespace quanlynhasach
                 }
             }
 
-            // 2. Lấy dữ liệu từng dòng
             foreach (DataGridViewRow row in dgv.Rows)
             {
-                if (!row.IsNewRow) // Bỏ qua dòng trống cuối cùng
+                if (!row.IsNewRow) 
                 {
                     DataRow dr = dt.NewRow();
                     int colIndex = 0;
@@ -273,7 +268,7 @@ namespace quanlynhasach
                         worksheet.Cell("A1").Style.Font.Bold = true;
                         worksheet.Cell("A1").Style.Font.FontSize = 16;
                         worksheet.Cell("A1").Style.Font.FontColor = XLColor.White;
-                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.DarkGreen; // Nền xanh lá
+                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.DarkGreen; 
                         worksheet.Cell("A1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
                         var table = worksheet.Cell(3, 1).InsertTable(dtExport);
@@ -291,18 +286,14 @@ namespace quanlynhasach
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             string tuKhoaTen = txtHoTen.Text.Trim();
-            string tuKhoaSdt = txtSDT.Text.Trim(); // Bạn đặt tên là txtSDT
+            string tuKhoaSdt = txtSDT.Text.Trim(); 
 
-            // 2. Gọi Controller để lấy dữ liệu
             DataTable dtKetQua = nvController.SearchNhanVien(tuKhoaTen, tuKhoaSdt);
 
-            // 3. Xóa trắng bảng cũ
             dgvNhanVien.Rows.Clear();
 
-            // 4. Đổ dữ liệu mới vào bảng
             foreach (DataRow row in dtKetQua.Rows)
             {
-                // Thêm đúng 6 thông tin theo thứ tự bạn đã tạo trong SetupColumns()
                 dgvNhanVien.Rows.Add(
                     row["MaNV"],
                     row["HoTen"],

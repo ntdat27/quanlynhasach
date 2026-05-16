@@ -13,6 +13,6 @@ namespace quanlynhasach.Models
         public string SoDienThoai { get; set; }
         public string TaiKhoan { get; set; }
         public string MatKhau { get; set; }
-        public string ChucVu { get; set; } // Ví dụ: Admin, NhanVien
+        public string ChucVu { get; set; }
     }
 }

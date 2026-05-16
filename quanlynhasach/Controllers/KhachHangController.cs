@@ -10,7 +10,6 @@ namespace quanlynhasach.Controllers
     {
         private DatabaseHelper db = new DatabaseHelper();
 
-        // Lấy 1 khách hàng bằng SĐT (Đã đổi tên bảng thành HangThanhVien)
         public KhachHang GetKhachHangBySdt(string sdt)
         {
             string query = $@"SELECT kh.MaKH, kh.HoTen, kh.SoDienThoai, kh.DiemTichLuy, kh.MaHang, 
@@ -38,7 +37,6 @@ namespace quanlynhasach.Controllers
             return null;
         }
 
-        // Lấy danh sách toàn bộ khách hàng (Đã đổi tên bảng thành HangThanhVien)
         public List<KhachHang> GetAllKhachHang()
         {
             List<KhachHang> list = new List<KhachHang>();
@@ -71,7 +69,6 @@ namespace quanlynhasach.Controllers
             return dt.Rows.Count > 0;
         }
 
-        // Thêm khách hàng (Đã bỏ cột PhanTramGiam ở bảng KhachHang cho đúng DB của bạn)
         public bool AddKhachHang(KhachHang kh)
         {
             string query = $"INSERT INTO KhachHang (HoTen, SoDienThoai, DiemTichLuy, MaHang) " +
@@ -95,7 +92,6 @@ namespace quanlynhasach.Controllers
         {
             try
             {
-                // Nối với bảng hangthanhvien để lấy được Tên Hạng và Giảm Giá y như lúc Load tất cả
                 string query = $@"
                     SELECT k.MaKH, k.HoTen, k.SoDienThoai, k.DiemTichLuy, 
                            t.TenHang, t.PhanTramGiam

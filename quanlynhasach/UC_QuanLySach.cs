@@ -17,12 +17,25 @@ namespace quanlynhasach
         public UC_QuanLySach()
         {
             InitializeComponent();
-            LoadComboBoxes();
             FormatDataGridView(dgvDanhSachSach);
             SetupColumns();
             LoadData();
-
             dgvDanhSachSach.CellClick += dgvDanhSachSach_CellClick;
+            KiemTraPhanQuyen();
+        }
+        private void KiemTraPhanQuyen()
+        {
+            // Ép đích danh đến đúng thư mục Models
+            if (quanlynhasach.Models.Session.CurrentUser != null)
+            {
+                string role = quanlynhasach.Models.Session.CurrentUser.ChucVu;
+                bool laQuanLy = (role == "Admin" || role == "Quản lý kho");
+
+                btnThem.Enabled = laQuanLy;
+                btnSua.Enabled = laQuanLy;
+                btnXoa.Enabled = laQuanLy;
+                btnNhapHang.Enabled = laQuanLy;
+            }
         }
 
         #region UI Cấu hình
@@ -36,7 +49,6 @@ namespace quanlynhasach
             dgv.AllowUserToAddRows = false;
             dgv.RowHeadersVisible = false;
             dgv.RowTemplate.Height = 35;
-
             dgv.EnableHeadersVisualStyles = false;
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(48, 63, 159);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
@@ -49,29 +61,20 @@ namespace quanlynhasach
             dgvDanhSachSach.Columns.Clear();
             dgvDanhSachSach.Columns.Add("MaSach", "Mã");
             dgvDanhSachSach.Columns["MaSach"].Width = 60;
-
             dgvDanhSachSach.Columns.Add("TenSach", "Tên sách");
             dgvDanhSachSach.Columns["TenSach"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-            // Thêm các cột ẩn (hoặc hiện tùy bạn) để lấy dữ liệu khi click
             dgvDanhSachSach.Columns.Add("MaTL", "Mã TL");
             dgvDanhSachSach.Columns["MaTL"].Visible = false;
-
             dgvDanhSachSach.Columns.Add("MaTG", "Mã TG");
             dgvDanhSachSach.Columns["MaTG"].Visible = false;
-
             dgvDanhSachSach.Columns.Add("MaNXB", "Mã NXB");
             dgvDanhSachSach.Columns["MaNXB"].Visible = false;
-
             dgvDanhSachSach.Columns.Add("NamXB", "Năm XB");
             dgvDanhSachSach.Columns["NamXB"].Width = 80;
-
             dgvDanhSachSach.Columns.Add("GiaNhap", "Giá nhập");
-            dgvDanhSachSach.Columns["GiaNhap"].Visible = false; // Có thể ẩn đi cho gọn
-
+            dgvDanhSachSach.Columns["GiaNhap"].Visible = false;
             dgvDanhSachSach.Columns.Add("SoLuongTon", "Tồn kho");
             dgvDanhSachSach.Columns["SoLuongTon"].Width = 100;
-
             dgvDanhSachSach.Columns.Add("GiaBan", "Giá bán");
             dgvDanhSachSach.Columns["GiaBan"].DefaultCellStyle.Format = "N0";
             dgvDanhSachSach.Columns["GiaBan"].Width = 120;
@@ -85,7 +88,6 @@ namespace quanlynhasach
                 List<Sach> ds = sachController.GetAllSach();
                 foreach (var s in ds)
                 {
-                    // Chú ý thứ tự add phải khớp với thứ tự add Columns ở trên
                     dgvDanhSachSach.Rows.Add(s.MaSach, s.TenSach, s.MaTL, s.MaTG, s.MaNXB, s.NamXB, s.GiaNhap, s.SoLuongTon, s.GiaBan);
                 }
             }
@@ -96,15 +98,45 @@ namespace quanlynhasach
         }
         #endregion
 
-        #region Sự kiện Nút bấm (CRUD)
+        #region Hàm Hỗ Trợ Xử Lý DB
+        // Tự động kiểm tra và thêm mới Danh mục nếu người dùng gõ nội dung chưa có
+        private int GetOrInsertValue(string tableName, string nameColumn, string idColumn, string textValue)
+        {
+            if (string.IsNullOrWhiteSpace(textValue)) return 0;
+            DatabaseHelper db = new DatabaseHelper();
+            string safeText = textValue.Trim().Replace("'", "''");
+            string checkQuery = $"SELECT {idColumn} FROM {tableName} WHERE {nameColumn} = N'{safeText}'";
+            DataTable dt = db.ExecuteQuery(checkQuery);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0][idColumn]);
+            }
+            else
+            {
+                string insertQuery = $"INSERT INTO {tableName} ({nameColumn}) VALUES (N'{safeText}'); SELECT LAST_INSERT_ID();";
+                return db.ExecuteScalar(insertQuery);
+            }
+        }
 
+        // Lấy ngược Tên chữ từ Mã ID để điền lên TextBox khi click vào Bảng
+        private string GetNameFromDB(string tableName, string nameCol, string idCol, int id)
+        {
+            if (id <= 0) return "";
+            DatabaseHelper db = new DatabaseHelper();
+            DataTable dt = db.ExecuteQuery($"SELECT {nameCol} FROM {tableName} WHERE {idCol} = {id}");
+            if (dt.Rows.Count > 0) return dt.Rows[0][0].ToString();
+            return "";
+        }
+        #endregion
+
+        #region Sự kiện Nút bấm (CRUD)
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             lblMaSach.Text = "";
             txtTenSach.Clear();
-            cboTheLoai.SelectedIndex = -1;
-            cboTacGia.SelectedIndex = -1;
-            cboNXB.SelectedIndex = -1;
+            txtTheLoai.Clear();
+            txtTacGia.Clear();
+            txtNXB.Clear();
             txtNamXB.Clear();
             txtGiaNhap.Clear();
             txtGiaBan.Clear();
@@ -123,9 +155,10 @@ namespace quanlynhasach
             Sach s = new Sach
             {
                 TenSach = txtTenSach.Text.Trim(),
-                MaTL = Convert.ToInt32(cboTheLoai.SelectedValue),
-                MaTG = Convert.ToInt32(cboTacGia.SelectedValue),
-                MaNXB = Convert.ToInt32(cboNXB.SelectedValue),
+                // Đọc trực tiếp từ TextBox thay vì ComboBox
+                MaTL = GetOrInsertValue("theloai", "TenTL", "MaTL", txtTheLoai.Text),
+                MaTG = GetOrInsertValue("tacgia", "TenTG", "MaTG", txtTacGia.Text),
+                MaNXB = GetOrInsertValue("nhaxuatban", "TenNXB", "MaNXB", txtNXB.Text),
                 NamXB = string.IsNullOrEmpty(txtNamXB.Text) ? 0 : int.Parse(txtNamXB.Text),
                 GiaNhap = string.IsNullOrEmpty(txtGiaNhap.Text) ? 0 : int.Parse(txtGiaNhap.Text),
                 GiaBan = string.IsNullOrEmpty(txtGiaBan.Text) ? 0 : int.Parse(txtGiaBan.Text),
@@ -152,9 +185,9 @@ namespace quanlynhasach
             {
                 MaSach = int.Parse(lblMaSach.Text),
                 TenSach = txtTenSach.Text.Trim(),
-                MaTL = Convert.ToInt32(cboTheLoai.SelectedValue),
-                MaTG = Convert.ToInt32(cboTacGia.SelectedValue),
-                MaNXB = Convert.ToInt32(cboNXB.SelectedValue),
+                MaTL = GetOrInsertValue("theloai", "TenTL", "MaTL", txtTheLoai.Text),
+                MaTG = GetOrInsertValue("tacgia", "TenTG", "MaTG", txtTacGia.Text),
+                MaNXB = GetOrInsertValue("nhaxuatban", "TenNXB", "MaNXB", txtNXB.Text),
                 NamXB = string.IsNullOrEmpty(txtNamXB.Text) ? 0 : int.Parse(txtNamXB.Text),
                 GiaNhap = string.IsNullOrEmpty(txtGiaNhap.Text) ? 0 : int.Parse(txtGiaNhap.Text),
                 GiaBan = string.IsNullOrEmpty(txtGiaBan.Text) ? 0 : int.Parse(txtGiaBan.Text),
@@ -186,24 +219,17 @@ namespace quanlynhasach
                 }
             }
         }
-        // Hàm chuyển DataGridView thành DataTable (Chỉ lấy cột đang hiển thị)
+
         private DataTable ConvertDgvToDataTable(DataGridView dgv)
         {
             DataTable dt = new DataTable();
-
-            // 1. Tạo cột cho Excel dựa trên các cột đang hiện (Visible = true) của DGV
             foreach (DataGridViewColumn col in dgv.Columns)
             {
-                if (col.Visible)
-                {
-                    dt.Columns.Add(col.HeaderText);
-                }
+                if (col.Visible) dt.Columns.Add(col.HeaderText);
             }
-
-            // 2. Lấy dữ liệu từng dòng
             foreach (DataGridViewRow row in dgv.Rows)
             {
-                if (!row.IsNewRow) // Bỏ qua dòng trống cuối cùng
+                if (!row.IsNewRow)
                 {
                     DataRow dr = dt.NewRow();
                     int colIndex = 0;
@@ -229,48 +255,23 @@ namespace quanlynhasach
                 lblMaSach.Text = row.Cells["MaSach"].Value.ToString();
                 txtTenSach.Text = row.Cells["TenSach"].Value?.ToString();
 
-                // Đổ ngược dữ liệu vào text box
-                cboTheLoai.SelectedValue = row.Cells["MaTL"].Value;
-                cboTacGia.SelectedValue = row.Cells["MaTG"].Value;
-                cboNXB.SelectedValue = row.Cells["MaNXB"].Value;
+                // Đổ ID ngầm và tra DB lấy tên chữ lên các TextBox
+                txtTheLoai.Text = GetNameFromDB("theloai", "TenTL", "MaTL", Convert.ToInt32(row.Cells["MaTL"].Value ?? 0));
+                txtTacGia.Text = GetNameFromDB("tacgia", "TenTG", "MaTG", Convert.ToInt32(row.Cells["MaTG"].Value ?? 0));
+                txtNXB.Text = GetNameFromDB("nhaxuatban", "TenNXB", "MaNXB", Convert.ToInt32(row.Cells["MaNXB"].Value ?? 0));
+
                 txtNamXB.Text = row.Cells["NamXB"].Value?.ToString();
                 txtGiaNhap.Text = row.Cells["GiaNhap"].Value?.ToString();
-
                 txtSoLuong.Text = row.Cells["SoLuongTon"].Value?.ToString();
                 txtGiaBan.Text = row.Cells["GiaBan"].Value?.ToString();
             }
-        }
-        private void LoadComboBoxes()
-        {
-            DatabaseHelper db = new DatabaseHelper();
-
-            // 1. Đổ dữ liệu Thể Loại
-            DataTable dtTL = db.ExecuteQuery("SELECT MaTL, TenTL FROM theloai");
-            cboTheLoai.DataSource = dtTL;
-            cboTheLoai.DisplayMember = "TenTL"; // Hiển thị Chữ
-            cboTheLoai.ValueMember = "MaTL";    // Lưu ngầm Số
-
-            // 2. Đổ dữ liệu Tác Giả
-            DataTable dtTG = db.ExecuteQuery("SELECT MaTG, TenTG FROM tacgia");
-            cboTacGia.DataSource = dtTG;
-            cboTacGia.DisplayMember = "TenTG";
-            cboTacGia.ValueMember = "MaTG";
-
-            // 3. Đổ dữ liệu NXB
-            DataTable dtNXB = db.ExecuteQuery("SELECT MaNXB, TenNXB FROM nhaxuatban");
-            cboNXB.DataSource = dtNXB;
-            cboNXB.DisplayMember = "TenNXB";
-            cboNXB.ValueMember = "MaNXB";
         }
         #endregion
 
         private void btnXuatExcel_Click(object sender, EventArgs e)
         {
             if (dgvDanhSachSach.Rows.Count == 0) return;
-
-            // Dùng hàm bùa chú để lấy dữ liệu đang thấy trên màn hình (Đã áp dụng Tìm kiếm)
             DataTable dtExport = ConvertDgvToDataTable(dgvDanhSachSach);
-
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Excel Workbook|*.xlsx";
             sfd.Title = "Lưu danh sách Sách";
@@ -285,7 +286,7 @@ namespace quanlynhasach
                         var worksheet = workbook.Worksheets.Add("Kho Sách");
 
                         worksheet.Cell("A1").Value = "DANH SÁCH SÁCH TRONG KHO";
-                        worksheet.Range("A1:G1").Merge(); // Gộp 7 ô
+                        worksheet.Range("A1:G1").Merge();
                         worksheet.Cell("A1").Style.Font.Bold = true;
                         worksheet.Cell("A1").Style.Font.FontSize = 16;
                         worksheet.Cell("A1").Style.Font.FontColor = XLColor.White;
@@ -307,29 +308,42 @@ namespace quanlynhasach
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             string tuKhoa = txtTenSach.Text.Trim();
-
-            // Gọi cái hàm SearchSach xịn xò mà bạn đã viết sẵn trong Controller
             List<Models.Sach> listKetQua = sachController.SearchSach(tuKhoa);
-
-            // 1. Dọn sạch bảng dữ liệu cũ
             dgvDanhSachSach.Rows.Clear();
-
-            // 2. Đổ dữ liệu tìm được vào bảng
             foreach (Models.Sach s in listKetQua)
             {
-                // ĐÃ FIX LỖI Ở ĐÂY: Truyền đúng Mã (MaTL, MaTG, MaNXB) 
-                // và đưa SoLuongTon lên trước GiaBan cho khớp với SetupColumns!
-                dgvDanhSachSach.Rows.Add(
-                    s.MaSach,
-                    s.TenSach,
-                    s.MaTL,       // Sửa từ s.TenTL thành s.MaTL
-                    s.MaTG,       // Sửa từ s.TenTG thành s.MaTG
-                    s.MaNXB,      // Sửa từ s.TenNXB thành s.MaNXB
-                    s.NamXB,
-                    s.GiaNhap,
-                    s.SoLuongTon, // Đưa tồn kho lên trước
-                    s.GiaBan      // Để giá bán xuống cuối
-                );
+                dgvDanhSachSach.Rows.Add(s.MaSach, s.TenSach, s.MaTL, s.MaTG, s.MaNXB, s.NamXB, s.GiaNhap, s.SoLuongTon, s.GiaBan);
+            }
+        }
+
+        private void btnNhapHang_Click(object sender, EventArgs e)
+        {
+            // 1. Kiểm tra cực kỳ an toàn xem ID sách đang chọn có phải là một con số hợp lệ không
+            if (!int.TryParse(lblMaSach.Text, out int maSach))
+            {
+                MessageBox.Show("Vui lòng click chọn một cuốn sách từ danh sách bên dưới trước khi nhập hàng!");
+                return;
+            }
+
+            // 2. Hiển thị hộp thoại nhập số lượng
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Nhập số lượng sách cộng thêm vào kho:", "Nhập hàng", "0");
+
+            // 3. Kiểm tra xem người dùng có nhập đúng số không (chống nhập chữ vào hộp thoại)
+            if (int.TryParse(input, out int soLuongThem) && soLuongThem > 0)
+            {
+                if (sachController.NhapHang(maSach, soLuongThem))
+                {
+                    MessageBox.Show($"Đã nhập thêm {soLuongThem} cuốn vào kho thành công!");
+                    LoadData(); // Load lại bảng để thấy số lượng tồn kho tăng lên
+                }
+                else
+                {
+                    MessageBox.Show("Lỗi khi kết nối CSDL để nhập hàng!");
+                }
+            }
+            else if (!string.IsNullOrEmpty(input)) // Chỉ báo lỗi nếu người dùng có gõ chữ bậy bạ (bỏ qua nếu bấm Cancel)
+            {
+                MessageBox.Show("Số lượng nhập vào phải là một con số hợp lệ lớn hơn 0!");
             }
         }
     }

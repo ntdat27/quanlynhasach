@@ -30,11 +30,11 @@
         {
             this.pnlContent = new System.Windows.Forms.Panel();
             this.pnlSidebar = new System.Windows.Forms.Panel();
+            this.btnQuanLySach = new ReaLTaiizor.Controls.MaterialButton();
             this.btnQuanLyHoaDon = new ReaLTaiizor.Controls.MaterialButton();
             this.btnMenuHome = new ReaLTaiizor.Controls.MaterialButton();
             this.btnMenuKhachHang = new ReaLTaiizor.Controls.MaterialButton();
             this.btnMenuNhanVien = new ReaLTaiizor.Controls.MaterialButton();
-            this.btnQuanLySach = new ReaLTaiizor.Controls.MaterialButton();
             this.btnMenuPOS = new ReaLTaiizor.Controls.MaterialButton();
             this.pnlSidebar.SuspendLayout();
             this.SuspendLayout();
@@ -61,6 +61,27 @@
             this.pnlSidebar.Name = "pnlSidebar";
             this.pnlSidebar.Size = new System.Drawing.Size(200, 633);
             this.pnlSidebar.TabIndex = 0;
+            // 
+            // btnQuanLySach
+            // 
+            this.btnQuanLySach.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnQuanLySach.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnQuanLySach.Depth = 0;
+            this.btnQuanLySach.HighEmphasis = true;
+            this.btnQuanLySach.Icon = null;
+            this.btnQuanLySach.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnQuanLySach.Location = new System.Drawing.Point(16, 150);
+            this.btnQuanLySach.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnQuanLySach.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnQuanLySach.Name = "btnQuanLySach";
+            this.btnQuanLySach.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnQuanLySach.Size = new System.Drawing.Size(124, 36);
+            this.btnQuanLySach.TabIndex = 2;
+            this.btnQuanLySach.Text = "Quản Lý Sách";
+            this.btnQuanLySach.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnQuanLySach.UseAccentColor = false;
+            this.btnQuanLySach.UseVisualStyleBackColor = true;
+            this.btnQuanLySach.Click += new System.EventHandler(this.btnQuanLySach_Click);
             // 
             // btnQuanLyHoaDon
             // 
@@ -145,27 +166,6 @@
             this.btnMenuNhanVien.UseAccentColor = false;
             this.btnMenuNhanVien.UseVisualStyleBackColor = true;
             this.btnMenuNhanVien.Click += new System.EventHandler(this.btnMenuNhanVien_Click);
-            // 
-            // btnQuanLySach
-            // 
-            this.btnQuanLySach.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnQuanLySach.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnQuanLySach.Depth = 0;
-            this.btnQuanLySach.HighEmphasis = true;
-            this.btnQuanLySach.Icon = null;
-            this.btnQuanLySach.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            this.btnQuanLySach.Location = new System.Drawing.Point(16, 150);
-            this.btnQuanLySach.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnQuanLySach.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            this.btnQuanLySach.Name = "btnQuanLySach";
-            this.btnQuanLySach.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnQuanLySach.Size = new System.Drawing.Size(124, 36);
-            this.btnQuanLySach.TabIndex = 2;
-            this.btnQuanLySach.Text = "Quản Lý Sách";
-            this.btnQuanLySach.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnQuanLySach.UseAccentColor = false;
-            this.btnQuanLySach.UseVisualStyleBackColor = true;
-            this.btnQuanLySach.Click += new System.EventHandler(this.btnQuanLySach_Click);
             // 
             // btnMenuPOS
             // 

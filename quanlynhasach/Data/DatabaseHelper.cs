@@ -10,7 +10,6 @@ namespace quanlynhasach.Data
 {
     public class DatabaseHelper
     {
-        // Nhớ thay đổi thông số host, user và password cho khớp với MySQL local của bạn
         private readonly string connectionString = "Server=localhost;Database=quanlynhasach;Uid=root;Pwd=;";
 
         public DataTable ExecuteQuery(string query)
@@ -30,7 +29,6 @@ namespace quanlynhasach.Data
             return dt;
         }
 
-        // Bổ sung thêm hàm ExecuteNonQuery để dành cho các lệnh INSERT, UPDATE, DELETE sau này
         public int ExecuteNonQuery(string query)
         {
             int result = 0;
@@ -42,9 +40,8 @@ namespace quanlynhasach.Data
                     result = cmd.ExecuteNonQuery();
                 }
             }
-            return result; // Trả về số dòng bị ảnh hưởng
+            return result;
         }
-        // Hàm mới: Thực thi lệnh và trả về 1 ID vừa được tạo
         public int ExecuteScalar(string query)
         {
             int result = 0;

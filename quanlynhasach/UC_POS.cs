@@ -30,11 +30,9 @@ namespace quanlynhasach
             SetupColumns();
             LoadDanhSachSach();
 
-            // Đăng ký các sự kiện
             dgvSach.CellDoubleClick += dgvSach_CellDoubleClick;
             dgvGioHang.CellContentClick += dgvGioHang_CellContentClick;
 
-            // SỰ KIỆN MỚI: Bắt sự kiện khi thu ngân gõ tay số lượng rồi click ra chỗ khác
             dgvGioHang.CellEndEdit += dgvGioHang_CellEndEdit;
 
             txtTimKiem.TextChanged += txtTimKiem_TextChanged;
@@ -69,7 +67,6 @@ namespace quanlynhasach
 
         private void SetupColumns()
         {
-            // ================= 1. BẢNG SÁCH =================
             dgvSach.Columns.Add("MaSach", "Mã");
             dgvSach.Columns["MaSach"].Width = 50;
             dgvSach.Columns.Add("TenSach", "Tên sách");
@@ -80,10 +77,8 @@ namespace quanlynhasach
             dgvSach.Columns["GiaBan"].DefaultCellStyle.Format = "N0";
             dgvSach.Columns["GiaBan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-            // ================= 2. BẢNG GIỎ HÀNG =================
             dgvGioHang.Columns.Clear();
 
-            // MỞ KHÓA BẢNG GIỎ HÀNG: Chỉ cho phép sửa duy nhất cột "SoLuong"
             dgvGioHang.ReadOnly = false;
 
             dgvGioHang.Columns.Add("MaSach", "Mã");
@@ -91,7 +86,7 @@ namespace quanlynhasach
 
             dgvGioHang.Columns.Add("TenSach", "Tên sách");
             dgvGioHang.Columns["TenSach"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvGioHang.Columns["TenSach"].ReadOnly = true; // Khóa cột tên
+            dgvGioHang.Columns["TenSach"].ReadOnly = true; 
 
             DataGridViewButtonColumn btnTru = new DataGridViewButtonColumn();
             btnTru.Name = "colTru";
@@ -101,11 +96,10 @@ namespace quanlynhasach
             btnTru.Width = 30;
             dgvGioHang.Columns.Add(btnTru);
 
-            // Cột Số lượng để ở giữa (Không ReadOnly để thu ngân gõ tay được)
             dgvGioHang.Columns.Add("SoLuong", "SL");
             dgvGioHang.Columns["SoLuong"].Width = 50;
             dgvGioHang.Columns["SoLuong"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvGioHang.Columns["SoLuong"].ReadOnly = false; // MỞ KHÓA CHỖ NÀY
+            dgvGioHang.Columns["SoLuong"].ReadOnly = false;
 
             DataGridViewButtonColumn btnCong = new DataGridViewButtonColumn();
             btnCong.Name = "colCong";
@@ -142,9 +136,7 @@ namespace quanlynhasach
             }
         }
 
-        // ========================================================
-        // LOGIC KHÁCH HÀNG & TÍNH TIỀN
-        // ========================================================
+        
         private void txtSoDienThoai_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter) KiemTraKhachHang();
@@ -164,12 +156,11 @@ namespace quanlynhasach
                 phanTramGiamHienTai = 0;
                 maKhachHangHienTai = null;
                 lblTenKhachDisplay.Text = "Khách hàng: Khách vãng lai";
-                lblHangThanhVien.Text = "Hạng: N/A"; // Hiện hạng mặc định
+                lblHangThanhVien.Text = "Hạng: N/A"; 
                 lblHangThanhVien.ForeColor = Color.Gray;
             }
             else
             {
-                // Sử dụng Controller để lấy thông tin khách hàng đầy đủ
                 KhachHang kh = khController.GetKhachHangBySdt(sdt);
 
                 if (kh != null)
@@ -179,9 +170,8 @@ namespace quanlynhasach
 
                     lblTenKhachDisplay.Text = "Khách hàng: " + kh.HoTen;
 
-                    // HIỂN THỊ HẠNG THÀNH VIÊN Ở ĐÂY
-                    lblHangThanhVien.Text = "Hạng: " + kh.TenHang; // Ví dụ: Hạng: Thành viên Bạc
-                    lblHangThanhVien.ForeColor = Color.FromArgb(48, 63, 159); // Màu xanh đậm cho sang
+                    lblHangThanhVien.Text = "Hạng: " + kh.TenHang; 
+                    lblHangThanhVien.ForeColor = Color.FromArgb(48, 63, 159); 
                 }
                 else
                 {
@@ -193,7 +183,6 @@ namespace quanlynhasach
                 }
             }
 
-            // CUỐI CÙNG: Gọi tính tiền để cập nhật số tiền giảm theo hạng vừa tìm được
             TinhTongTien();
         }
 
@@ -201,7 +190,6 @@ namespace quanlynhasach
         {
             long tongTienHang = 0;
 
-            // 1. Tính tiền gốc từ giỏ hàng
             foreach (DataGridViewRow row in dgvGioHang.Rows)
             {
                 if (row.Cells["ThanhTien"].Value != null)
@@ -210,23 +198,16 @@ namespace quanlynhasach
                 }
             }
 
-            // 2. Tính toán dựa trên % giảm giá đã được xác định ở hàm KiemTraKhachHang
             long soTienDuocGiam = (tongTienHang * phanTramGiamHienTai) / 100;
             long thanhTien = tongTienHang - soTienDuocGiam;
 
-            // 3. Đổ dữ liệu lên giao diện
             lblTamTinh.Text = string.Format("{0:N0} đ", tongTienHang);
 
-            // Hiển thị dòng Giảm giá có kèm % để khách dễ nhìn
             lblGiamGia.Text = string.Format("- {0:N0} đ ({1}%)", soTienDuocGiam, phanTramGiamHienTai);
 
-            // Tổng tiền cuối cùng
             lblTongCong.Text = string.Format("{0:N0} đ", thanhTien);
         }
 
-        // ========================================================
-        // LOGIC GIỎ HÀNG & TÌM KIẾM
-        // ========================================================
         private void txtTimKiem_TextChanged(object sender, EventArgs e)
         {
             string keyword = txtTimKiem.Text.Trim();
@@ -307,9 +288,6 @@ namespace quanlynhasach
             }
         }
 
-        // ========================================================
-        // SỰ KIỆN MỚI: KHI THU NGÂN GÕ TAY SỐ LƯỢNG VÀO BẢNG
-        // ========================================================
         private void dgvGioHang_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvGioHang.Columns[e.ColumnIndex].Name == "SoLuong")
@@ -321,7 +299,6 @@ namespace quanlynhasach
                 string input = row.Cells["SoLuong"].Value?.ToString();
                 int soLuongMoi;
 
-                // 1. Kiểm tra xem có gõ chữ bậy bạ (ví dụ gõ chữ "abc") hoặc gõ số âm không
                 if (!int.TryParse(input, out soLuongMoi) || soLuongMoi < 0)
                 {
                     MessageBox.Show("Vui lòng nhập số lượng hợp lệ!", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -331,7 +308,6 @@ namespace quanlynhasach
                     return;
                 }
 
-                // 2. Nếu gõ số 0 thì xóa cuốn sách đó khỏi giỏ
                 if (soLuongMoi == 0)
                 {
                     dgvGioHang.Rows.Remove(row);
@@ -339,17 +315,15 @@ namespace quanlynhasach
                     return;
                 }
 
-                // 3. Nếu gõ 1000, kiểm tra xem tồn kho có đủ 1000 không
                 int tonKho = LayTonKho(maSach);
                 if (soLuongMoi > tonKho)
                 {
                     MessageBox.Show($"Chỉ còn {tonKho} quyển trong kho! Đã tự động điều chỉnh về số lượng tối đa.", "Vượt quá Tồn Kho", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    row.Cells["SoLuong"].Value = tonKho; // Ép về số lượng tối đa trong kho
+                    row.Cells["SoLuong"].Value = tonKho; 
                     row.Cells["ThanhTien"].Value = tonKho * donGia;
                 }
                 else
                 {
-                    // Hợp lệ, gán giá trị mới
                     row.Cells["SoLuong"].Value = soLuongMoi;
                     row.Cells["ThanhTien"].Value = soLuongMoi * donGia;
                 }
@@ -358,7 +332,6 @@ namespace quanlynhasach
             }
         }
 
-        // Hàm phụ trợ để tìm lại số lượng tồn kho của một mã sách
         private int LayTonKho(int maSach)
         {
             foreach (DataGridViewRow sachRow in dgvSach.Rows)
@@ -371,9 +344,6 @@ namespace quanlynhasach
             return 0;
         }
 
-        // ========================================================
-        // NÚT THANH TOÁN (Lưu xuống Database)
-        // ========================================================
         private bool IsFileLocked(string filePath)
         {
             if (!System.IO.File.Exists(filePath)) return false;
@@ -391,7 +361,6 @@ namespace quanlynhasach
         {
             try
             {
-                // 1. Kiểm tra quyền ghi file (đề phòng file đang mở)
                 if (IsFileLocked(filePath))
                 {
                     MessageBox.Show("File này đang được mở bởi một chương trình khác!", "Lỗi");
@@ -404,7 +373,6 @@ namespace quanlynhasach
                     {
                         Document document = new Document(pdf);
 
-                        // 2. Nạp Font chuẩn xác (Sửa tên file arial.ttf, arialbd.ttf, ariali.ttf)
                         string path = @"C:\Windows\Fonts\";
                         PdfFont fontNormal = PdfFontFactory.CreateFont(path + "arial.ttf", PdfEncodings.IDENTITY_H);
                         PdfFont fontBold = PdfFontFactory.CreateFont(path + "arialbd.ttf", PdfEncodings.IDENTITY_H);
@@ -412,22 +380,19 @@ namespace quanlynhasach
 
                         document.SetFont(fontNormal);
 
-                        // --- BẮT ĐẦU VẼ HÓA ĐƠN ---
                         document.Add(new Paragraph("HÓA ĐƠN")
                             .SetTextAlignment(TextAlignment.CENTER)
                             .SetFontSize(20)
-                            .SetFont(fontBold)); // Dùng biến fontBold đã nạp
+                            .SetFont(fontBold)); 
 
                         document.Add(new Paragraph("Nhà Sách Thư Quán").SetTextAlignment(TextAlignment.CENTER));
                         document.Add(new Paragraph("--------------------------------------------------").SetTextAlignment(TextAlignment.CENTER));
 
-                        // Thông tin khách hàng
                         document.Add(new Paragraph(lblTenKhachDisplay.Text));
-                        document.Add(new Paragraph(lblHangThanhVien.Text)); // Đã có Hạng thành viên như bạn muốn!
+                        document.Add(new Paragraph(lblHangThanhVien.Text));
                         document.Add(new Paragraph($"Ngày lập: {DateTime.Now:dd/MM/yyyy HH:mm}"));
                         document.Add(new Paragraph("\n"));
 
-                        // Bảng sản phẩm
                         Table table = new Table(4).UseAllAvailableWidth();
                         table.AddHeaderCell(new Cell().Add(new Paragraph("Tên sách").SetFont(fontBold)));
                         table.AddHeaderCell(new Cell().Add(new Paragraph("SL").SetFont(fontBold)));
@@ -443,7 +408,6 @@ namespace quanlynhasach
                         }
                         document.Add(table);
 
-                        // Tổng kết tiền
                         document.Add(new Paragraph("\n"));
                         document.Add(new Paragraph($"Tạm tính: {lblTamTinh.Text}").SetTextAlignment(TextAlignment.RIGHT));
                         document.Add(new Paragraph($"Giảm giá: {lblGiamGia.Text}").SetTextAlignment(TextAlignment.RIGHT));
@@ -462,7 +426,6 @@ namespace quanlynhasach
             }
             catch (Exception ex)
             {
-                // Hiện lỗi chi tiết để dễ "bắt bệnh"
                 MessageBox.Show("Lỗi tạo PDF: " + ex.Message + "\n" + ex.InnerException?.Message);
             }
         }
@@ -513,7 +476,6 @@ namespace quanlynhasach
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         ExportInvoiceToPDF(sfd.FileName);
-                        // Mở file sau khi lưu xong
                         System.Diagnostics.Process.Start(sfd.FileName);
                     }
                 }
@@ -524,7 +486,7 @@ namespace quanlynhasach
                 lblTongCong.Text = "0 VNĐ";
                 lblTongCong.ForeColor = Color.Black;
 
-                LoadDanhSachSach(); // Gọi lại kho sách để cập nhật số tồn mới
+                LoadDanhSachSach(); 
             }
             else
             {
