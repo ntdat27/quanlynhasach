@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace quanlynhasach
@@ -17,25 +19,16 @@ namespace quanlynhasach
         {
             InitializeComponent();
 
-            SetupComboBox();
-
             FormatDataGridView(dgvKhachHang);
             SetupColumns();
             LoadData();
             dgvKhachHang.CellClick += dgvKhachHang_CellClick;
+
+            // Khóa cứng các ô thông tin tự động, chỉ cho phép hiển thị xem
+            txtHangThanhVien.ReadOnly = true;
         }
 
-        private void SetupComboBox()
-        {
-            quanlynhasach.Data.DatabaseHelper db = new quanlynhasach.Data.DatabaseHelper();
-            System.Data.DataTable dt = db.ExecuteQuery("SELECT MaHang, TenHang FROM HangThanhVien");
-
-            cboHangThanhVien.DataSource = dt;
-            cboHangThanhVien.DisplayMember = "TenHang"; 
-            cboHangThanhVien.ValueMember = "MaHang";    
-        }
-
-        #region UI & Dữ liệu
+        #region UI & Dữ liệu hiển thị
         private void FormatDataGridView(DataGridView dgv)
         {
             dgv.ReadOnly = true;
@@ -66,14 +59,16 @@ namespace quanlynhasach
             dgvKhachHang.Columns.Add("SoDienThoai", "SĐT");
             dgvKhachHang.Columns["SoDienThoai"].Width = 120;
 
-            dgvKhachHang.Columns.Add("DiemTichLuy", "Điểm");
-            dgvKhachHang.Columns["DiemTichLuy"].Width = 80;
+            dgvKhachHang.Columns.Add("TongTienDaMua", "Tổng chi tiêu");
+            dgvKhachHang.Columns["TongTienDaMua"].Width = 120;
+            dgvKhachHang.Columns["TongTienDaMua"].DefaultCellStyle.Format = "N0";
 
             dgvKhachHang.Columns.Add("TenHang", "Hạng Thành Viên");
-            dgvKhachHang.Columns["TenHang"].Width = 180;
+            dgvKhachHang.Columns["TenHang"].Width = 150;
 
             dgvKhachHang.Columns.Add("PhanTramGiam", "Giảm (%)");
-            dgvKhachHang.Columns["PhanTramGiam"].Width = 80;
+            dgvKhachHang.Columns["PhanTramGiam"].Width = 90;
+            dgvKhachHang.Columns["PhanTramGiam"].DefaultCellStyle.Format = "N0";
         }
 
         private void LoadData()
@@ -84,7 +79,8 @@ namespace quanlynhasach
                 List<KhachHang> ds = khController.GetAllKhachHang();
                 foreach (var kh in ds)
                 {
-                    dgvKhachHang.Rows.Add(kh.MaKH, kh.HoTen, kh.SoDienThoai, kh.DiemTichLuy, kh.TenHang, kh.PhanTramGiam);
+                    // Đọc trực tiếp các thuộc tính thông minh tự tính toán từ Model KhachHang
+                    dgvKhachHang.Rows.Add(kh.MaKH, kh.HoTen, kh.SoDienThoai, kh.TongTienDaMua, kh.TenHang, kh.PhanTramGiam);
                 }
             }
             catch (Exception ex)
@@ -92,54 +88,59 @@ namespace quanlynhasach
                 MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
             }
         }
+
+        private string ChuanHoaHoTen(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return "";
+            text = Regex.Replace(text.Trim(), @"\s+", " ");
+            TextInfo textInfo = new CultureInfo("vi-VN", false).TextInfo;
+            return textInfo.ToTitleCase(text.ToLower());
+        }
         #endregion
 
-        #region Logic CRUD
+        #region Logic CRUD Khách Hàng
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             lblMaKH.Text = "";
             txtHoTen.Clear();
             txtSDT.Clear();
-            txtDiemTichLuy.Clear();
-            cboHangThanhVien.SelectedIndex = 0; 
+            txtHangThanhVien.Text = "Khách hàng thân thiết";
             LoadData();
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            string hoTen = txtHoTen.Text.Trim();
+            string hoTen = ChuanHoaHoTen(txtHoTen.Text);
             string sdt = txtSDT.Text.Trim();
 
             if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(sdt))
             {
-                MessageBox.Show("Vui lòng nhập đủ thông tin!"); return;
+                MessageBox.Show("Vui lòng nhập đầy đủ Họ tên và Số điện thoại!");
+                return;
             }
 
-            if (sdt.Length != 10 || !System.Text.RegularExpressions.Regex.IsMatch(sdt, @"^\d{10}$"))
+            if (!Regex.IsMatch(sdt, @"^0\d{9}$"))
             {
-                MessageBox.Show("Số điện thoại không hợp lệ! Vui lòng nhập đúng 10 chữ số (ví dụ: 0987654321).", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Số điện thoại không hợp lệ! Vui lòng nhập đúng 10 chữ số và bắt đầu bằng số 0.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (khController.KiemTraTrungSdt(sdt))
             {
-                MessageBox.Show("Số điện thoại này đã được đăng ký cho một khách hàng khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Số điện thoại này đã được sử dụng cho một khách hàng khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            int diem = 0;
-            int.TryParse(txtDiemTichLuy.Text, out diem);
 
             KhachHang kh = new KhachHang
             {
                 HoTen = hoTen,
                 SoDienThoai = sdt,
-                DiemTichLuy = diem,
-                MaHang = Convert.ToInt32(cboHangThanhVien.SelectedValue)
+                TongTienDaMua = 0 // Khách mới mặc định chi tiêu bằng 0
             };
 
             if (khController.AddKhachHang(kh))
             {
+                LichSuController.GhiLog(Session.MaNV, $"Đăng ký khách hàng mới: {hoTen} ({sdt})");
                 MessageBox.Show("Thêm khách hàng thành công!");
                 btnLamMoi_Click(null, null);
             }
@@ -149,42 +150,43 @@ namespace quanlynhasach
         {
             if (string.IsNullOrEmpty(lblMaKH.Text)) return;
 
-            string hoTen = txtHoTen.Text.Trim();
+            string hoTen = ChuanHoaHoTen(txtHoTen.Text);
             string sdt = txtSDT.Text.Trim();
             int maKHHienTai = int.Parse(lblMaKH.Text);
 
             if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(sdt))
             {
-                MessageBox.Show("Vui lòng nhập đủ thông tin!"); return;
+                MessageBox.Show("Vui lòng nhập đủ thông tin!");
+                return;
             }
 
-            if (sdt.Length != 10 || !System.Text.RegularExpressions.Regex.IsMatch(sdt, @"^\d{10}$"))
+            if (!Regex.IsMatch(sdt, @"^0\d{9}$"))
             {
-                MessageBox.Show("Số điện thoại không hợp lệ! Vui lòng nhập đúng 10 chữ số.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Số điện thoại không hợp lệ! Phải bao gồm đúng 10 số và bắt đầu bằng số 0.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (khController.KiemTraTrungSdt(sdt, maKHHienTai))
             {
-                MessageBox.Show("Số điện thoại này đã được đăng ký cho một khách hàng khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Số điện thoại này đã được sử dụng cho một khách hàng khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            int diem = 0;
-            int.TryParse(txtDiemTichLuy.Text, out diem);
+            // Lấy lại tổng tiền cũ từ hàng đang chọn để tránh ghi đè làm mất tích lũy của khách
+            decimal tongTienHienTai = Convert.ToDecimal(dgvKhachHang.CurrentRow.Cells["TongTienDaMua"].Value);
 
             KhachHang kh = new KhachHang
             {
                 MaKH = maKHHienTai,
                 HoTen = hoTen,
                 SoDienThoai = sdt,
-                DiemTichLuy = diem,
-                MaHang = Convert.ToInt32(cboHangThanhVien.SelectedValue)
+                TongTienDaMua = tongTienHienTai
             };
 
             if (khController.UpdateKhachHang(kh))
             {
-                MessageBox.Show("Cập nhật thành công!");
+                LichSuController.GhiLog(Session.MaNV, $"Cập nhật thông tin khách hàng ID: {maKHHienTai}");
+                MessageBox.Show("Cập nhật thông tin khách hàng thành công!");
                 btnLamMoi_Click(null, null);
             }
         }
@@ -192,11 +194,20 @@ namespace quanlynhasach
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(lblMaKH.Text)) return;
+            int maKH = int.Parse(lblMaKH.Text);
 
-            if (MessageBox.Show("Xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Bạn có chắc chắn muốn xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                khController.DeleteKhachHang(int.Parse(lblMaKH.Text));
-                btnLamMoi_Click(null, null);
+                if (khController.DeleteKhachHang(maKH))
+                {
+                    LichSuController.GhiLog(Session.MaNV, $"Xóa khách hàng ID: {maKH}");
+                    MessageBox.Show("Đã xóa dữ liệu khách hàng thành công!");
+                    btnLamMoi_Click(null, null);
+                }
+                else
+                {
+                    MessageBox.Show("Không thể xóa khách hàng này (Dữ liệu đã vướng vào lịch sử các hóa đơn cũ)!");
+                }
             }
         }
 
@@ -206,29 +217,25 @@ namespace quanlynhasach
             {
                 DataGridViewRow row = dgvKhachHang.Rows[e.RowIndex];
                 lblMaKH.Text = row.Cells["MaKH"].Value.ToString();
-                txtHoTen.Text = row.Cells["HoTen"].Value.ToString();
-                txtSDT.Text = row.Cells["SoDienThoai"].Value.ToString();
-                txtDiemTichLuy.Text = row.Cells["DiemTichLuy"].Value.ToString();
+                txtHoTen.Text = row.Cells["HoTen"].Value?.ToString();
+                txtSDT.Text = row.Cells["SoDienThoai"].Value?.ToString();
 
-                cboHangThanhVien.Text = row.Cells["TenHang"].Value.ToString();
+                // Đổ dữ liệu tổng tiền (định dạng số) và chữ tên Hạng lên các ô hiển thị TextBox tương ứng
+                txtHangThanhVien.Text = row.Cells["TenHang"].Value?.ToString();
             }
         }
         #endregion
+
         private DataTable ConvertDgvToDataTable(DataGridView dgv)
         {
             DataTable dt = new DataTable();
-
             foreach (DataGridViewColumn col in dgv.Columns)
             {
-                if (col.Visible)
-                {
-                    dt.Columns.Add(col.HeaderText);
-                }
+                if (col.Visible) dt.Columns.Add(col.HeaderText);
             }
-
             foreach (DataGridViewRow row in dgv.Rows)
             {
-                if (!row.IsNewRow) 
+                if (!row.IsNewRow)
                 {
                     DataRow dr = dt.NewRow();
                     int colIndex = 0;
@@ -251,7 +258,6 @@ namespace quanlynhasach
             if (dgvKhachHang.Rows.Count == 0) return;
 
             DataTable dtExport = ConvertDgvToDataTable(dgvKhachHang);
-
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Excel Workbook|*.xlsx";
             sfd.FileName = "KhachHang_" + DateTime.Now.ToString("ddMMyyyy");
@@ -269,7 +275,7 @@ namespace quanlynhasach
                         worksheet.Cell("A1").Style.Font.Bold = true;
                         worksheet.Cell("A1").Style.Font.FontSize = 16;
                         worksheet.Cell("A1").Style.Font.FontColor = XLColor.White;
-                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.Purple; 
+                        worksheet.Cell("A1").Style.Fill.BackgroundColor = XLColor.Purple;
                         worksheet.Cell("A1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
                         var table = worksheet.Cell(3, 1).InsertTable(dtExport);
@@ -286,22 +292,26 @@ namespace quanlynhasach
 
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
-            string tuKhoaTen = txtHoTen.Text.Trim(); 
-            string tuKhoaSdt = txtSDT.Text.Trim(); 
+            string tuKhoaTen = txtHoTen.Text.Trim();
+            string tuKhoaSdt = txtSDT.Text.Trim();
 
             DataTable dtKetQua = khController.SearchKhachHang(tuKhoaTen, tuKhoaSdt);
-
             dgvKhachHang.Rows.Clear();
 
             foreach (DataRow row in dtKetQua.Rows)
             {
+                decimal tongTien = row["TongTienDaMua"] != DBNull.Value ? Convert.ToDecimal(row["TongTienDaMua"]) : 0;
+
+                // Sử dụng một đối tượng tạm thời để mượn logic tính hạng và % giảm tự động
+                KhachHang khTemp = new KhachHang { TongTienDaMua = tongTien };
+
                 dgvKhachHang.Rows.Add(
                     row["MaKH"],
                     row["HoTen"],
                     row["SoDienThoai"],
-                    row["DiemTichLuy"],
-                    row["TenHang"],
-                    row["PhanTramGiam"]
+                    tongTien,
+                    khTemp.TenHang,
+                    khTemp.PhanTramGiam
                 );
             }
         }

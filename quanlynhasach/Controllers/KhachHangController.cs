@@ -11,15 +11,33 @@ namespace quanlynhasach.Controllers
     {
         private DatabaseHelper db = new DatabaseHelper();
 
+        // Hàm lấy toàn bộ danh sách khách hàng
+        public List<KhachHang> GetAllKhachHang()
+        {
+            List<KhachHang> list = new List<KhachHang>();
+            string query = "SELECT MaKH, HoTen, SoDienThoai, TongTienDaMua FROM khachhang";
+            DataTable dt = db.ExecuteQuery(query);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                list.Add(new KhachHang
+                {
+                    MaKH = Convert.ToInt32(row["MaKH"]),
+                    HoTen = row["HoTen"].ToString(),
+                    SoDienThoai = row["SoDienThoai"].ToString(),
+                    TongTienDaMua = row["TongTienDaMua"] != DBNull.Value ? Convert.ToDecimal(row["TongTienDaMua"]) : 0
+                });
+            }
+            return list;
+        }
+
+        // HÀM ĐƯỢC BỔ SUNG LẠI: Tìm kiếm khách hàng bằng SĐT dùng cho màn hình POS/Bán hàng
         public KhachHang GetKhachHangBySdt(string sdt)
         {
-            string query = @"SELECT kh.MaKH, kh.HoTen, kh.SoDienThoai, kh.DiemTichLuy, kh.MaHang, 
-                                     tv.TenHang, tv.PhanTramGiam 
-                              FROM KhachHang kh 
-                              LEFT JOIN HangThanhVien tv ON kh.MaHang = tv.MaHang 
-                              WHERE kh.SoDienThoai = @sdt";
-
-            MySqlParameter[] parameters = { new MySqlParameter("@sdt", sdt) };
+            string query = "SELECT MaKH, HoTen, SoDienThoai, TongTienDaMua FROM khachhang WHERE SoDienThoai = @sdt";
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@sdt", sdt.Trim())
+            };
             DataTable dt = db.ExecuteQuery(query, parameters);
 
             if (dt.Rows.Count > 0)
@@ -30,108 +48,77 @@ namespace quanlynhasach.Controllers
                     MaKH = Convert.ToInt32(row["MaKH"]),
                     HoTen = row["HoTen"].ToString(),
                     SoDienThoai = row["SoDienThoai"].ToString(),
-                    DiemTichLuy = Convert.ToInt32(row["DiemTichLuy"]),
-                    MaHang = Convert.ToInt32(row["MaHang"]),
-                    TenHang = row["TenHang"].ToString(),
-                    PhanTramGiam = Convert.ToInt32(row["PhanTramGiam"])
+                    TongTienDaMua = row["TongTienDaMua"] != DBNull.Value ? Convert.ToDecimal(row["TongTienDaMua"]) : 0
                 };
             }
-            return null;
+            return null; // Trả về null nếu không tìm thấy số điện thoại này
         }
 
-        public List<KhachHang> GetAllKhachHang()
+        // Hàm tìm kiếm khách hàng phục vụ bộ lọc tìm kiếm trên giao diện quản lý
+        public DataTable SearchKhachHang(string tenKH, string sdt)
         {
-            List<KhachHang> list = new List<KhachHang>();
-            string query = @"SELECT kh.MaKH, kh.HoTen, kh.SoDienThoai, kh.DiemTichLuy, kh.MaHang, 
-                                    tv.TenHang, tv.PhanTramGiam 
-                             FROM KhachHang kh 
-                             LEFT JOIN HangThanhVien tv ON kh.MaHang = tv.MaHang";
-
-            DataTable dt = db.ExecuteQuery(query);
-
-            foreach (DataRow row in dt.Rows)
-            {
-                list.Add(new KhachHang
-                {
-                    MaKH = Convert.ToInt32(row["MaKH"]),
-                    HoTen = row["HoTen"].ToString(),
-                    SoDienThoai = row["SoDienThoai"].ToString(),
-                    DiemTichLuy = Convert.ToInt32(row["DiemTichLuy"]),
-                    MaHang = Convert.ToInt32(row["MaHang"]),
-                    TenHang = row["TenHang"].ToString(),
-                    PhanTramGiam = Convert.ToInt32(row["PhanTramGiam"])
-                });
-            }
-            return list;
-        }
-
-        public bool KiemTraTrungSdt(string sdt, int maKHIgnore = 0)
-        {
-            string query = "SELECT MaKH FROM KhachHang WHERE SoDienThoai = @sdt AND MaKH != @maKHIgnore";
+            string query = "SELECT MaKH, HoTen, SoDienThoai, TongTienDaMua FROM khachhang WHERE HoTen LIKE @tenKH AND SoDienThoai LIKE @sdt";
             MySqlParameter[] parameters = {
-                new MySqlParameter("@sdt", sdt),
-                new MySqlParameter("@maKHIgnore", maKHIgnore)
+                new MySqlParameter("@tenKH", "%" + tenKH + "%"),
+                new MySqlParameter("@sdt", "%" + sdt + "%")
             };
-            DataTable dt = db.ExecuteQuery(query, parameters);
-            return dt.Rows.Count > 0;
+            return db.ExecuteQuery(query, parameters);
         }
 
+        // Hàm thêm mới khách hàng
         public bool AddKhachHang(KhachHang kh)
         {
-            string query = "INSERT INTO KhachHang (HoTen, SoDienThoai, DiemTichLuy, MaHang) VALUES (@hoTen, @soDienThoai, @diem, @maHang)";
+            string query = "INSERT INTO khachhang (HoTen, SoDienThoai, TongTienDaMua) VALUES (@HoTen, @SoDienThoai, @TongTienDaMua)";
             MySqlParameter[] parameters = {
-                new MySqlParameter("@hoTen", kh.HoTen),
-                new MySqlParameter("@soDienThoai", kh.SoDienThoai),
-                new MySqlParameter("@diem", kh.DiemTichLuy),
-                new MySqlParameter("@maHang", kh.MaHang)
+                new MySqlParameter("@HoTen", kh.HoTen),
+                new MySqlParameter("@SoDienThoai", kh.SoDienThoai),
+                new MySqlParameter("@TongTienDaMua", kh.TongTienDaMua)
             };
             return db.ExecuteNonQuery(query, parameters) > 0;
         }
 
+        // Hàm cập nhật thông tin khách hàng
         public bool UpdateKhachHang(KhachHang kh)
         {
-            string query = "UPDATE KhachHang SET HoTen=@hoTen, SoDienThoai=@soDienThoai, DiemTichLuy=@diem, MaHang=@maHang WHERE MaKH=@maKH";
+            string query = "UPDATE khachhang SET HoTen = @HoTen, SoDienThoai = @SoDienThoai, TongTienDaMua = @TongTienDaMua WHERE MaKH = @MaKH";
             MySqlParameter[] parameters = {
-                new MySqlParameter("@hoTen", kh.HoTen),
-                new MySqlParameter("@soDienThoai", kh.SoDienThoai),
-                new MySqlParameter("@diem", kh.DiemTichLuy),
-                new MySqlParameter("@maHang", kh.MaHang),
-                new MySqlParameter("@maKH", kh.MaKH)
+                new MySqlParameter("@HoTen", kh.HoTen),
+                new MySqlParameter("@SoDienThoai", kh.SoDienThoai),
+                new MySqlParameter("@TongTienDaMua", kh.TongTienDaMua),
+                new MySqlParameter("@MaKH", kh.MaKH)
             };
             return db.ExecuteNonQuery(query, parameters) > 0;
         }
 
+        // Hàm xóa khách hàng
         public bool DeleteKhachHang(int maKH)
-        {
-            string query = "DELETE FROM KhachHang WHERE MaKH=@maKH";
-            MySqlParameter[] parameters = { new MySqlParameter("@maKH", maKH) };
-            return db.ExecuteNonQuery(query, parameters) > 0;
-        }
-
-        public DataTable SearchKhachHang(string tenKH, string sdt)
         {
             try
             {
-                string query = @"
-                    SELECT k.MaKH, k.HoTen, k.SoDienThoai, k.DiemTichLuy, 
-                           t.TenHang, t.PhanTramGiam
-                    FROM khachhang k
-                    LEFT JOIN hangthanhvien t ON k.MaHang = t.MaHang
-                    WHERE k.HoTen LIKE @tenKH 
-                      AND k.SoDienThoai LIKE @sdt";
-
-                MySqlParameter[] parameters = {
-                    new MySqlParameter("@tenKH", "%" + tenKH + "%"),
-                    new MySqlParameter("@sdt", "%" + sdt + "%")
-                };
-
-                return db.ExecuteQuery(query, parameters);
+                string query = "DELETE FROM khachhang WHERE MaKH = @MaKH";
+                MySqlParameter[] parameters = { new MySqlParameter("@MaKH", maKH) };
+                return db.ExecuteNonQuery(query, parameters) > 0;
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine("Lỗi tìm kiếm: " + ex.Message);
-                return new DataTable();
+                return false;
             }
+        }
+
+        // Hàm check trùng SĐT khi thêm hoặc sửa dữ liệu khách
+        public bool KiemTraTrungSdt(string sdt, int maKHExempt = 0)
+        {
+            string query = "SELECT COUNT(*) FROM khachhang WHERE SoDienThoai = @sdt AND MaKH != @maKH";
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@sdt", sdt),
+                new MySqlParameter("@maKH", maKHExempt)
+            };
+            DataTable dt = db.ExecuteQuery(query, parameters);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0][0]) > 0;
+            }
+            return false;
         }
     }
 }

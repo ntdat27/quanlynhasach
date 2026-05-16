@@ -29,7 +29,6 @@ namespace quanlynhasach
 
         private void KiemTraPhanQuyen()
         {
-            // Gọi trực tiếp biến tĩnh Session.MaNV và Session.ChucVu
             if (quanlynhasach.Models.Session.MaNV > 0)
             {
                 string role = quanlynhasach.Models.Session.ChucVu;
@@ -100,30 +99,22 @@ namespace quanlynhasach
                 MessageBox.Show("Lỗi: " + ex.Message);
             }
         }
-
         #endregion
 
         #region Hàm Hỗ Trợ Xử Lý DB
         private string ChuanHoaVanBan(string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return "";
-
-            // 1. Xóa khoảng trắng thừa ở đầu, cuối và ép các khoảng trắng đôi ở giữa về 1 khoảng trắng đơn
             text = Regex.Replace(text.Trim(), @"\s+", " ");
-
-            // 2. Chuyển toàn bộ chuỗi về chữ thường, sau đó viết hoa chữ cái đầu của mỗi từ theo chuẩn tiếng Việt
             TextInfo textInfo = new CultureInfo("vi-VN", false).TextInfo;
             return textInfo.ToTitleCase(text.ToLower());
         }
 
-        // Tự động kiểm tra và thêm mới Danh mục nếu người dùng gõ nội dung chưa có
         private int GetOrInsertValue(string tableName, string nameColumn, string idColumn, string textValue)
         {
             if (string.IsNullOrWhiteSpace(textValue)) return 0;
             DatabaseHelper db = new DatabaseHelper();
 
-            // Tên bảng và tên cột bắt buộc phải nối chuỗi (vì SQL không cho parameter hóa tên bảng), 
-            // nhưng DỮ LIỆU người dùng nhập (textValue) thì bắt buộc phải dùng @parameter.
             string checkQuery = $"SELECT {idColumn} FROM {tableName} WHERE {nameColumn} = @textValue";
             MySqlParameter[] checkParams = { new MySqlParameter("@textValue", textValue.Trim()) };
 
@@ -140,7 +131,6 @@ namespace quanlynhasach
             }
         }
 
-        // Lấy ngược Tên chữ từ Mã ID để điền lên TextBox khi click vào Bảng
         private string GetNameFromDB(string tableName, string nameCol, string idCol, int id)
         {
             if (id <= 0) return "";
@@ -170,20 +160,35 @@ namespace quanlynhasach
             LoadData();
         }
 
-        private void btnTeam_Click(object sender, EventArgs e) // Giữ nguyên ánh xạ sự kiện nút Thêm của bạn
+        private void btnTeam_Click(object sender, EventArgs e)
         {
             btnThem_Click(sender, e);
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtTenSach.Text))
+            // 1. CHẶN RỖNG CÁC TRƯỜNG BẮT BUỘC ĐỂ TRÁNH LỖI KHÓA NGOẠI (FOREIGN KEY = 0)
+            if (string.IsNullOrWhiteSpace(txtTenSach.Text) ||
+                string.IsNullOrWhiteSpace(txtTheLoai.Text) ||
+                string.IsNullOrWhiteSpace(txtTacGia.Text) ||
+                string.IsNullOrWhiteSpace(txtNXB.Text))
             {
-                MessageBox.Show("Vui lòng nhập tên sách!");
+                MessageBox.Show("Vui lòng điền đầy đủ thông tin: Tên sách, Thể loại, Tác giả và Nhà xuất bản!", "Thông báo lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // ĐÃ THAY ĐỔI: Chuẩn hóa toàn bộ chuỗi nhập tay qua bộ lọc trước khi bắn xuống DB
+            // 2. KIỂM TRA ĐIỀU KIỆN NĂM XUẤT BẢN (Số dương & Không vượt quá năm hiện tại)
+            if (!int.TryParse(txtNamXB.Text.Trim(), out int namXB) || namXB <= 0 || namXB > DateTime.Now.Year)
+            {
+                MessageBox.Show($"Năm xuất bản phải là một số nguyên dương và không được lớn hơn năm hiện tại ({DateTime.Now.Year})!", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Đọc và ép kiểu an toàn cho dữ liệu số tránh crash định dạng chữ
+            int.TryParse(txtGiaNhap.Text.Trim(), out int giaNhap);
+            int.TryParse(txtGiaBan.Text.Trim(), out int giaBan);
+            int.TryParse(txtSoLuong.Text.Trim(), out int soLuong);
+
             string tenSachChuan = ChuanHoaVanBan(txtTenSach.Text);
             string theLoaiChuan = ChuanHoaVanBan(txtTheLoai.Text);
             string tacGiaChuan = ChuanHoaVanBan(txtTacGia.Text);
@@ -195,29 +200,49 @@ namespace quanlynhasach
                 MaTL = GetOrInsertValue("theloai", "TenTL", "MaTL", theLoaiChuan),
                 MaTG = GetOrInsertValue("tacgia", "TenTG", "MaTG", tacGiaChuan),
                 MaNXB = GetOrInsertValue("nhaxuatban", "TenNXB", "MaNXB", nxbChuan),
-                NamXB = string.IsNullOrEmpty(txtNamXB.Text) ? 0 : int.Parse(txtNamXB.Text),
-                GiaNhap = string.IsNullOrEmpty(txtGiaNhap.Text) ? 0 : int.Parse(txtGiaNhap.Text),
-                GiaBan = string.IsNullOrEmpty(txtGiaBan.Text) ? 0 : int.Parse(txtGiaBan.Text),
-                SoLuongTon = string.IsNullOrEmpty(txtSoLuong.Text) ? 0 : int.Parse(txtSoLuong.Text)
+                NamXB = namXB,
+                GiaNhap = giaNhap >= 0 ? giaNhap : 0,
+                GiaBan = giaBan >= 0 ? giaBan : 0,
+                SoLuongTon = soLuong >= 0 ? soLuong : 0
             };
 
             if (sachController.AddSach(s))
             {
-                MessageBox.Show("Thêm sách thành công!");
+                MessageBox.Show("Thêm sách mới thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnLamMoi_Click(null, null);
             }
-            else MessageBox.Show("Thêm thất bại, vui lòng kiểm tra lại kiểu dữ liệu!");
+            else MessageBox.Show("Thêm thất bại, vui lòng kiểm tra lại kết nối CSDL!");
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(lblMaSach.Text))
             {
-                MessageBox.Show("Vui lòng chọn một cuốn sách từ danh sách bên dưới!");
+                MessageBox.Show("Vui lòng chọn một cuốn sách từ danh sách bên dưới!", "Thông báo");
                 return;
             }
 
-            // ĐÃ THAY ĐỔI: Chuẩn hóa toàn bộ chuỗi nhập tay qua bộ lọc trước khi cập nhật DB
+            // 1. CHẶN RỖNG KHI SỬA
+            if (string.IsNullOrWhiteSpace(txtTenSach.Text) ||
+                string.IsNullOrWhiteSpace(txtTheLoai.Text) ||
+                string.IsNullOrWhiteSpace(txtTacGia.Text) ||
+                string.IsNullOrWhiteSpace(txtNXB.Text))
+            {
+                MessageBox.Show("Không được để trống Tên sách, Thể loại, Tác giả và Nhà xuất bản!", "Thông báo lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. KIỂM TRA ĐIỀU KIỆN NĂM XUẤT BẢN KHI SỬA
+            if (!int.TryParse(txtNamXB.Text.Trim(), out int namXB) || namXB <= 0 || namXB > DateTime.Now.Year)
+            {
+                MessageBox.Show($"Năm xuất bản phải là một số nguyên dương và không được lớn hơn năm hiện tại ({DateTime.Now.Year})!", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            int.TryParse(txtGiaNhap.Text.Trim(), out int giaNhap);
+            int.TryParse(txtGiaBan.Text.Trim(), out int giaBan);
+            int.TryParse(txtSoLuong.Text.Trim(), out int soLuong);
+
             string tenSachChuan = ChuanHoaVanBan(txtTenSach.Text);
             string theLoaiChuan = ChuanHoaVanBan(txtTheLoai.Text);
             string tacGiaChuan = ChuanHoaVanBan(txtTacGia.Text);
@@ -230,15 +255,15 @@ namespace quanlynhasach
                 MaTL = GetOrInsertValue("theloai", "TenTL", "MaTL", theLoaiChuan),
                 MaTG = GetOrInsertValue("tacgia", "TenTG", "MaTG", tacGiaChuan),
                 MaNXB = GetOrInsertValue("nhaxuatban", "TenNXB", "MaNXB", nxbChuan),
-                NamXB = string.IsNullOrEmpty(txtNamXB.Text) ? 0 : int.Parse(txtNamXB.Text),
-                GiaNhap = string.IsNullOrEmpty(txtGiaNhap.Text) ? 0 : int.Parse(txtGiaNhap.Text),
-                GiaBan = string.IsNullOrEmpty(txtGiaBan.Text) ? 0 : int.Parse(txtGiaBan.Text),
-                SoLuongTon = string.IsNullOrEmpty(txtSoLuong.Text) ? 0 : int.Parse(txtSoLuong.Text)
+                NamXB = namXB,
+                GiaNhap = giaNhap >= 0 ? giaNhap : 0,
+                GiaBan = giaBan >= 0 ? giaBan : 0,
+                SoLuongTon = soLuong >= 0 ? soLuong : 0
             };
 
             if (sachController.UpdateSach(s))
             {
-                MessageBox.Show("Cập nhật thành công!");
+                MessageBox.Show("Cập nhật thông tin sách thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnLamMoi_Click(null, null);
             }
         }

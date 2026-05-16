@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.materialCard1 = new ReaLTaiizor.Controls.MaterialCard();
+            this.btnNhapHang = new ReaLTaiizor.Controls.MaterialButton();
+            this.txtTacGia = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
+            this.txtTheLoai = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
+            this.txtNXB = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.btnTimKiem = new ReaLTaiizor.Controls.MaterialButton();
             this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
             this.label8 = new System.Windows.Forms.Label();
@@ -51,10 +55,6 @@
             this.txtGiaBan = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.txtTenSach = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.dgvDanhSachSach = new System.Windows.Forms.DataGridView();
-            this.txtNXB = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
-            this.txtTheLoai = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
-            this.txtTacGia = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
-            this.btnNhapHang = new ReaLTaiizor.Controls.MaterialButton();
             this.materialCard1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDanhSachSach)).BeginInit();
             this.SuspendLayout();
@@ -97,6 +97,117 @@
             this.materialCard1.Padding = new System.Windows.Forms.Padding(14);
             this.materialCard1.Size = new System.Drawing.Size(1000, 466);
             this.materialCard1.TabIndex = 0;
+            // 
+            // btnNhapHang
+            // 
+            this.btnNhapHang.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnNhapHang.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.btnNhapHang.Depth = 0;
+            this.btnNhapHang.HighEmphasis = true;
+            this.btnNhapHang.Icon = null;
+            this.btnNhapHang.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
+            this.btnNhapHang.Location = new System.Drawing.Point(349, 410);
+            this.btnNhapHang.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnNhapHang.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
+            this.btnNhapHang.Name = "btnNhapHang";
+            this.btnNhapHang.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.btnNhapHang.Size = new System.Drawing.Size(106, 36);
+            this.btnNhapHang.TabIndex = 41;
+            this.btnNhapHang.Text = "Nhập Hàng";
+            this.btnNhapHang.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.btnNhapHang.UseAccentColor = false;
+            this.btnNhapHang.UseVisualStyleBackColor = true;
+            this.btnNhapHang.Click += new System.EventHandler(this.btnNhapHang_Click);
+            // 
+            // txtTacGia
+            // 
+            this.txtTacGia.AnimateReadOnly = false;
+            this.txtTacGia.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtTacGia.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtTacGia.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.txtTacGia.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+            this.txtTacGia.Depth = 0;
+            this.txtTacGia.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtTacGia.HideSelection = true;
+            this.txtTacGia.LeadingIcon = null;
+            this.txtTacGia.Location = new System.Drawing.Point(785, 101);
+            this.txtTacGia.MaxLength = 32767;
+            this.txtTacGia.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.txtTacGia.Name = "txtTacGia";
+            this.txtTacGia.PasswordChar = '\0';
+            this.txtTacGia.PrefixSuffixText = null;
+            this.txtTacGia.ReadOnly = false;
+            this.txtTacGia.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtTacGia.SelectedText = "";
+            this.txtTacGia.SelectionLength = 0;
+            this.txtTacGia.SelectionStart = 0;
+            this.txtTacGia.ShortcutsEnabled = true;
+            this.txtTacGia.Size = new System.Drawing.Size(250, 48);
+            this.txtTacGia.TabIndex = 40;
+            this.txtTacGia.TabStop = false;
+            this.txtTacGia.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtTacGia.TrailingIcon = null;
+            this.txtTacGia.UseSystemPasswordChar = false;
+            // 
+            // txtTheLoai
+            // 
+            this.txtTheLoai.AnimateReadOnly = false;
+            this.txtTheLoai.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtTheLoai.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtTheLoai.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.txtTheLoai.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+            this.txtTheLoai.Depth = 0;
+            this.txtTheLoai.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtTheLoai.HideSelection = true;
+            this.txtTheLoai.LeadingIcon = null;
+            this.txtTheLoai.Location = new System.Drawing.Point(529, 101);
+            this.txtTheLoai.MaxLength = 32767;
+            this.txtTheLoai.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.txtTheLoai.Name = "txtTheLoai";
+            this.txtTheLoai.PasswordChar = '\0';
+            this.txtTheLoai.PrefixSuffixText = null;
+            this.txtTheLoai.ReadOnly = false;
+            this.txtTheLoai.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtTheLoai.SelectedText = "";
+            this.txtTheLoai.SelectionLength = 0;
+            this.txtTheLoai.SelectionStart = 0;
+            this.txtTheLoai.ShortcutsEnabled = true;
+            this.txtTheLoai.Size = new System.Drawing.Size(250, 48);
+            this.txtTheLoai.TabIndex = 39;
+            this.txtTheLoai.TabStop = false;
+            this.txtTheLoai.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtTheLoai.TrailingIcon = null;
+            this.txtTheLoai.UseSystemPasswordChar = false;
+            // 
+            // txtNXB
+            // 
+            this.txtNXB.AnimateReadOnly = false;
+            this.txtNXB.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtNXB.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtNXB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.txtNXB.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+            this.txtNXB.Depth = 0;
+            this.txtNXB.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtNXB.HideSelection = true;
+            this.txtNXB.LeadingIcon = null;
+            this.txtNXB.Location = new System.Drawing.Point(17, 193);
+            this.txtNXB.MaxLength = 32767;
+            this.txtNXB.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.txtNXB.Name = "txtNXB";
+            this.txtNXB.PasswordChar = '\0';
+            this.txtNXB.PrefixSuffixText = null;
+            this.txtNXB.ReadOnly = false;
+            this.txtNXB.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtNXB.SelectedText = "";
+            this.txtNXB.SelectionLength = 0;
+            this.txtNXB.SelectionStart = 0;
+            this.txtNXB.ShortcutsEnabled = true;
+            this.txtNXB.Size = new System.Drawing.Size(250, 48);
+            this.txtNXB.TabIndex = 38;
+            this.txtNXB.TabStop = false;
+            this.txtNXB.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtNXB.TrailingIcon = null;
+            this.txtNXB.UseSystemPasswordChar = false;
             // 
             // btnTimKiem
             // 
@@ -484,117 +595,6 @@
             this.dgvDanhSachSach.Name = "dgvDanhSachSach";
             this.dgvDanhSachSach.Size = new System.Drawing.Size(1000, 228);
             this.dgvDanhSachSach.TabIndex = 1;
-            // 
-            // txtNXB
-            // 
-            this.txtNXB.AnimateReadOnly = false;
-            this.txtNXB.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtNXB.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtNXB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.txtNXB.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
-            this.txtNXB.Depth = 0;
-            this.txtNXB.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.txtNXB.HideSelection = true;
-            this.txtNXB.LeadingIcon = null;
-            this.txtNXB.Location = new System.Drawing.Point(17, 193);
-            this.txtNXB.MaxLength = 32767;
-            this.txtNXB.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.txtNXB.Name = "txtNXB";
-            this.txtNXB.PasswordChar = '\0';
-            this.txtNXB.PrefixSuffixText = null;
-            this.txtNXB.ReadOnly = false;
-            this.txtNXB.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtNXB.SelectedText = "";
-            this.txtNXB.SelectionLength = 0;
-            this.txtNXB.SelectionStart = 0;
-            this.txtNXB.ShortcutsEnabled = true;
-            this.txtNXB.Size = new System.Drawing.Size(250, 48);
-            this.txtNXB.TabIndex = 38;
-            this.txtNXB.TabStop = false;
-            this.txtNXB.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.txtNXB.TrailingIcon = null;
-            this.txtNXB.UseSystemPasswordChar = false;
-            // 
-            // txtTheLoai
-            // 
-            this.txtTheLoai.AnimateReadOnly = false;
-            this.txtTheLoai.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtTheLoai.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtTheLoai.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.txtTheLoai.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
-            this.txtTheLoai.Depth = 0;
-            this.txtTheLoai.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.txtTheLoai.HideSelection = true;
-            this.txtTheLoai.LeadingIcon = null;
-            this.txtTheLoai.Location = new System.Drawing.Point(529, 101);
-            this.txtTheLoai.MaxLength = 32767;
-            this.txtTheLoai.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.txtTheLoai.Name = "txtTheLoai";
-            this.txtTheLoai.PasswordChar = '\0';
-            this.txtTheLoai.PrefixSuffixText = null;
-            this.txtTheLoai.ReadOnly = false;
-            this.txtTheLoai.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtTheLoai.SelectedText = "";
-            this.txtTheLoai.SelectionLength = 0;
-            this.txtTheLoai.SelectionStart = 0;
-            this.txtTheLoai.ShortcutsEnabled = true;
-            this.txtTheLoai.Size = new System.Drawing.Size(250, 48);
-            this.txtTheLoai.TabIndex = 39;
-            this.txtTheLoai.TabStop = false;
-            this.txtTheLoai.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.txtTheLoai.TrailingIcon = null;
-            this.txtTheLoai.UseSystemPasswordChar = false;
-            // 
-            // txtTacGia
-            // 
-            this.txtTacGia.AnimateReadOnly = false;
-            this.txtTacGia.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtTacGia.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtTacGia.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.txtTacGia.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
-            this.txtTacGia.Depth = 0;
-            this.txtTacGia.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.txtTacGia.HideSelection = true;
-            this.txtTacGia.LeadingIcon = null;
-            this.txtTacGia.Location = new System.Drawing.Point(785, 101);
-            this.txtTacGia.MaxLength = 32767;
-            this.txtTacGia.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.txtTacGia.Name = "txtTacGia";
-            this.txtTacGia.PasswordChar = '\0';
-            this.txtTacGia.PrefixSuffixText = null;
-            this.txtTacGia.ReadOnly = false;
-            this.txtTacGia.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtTacGia.SelectedText = "";
-            this.txtTacGia.SelectionLength = 0;
-            this.txtTacGia.SelectionStart = 0;
-            this.txtTacGia.ShortcutsEnabled = true;
-            this.txtTacGia.Size = new System.Drawing.Size(250, 48);
-            this.txtTacGia.TabIndex = 40;
-            this.txtTacGia.TabStop = false;
-            this.txtTacGia.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.txtTacGia.TrailingIcon = null;
-            this.txtTacGia.UseSystemPasswordChar = false;
-            // 
-            // btnNhapHang
-            // 
-            this.btnNhapHang.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnNhapHang.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.btnNhapHang.Depth = 0;
-            this.btnNhapHang.HighEmphasis = true;
-            this.btnNhapHang.Icon = null;
-            this.btnNhapHang.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            this.btnNhapHang.Location = new System.Drawing.Point(349, 410);
-            this.btnNhapHang.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.btnNhapHang.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            this.btnNhapHang.Name = "btnNhapHang";
-            this.btnNhapHang.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.btnNhapHang.Size = new System.Drawing.Size(106, 36);
-            this.btnNhapHang.TabIndex = 41;
-            this.btnNhapHang.Text = "Nhập Hàng";
-            this.btnNhapHang.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.btnNhapHang.UseAccentColor = false;
-            this.btnNhapHang.UseVisualStyleBackColor = true;
-            this.btnNhapHang.Click += new System.EventHandler(this.btnNhapHang_Click);
             // 
             // UC_QuanLySach
             // 

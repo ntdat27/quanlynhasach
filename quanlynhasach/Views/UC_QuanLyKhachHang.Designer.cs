@@ -32,20 +32,18 @@
             this.btnTimKiem = new ReaLTaiizor.Controls.MaterialButton();
             this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
             this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
-            this.cboHangThanhVien = new ReaLTaiizor.Controls.MaterialComboBox();
             this.btnSua = new ReaLTaiizor.Controls.MaterialButton();
             this.btnXoa = new ReaLTaiizor.Controls.MaterialButton();
             this.btnLamMoi = new ReaLTaiizor.Controls.MaterialButton();
             this.btnThem = new ReaLTaiizor.Controls.MaterialButton();
             this.lblMaKH = new System.Windows.Forms.Label();
-            this.txtDiemTichLuy = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.txtSDT = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.txtHoTen = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.dgvKhachHang = new System.Windows.Forms.DataGridView();
+            this.txtHangThanhVien = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.materialCard1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKhachHang)).BeginInit();
             this.SuspendLayout();
@@ -53,20 +51,18 @@
             // materialCard1
             // 
             this.materialCard1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard1.Controls.Add(this.txtHangThanhVien);
             this.materialCard1.Controls.Add(this.btnTimKiem);
             this.materialCard1.Controls.Add(this.btnXuatExcel);
             this.materialCard1.Controls.Add(this.label5);
-            this.materialCard1.Controls.Add(this.label4);
             this.materialCard1.Controls.Add(this.label3);
             this.materialCard1.Controls.Add(this.label1);
             this.materialCard1.Controls.Add(this.bigLabel1);
-            this.materialCard1.Controls.Add(this.cboHangThanhVien);
             this.materialCard1.Controls.Add(this.btnSua);
             this.materialCard1.Controls.Add(this.btnXoa);
             this.materialCard1.Controls.Add(this.btnLamMoi);
             this.materialCard1.Controls.Add(this.btnThem);
             this.materialCard1.Controls.Add(this.lblMaKH);
-            this.materialCard1.Controls.Add(this.txtDiemTichLuy);
             this.materialCard1.Controls.Add(this.txtSDT);
             this.materialCard1.Controls.Add(this.txtHoTen);
             this.materialCard1.Depth = 0;
@@ -126,21 +122,11 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(781, 72);
+            this.label5.Location = new System.Drawing.Point(525, 72);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(160, 24);
             this.label5.TabIndex = 18;
             this.label5.Text = "Hạng Thành Viên";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(529, 73);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(131, 24);
-            this.label4.TabIndex = 17;
-            this.label4.Text = "Điểm Tích Lũy";
             // 
             // label3
             // 
@@ -173,28 +159,6 @@
             this.bigLabel1.Size = new System.Drawing.Size(382, 46);
             this.bigLabel1.TabIndex = 13;
             this.bigLabel1.Text = "Thông Tin Khách Hàng -";
-            // 
-            // cboHangThanhVien
-            // 
-            this.cboHangThanhVien.AutoResize = false;
-            this.cboHangThanhVien.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.cboHangThanhVien.Depth = 0;
-            this.cboHangThanhVien.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cboHangThanhVien.DropDownHeight = 174;
-            this.cboHangThanhVien.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboHangThanhVien.DropDownWidth = 121;
-            this.cboHangThanhVien.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.cboHangThanhVien.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.cboHangThanhVien.FormattingEnabled = true;
-            this.cboHangThanhVien.IntegralHeight = false;
-            this.cboHangThanhVien.ItemHeight = 43;
-            this.cboHangThanhVien.Location = new System.Drawing.Point(785, 100);
-            this.cboHangThanhVien.MaxDropDownItems = 4;
-            this.cboHangThanhVien.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.cboHangThanhVien.Name = "cboHangThanhVien";
-            this.cboHangThanhVien.Size = new System.Drawing.Size(198, 49);
-            this.cboHangThanhVien.StartIndex = 0;
-            this.cboHangThanhVien.TabIndex = 12;
             // 
             // btnSua
             // 
@@ -290,36 +254,6 @@
             this.lblMaKH.TabIndex = 6;
             this.lblMaKH.Text = "MaKH";
             // 
-            // txtDiemTichLuy
-            // 
-            this.txtDiemTichLuy.AnimateReadOnly = false;
-            this.txtDiemTichLuy.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtDiemTichLuy.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtDiemTichLuy.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.txtDiemTichLuy.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
-            this.txtDiemTichLuy.Depth = 0;
-            this.txtDiemTichLuy.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.txtDiemTichLuy.HideSelection = true;
-            this.txtDiemTichLuy.LeadingIcon = null;
-            this.txtDiemTichLuy.Location = new System.Drawing.Point(529, 100);
-            this.txtDiemTichLuy.MaxLength = 32767;
-            this.txtDiemTichLuy.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
-            this.txtDiemTichLuy.Name = "txtDiemTichLuy";
-            this.txtDiemTichLuy.PasswordChar = '\0';
-            this.txtDiemTichLuy.PrefixSuffixText = null;
-            this.txtDiemTichLuy.ReadOnly = true;
-            this.txtDiemTichLuy.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtDiemTichLuy.SelectedText = "";
-            this.txtDiemTichLuy.SelectionLength = 0;
-            this.txtDiemTichLuy.SelectionStart = 0;
-            this.txtDiemTichLuy.ShortcutsEnabled = true;
-            this.txtDiemTichLuy.Size = new System.Drawing.Size(250, 48);
-            this.txtDiemTichLuy.TabIndex = 3;
-            this.txtDiemTichLuy.TabStop = false;
-            this.txtDiemTichLuy.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.txtDiemTichLuy.TrailingIcon = null;
-            this.txtDiemTichLuy.UseSystemPasswordChar = false;
-            // 
             // txtSDT
             // 
             this.txtSDT.AnimateReadOnly = false;
@@ -389,6 +323,36 @@
             this.dgvKhachHang.Size = new System.Drawing.Size(1000, 405);
             this.dgvKhachHang.TabIndex = 4;
             // 
+            // txtHangThanhVien
+            // 
+            this.txtHangThanhVien.AnimateReadOnly = false;
+            this.txtHangThanhVien.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtHangThanhVien.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtHangThanhVien.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.txtHangThanhVien.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal;
+            this.txtHangThanhVien.Depth = 0;
+            this.txtHangThanhVien.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.txtHangThanhVien.HideSelection = true;
+            this.txtHangThanhVien.LeadingIcon = null;
+            this.txtHangThanhVien.Location = new System.Drawing.Point(529, 99);
+            this.txtHangThanhVien.MaxLength = 32767;
+            this.txtHangThanhVien.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            this.txtHangThanhVien.Name = "txtHangThanhVien";
+            this.txtHangThanhVien.PasswordChar = '\0';
+            this.txtHangThanhVien.PrefixSuffixText = null;
+            this.txtHangThanhVien.ReadOnly = true;
+            this.txtHangThanhVien.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtHangThanhVien.SelectedText = "";
+            this.txtHangThanhVien.SelectionLength = 0;
+            this.txtHangThanhVien.SelectionStart = 0;
+            this.txtHangThanhVien.ShortcutsEnabled = true;
+            this.txtHangThanhVien.Size = new System.Drawing.Size(250, 48);
+            this.txtHangThanhVien.TabIndex = 37;
+            this.txtHangThanhVien.TabStop = false;
+            this.txtHangThanhVien.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.txtHangThanhVien.TrailingIcon = null;
+            this.txtHangThanhVien.UseSystemPasswordChar = false;
+            // 
             // UC_QuanLyKhachHang
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -412,17 +376,15 @@
         private ReaLTaiizor.Controls.MaterialButton btnLamMoi;
         private ReaLTaiizor.Controls.MaterialButton btnThem;
         private System.Windows.Forms.Label lblMaKH;
-        private ReaLTaiizor.Controls.MaterialTextBoxEdit txtDiemTichLuy;
         private ReaLTaiizor.Controls.MaterialTextBoxEdit txtSDT;
         private ReaLTaiizor.Controls.MaterialTextBoxEdit txtHoTen;
         private System.Windows.Forms.DataGridView dgvKhachHang;
-        private ReaLTaiizor.Controls.MaterialComboBox cboHangThanhVien;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private ReaLTaiizor.Controls.BigLabel bigLabel1;
         private ReaLTaiizor.Controls.MaterialButton btnXuatExcel;
         private ReaLTaiizor.Controls.MaterialButton btnTimKiem;
+        private ReaLTaiizor.Controls.MaterialTextBoxEdit txtHangThanhVien;
     }
 }
