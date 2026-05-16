@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace quanlynhasach
@@ -98,9 +100,22 @@ namespace quanlynhasach
                 MessageBox.Show("Lỗi: " + ex.Message);
             }
         }
+
         #endregion
 
         #region Hàm Hỗ Trợ Xử Lý DB
+        private string ChuanHoaVanBan(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return "";
+
+            // 1. Xóa khoảng trắng thừa ở đầu, cuối và ép các khoảng trắng đôi ở giữa về 1 khoảng trắng đơn
+            text = Regex.Replace(text.Trim(), @"\s+", " ");
+
+            // 2. Chuyển toàn bộ chuỗi về chữ thường, sau đó viết hoa chữ cái đầu của mỗi từ theo chuẩn tiếng Việt
+            TextInfo textInfo = new CultureInfo("vi-VN", false).TextInfo;
+            return textInfo.ToTitleCase(text.ToLower());
+        }
+
         // Tự động kiểm tra và thêm mới Danh mục nếu người dùng gõ nội dung chưa có
         private int GetOrInsertValue(string tableName, string nameColumn, string idColumn, string textValue)
         {
@@ -155,6 +170,11 @@ namespace quanlynhasach
             LoadData();
         }
 
+        private void btnTeam_Click(object sender, EventArgs e) // Giữ nguyên ánh xạ sự kiện nút Thêm của bạn
+        {
+            btnThem_Click(sender, e);
+        }
+
         private void btnThem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtTenSach.Text))
@@ -163,12 +183,18 @@ namespace quanlynhasach
                 return;
             }
 
+            // ĐÃ THAY ĐỔI: Chuẩn hóa toàn bộ chuỗi nhập tay qua bộ lọc trước khi bắn xuống DB
+            string tenSachChuan = ChuanHoaVanBan(txtTenSach.Text);
+            string theLoaiChuan = ChuanHoaVanBan(txtTheLoai.Text);
+            string tacGiaChuan = ChuanHoaVanBan(txtTacGia.Text);
+            string nxbChuan = ChuanHoaVanBan(txtNXB.Text);
+
             Sach s = new Sach
             {
-                TenSach = txtTenSach.Text.Trim(),
-                MaTL = GetOrInsertValue("theloai", "TenTL", "MaTL", txtTheLoai.Text),
-                MaTG = GetOrInsertValue("tacgia", "TenTG", "MaTG", txtTacGia.Text),
-                MaNXB = GetOrInsertValue("nhaxuatban", "TenNXB", "MaNXB", txtNXB.Text),
+                TenSach = tenSachChuan,
+                MaTL = GetOrInsertValue("theloai", "TenTL", "MaTL", theLoaiChuan),
+                MaTG = GetOrInsertValue("tacgia", "TenTG", "MaTG", tacGiaChuan),
+                MaNXB = GetOrInsertValue("nhaxuatban", "TenNXB", "MaNXB", nxbChuan),
                 NamXB = string.IsNullOrEmpty(txtNamXB.Text) ? 0 : int.Parse(txtNamXB.Text),
                 GiaNhap = string.IsNullOrEmpty(txtGiaNhap.Text) ? 0 : int.Parse(txtGiaNhap.Text),
                 GiaBan = string.IsNullOrEmpty(txtGiaBan.Text) ? 0 : int.Parse(txtGiaBan.Text),
@@ -191,13 +217,19 @@ namespace quanlynhasach
                 return;
             }
 
+            // ĐÃ THAY ĐỔI: Chuẩn hóa toàn bộ chuỗi nhập tay qua bộ lọc trước khi cập nhật DB
+            string tenSachChuan = ChuanHoaVanBan(txtTenSach.Text);
+            string theLoaiChuan = ChuanHoaVanBan(txtTheLoai.Text);
+            string tacGiaChuan = ChuanHoaVanBan(txtTacGia.Text);
+            string nxbChuan = ChuanHoaVanBan(txtNXB.Text);
+
             Sach s = new Sach
             {
                 MaSach = int.Parse(lblMaSach.Text),
-                TenSach = txtTenSach.Text.Trim(),
-                MaTL = GetOrInsertValue("theloai", "TenTL", "MaTL", txtTheLoai.Text),
-                MaTG = GetOrInsertValue("tacgia", "TenTG", "MaTG", txtTacGia.Text),
-                MaNXB = GetOrInsertValue("nhaxuatban", "TenNXB", "MaNXB", txtNXB.Text),
+                TenSach = tenSachChuan,
+                MaTL = GetOrInsertValue("theloai", "TenTL", "MaTL", theLoaiChuan),
+                MaTG = GetOrInsertValue("tacgia", "TenTG", "MaTG", tacGiaChuan),
+                MaNXB = GetOrInsertValue("nhaxuatban", "TenNXB", "MaNXB", nxbChuan),
                 NamXB = string.IsNullOrEmpty(txtNamXB.Text) ? 0 : int.Parse(txtNamXB.Text),
                 GiaNhap = string.IsNullOrEmpty(txtGiaNhap.Text) ? 0 : int.Parse(txtGiaNhap.Text),
                 GiaBan = string.IsNullOrEmpty(txtGiaBan.Text) ? 0 : int.Parse(txtGiaBan.Text),
