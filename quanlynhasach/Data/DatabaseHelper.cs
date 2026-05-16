@@ -8,6 +8,9 @@ namespace quanlynhasach.Data
     {
         private readonly string connectionString = "Server=localhost;Database=quanlynhasach;Uid=root;Pwd=;";
 
+        // BỔ SUNG THUỘC TÍNH NÀY: Để các Controller khác có thể lấy chuỗi kết nối dùng cho Transaction
+        public string ConnectionString => connectionString;
+
         public DataTable ExecuteQuery(string query, MySqlParameter[] parameters = null)
         {
             DataTable dt = new DataTable();
