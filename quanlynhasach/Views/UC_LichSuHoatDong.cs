@@ -14,10 +14,7 @@ namespace quanlynhasach
         {
             InitializeComponent();
 
-            // Định dạng bảng hiển thị giống chuẩn các form trước của bạn
             FormatDataGridView(dgvLichSu);
-
-            // Tự động tải dữ liệu khi mở màn hình
             LoadData();
         }
 
@@ -34,37 +31,43 @@ namespace quanlynhasach
 
             dgv.EnableHeadersVisualStyles = false;
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(48, 63, 159); // Màu xanh đậm giống hệ thống của bạn
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(48, 63, 159);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             dgv.ColumnHeadersHeight = 40;
+        }
+
+        // HÀM MỚI: Tách logic đổ DataTable và Việt hóa cột ra dùng chung để tránh code rác và chống lỗi Crash
+        private void HienThiDuLieuLenBang(DataTable dt)
+        {
+            // Đổ trực tiếp dữ liệu thay vì dùng vòng lặp Add thủ công
+            dgvLichSu.DataSource = dt;
+
+            // Việt hóa lại tiêu đề các cột
+            if (dgvLichSu.Columns.Contains("MaLog")) dgvLichSu.Columns["MaLog"].HeaderText = "Mã";
+            if (dgvLichSu.Columns.Contains("HoTen")) dgvLichSu.Columns["HoTen"].HeaderText = "Nhân viên";
+            if (dgvLichSu.Columns.Contains("TaiKhoan")) dgvLichSu.Columns["TaiKhoan"].HeaderText = "Tài khoản";
+
+            if (dgvLichSu.Columns.Contains("HanhDong"))
+            {
+                dgvLichSu.Columns["HanhDong"].HeaderText = "Hành động thực hiện";
+                dgvLichSu.Columns["HanhDong"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
+
+            if (dgvLichSu.Columns.Contains("ThoiGian"))
+            {
+                dgvLichSu.Columns["ThoiGian"].HeaderText = "Thời gian";
+                dgvLichSu.Columns["ThoiGian"].Width = 180;
+                dgvLichSu.Columns["ThoiGian"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
+            }
         }
 
         private void LoadData()
         {
             try
             {
-                // Gọi Controller lấy dữ liệu từ database về
                 DataTable dt = lsController.GetDanhSachLichSu();
-                dgvLichSu.DataSource = dt;
-
-                // Việt hóa lại tiêu đề các cột đổ từ database lên cho đẹp mắt
-                if (dgvLichSu.Columns.Contains("MaLog")) dgvLichSu.Columns["MaLog"].HeaderText = "Mã";
-                if (dgvLichSu.Columns.Contains("HoTen")) dgvLichSu.Columns["HoTen"].HeaderText = "Nhân viên";
-                if (dgvLichSu.Columns.Contains("TaiKhoan")) dgvLichSu.Columns["TaiKhoan"].HeaderText = "Tài khoản";
-
-                if (dgvLichSu.Columns.Contains("HanhDong"))
-                {
-                    dgvLichSu.Columns["HanhDong"].HeaderText = "Hành động thực hiện";
-                    dgvLichSu.Columns["HanhDong"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; // Tự động kéo dãn cột hành động
-                }
-
-                if (dgvLichSu.Columns.Contains("ThoiGian"))
-                {
-                    dgvLichSu.Columns["ThoiGian"].HeaderText = "Thời gian";
-                    dgvLichSu.Columns["ThoiGian"].Width = 180;
-                    dgvLichSu.Columns["ThoiGian"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"; // Định dạng ngày giờ Việt Nam
-                }
+                HienThiDuLieuLenBang(dt);
             }
             catch (Exception ex)
             {
@@ -74,7 +77,29 @@ namespace quanlynhasach
 
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
-            LoadData(); // Bấm nút thì tải lại dữ liệu mới nhất
+            LoadData();
+        }
+
+        private void btnLoc_Click(object sender, EventArgs e)
+        {
+            DateTime tuNgay = dtpTuNgay.Value.Date;
+            DateTime denNgay = dtpDenNgay.Value.Date.AddDays(1).AddSeconds(-1);
+
+            if (tuNgay > denNgay)
+            {
+                MessageBox.Show("Mốc 'Từ ngày' không được lớn hơn 'Đến ngày'!", "Lỗi chọn ngày", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                DataTable dt = lsController.GetLichSuTheoKhoangThoiGian(tuNgay, denNgay);
+                HienThiDuLieuLenBang(dt); // Gọi hàm hiển thị chung, hết sạch lỗi "Cannot clear this list"!
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi lọc dữ liệu: " + ex.Message);
+            }
         }
     }
 }

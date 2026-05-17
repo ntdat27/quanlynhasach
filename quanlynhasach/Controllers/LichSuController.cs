@@ -9,7 +9,6 @@ namespace quanlynhasach.Controllers
     {
         private DatabaseHelper db = new DatabaseHelper();
 
-        // Hàm ghi log tĩnh (static) - Gọi trực tiếp từ mọi nơi cực kỳ tiện lợi
         public static void GhiLog(int maNV, string hanhDong)
         {
             try
@@ -24,11 +23,10 @@ namespace quanlynhasach.Controllers
             }
             catch
             {
-                // Bỏ qua lỗi nếu có để không làm gián đoạn các chức năng chính của phần mềm
+                // Bỏ qua lỗi
             }
         }
 
-        // Hàm lấy danh sách log để hiển thị lên DataGridView cho Admin xem
         public DataTable GetDanhSachLichSu()
         {
             string query = @"
@@ -36,9 +34,28 @@ namespace quanlynhasach.Controllers
                 FROM lichsuhoatdong l
                 JOIN nhanvien n ON l.MaNV = n.MaNV
                 ORDER BY l.ThoiGian DESC
-                LIMIT 100"; // Chỉ lấy 100 hành động gần nhất cho nhẹ app
+                LIMIT 100";
 
             return db.ExecuteQuery(query);
+        }
+
+        public DataTable GetLichSuTheoKhoangThoiGian(DateTime tuNgay, DateTime denNgay)
+        {
+            DatabaseHelper db = new DatabaseHelper();
+
+            // ĐÃ FIX: Thêm cột nv.TaiKhoan vào chuỗi SELECT để đồng bộ cấu trúc với hàm GetDanhSachLichSu
+            string query = @"SELECT ls.MaLog, nv.HoTen, nv.TaiKhoan, ls.HanhDong, ls.ThoiGian 
+                     FROM lichsuhoatdong ls
+                     LEFT JOIN nhanvien nv ON ls.MaNV = nv.MaNV
+                     WHERE ls.ThoiGian >= @tuNgay AND ls.ThoiGian <= @denNgay
+                     ORDER BY ls.ThoiGian DESC";
+
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@tuNgay", tuNgay),
+                new MySqlParameter("@denNgay", denNgay)
+            };
+
+            return db.ExecuteQuery(query, parameters);
         }
     }
 }

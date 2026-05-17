@@ -34,11 +34,11 @@
             this.dgvHoaDon = new System.Windows.Forms.DataGridView();
             this.bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             this.materialCard4 = new ReaLTaiizor.Controls.MaterialCard();
+            this.label3 = new System.Windows.Forms.Label();
             this.btnXuatExcel = new ReaLTaiizor.Controls.MaterialButton();
             this.txtTimSdt = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHoaDon)).BeginInit();
             this.materialCard4.SuspendLayout();
             this.SuspendLayout();
@@ -46,6 +46,7 @@
             // dtpTuNgay
             // 
             this.dtpTuNgay.FontSize = ReaLTaiizor.Extension.Poison.PoisonDateTimeSize.Medium;
+            this.dtpTuNgay.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpTuNgay.Location = new System.Drawing.Point(17, 54);
             this.dtpTuNgay.MinimumSize = new System.Drawing.Size(0, 29);
             this.dtpTuNgay.Name = "dtpTuNgay";
@@ -55,6 +56,7 @@
             // dtpDenNgay
             // 
             this.dtpDenNgay.FontSize = ReaLTaiizor.Extension.Poison.PoisonDateTimeSize.Medium;
+            this.dtpDenNgay.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpDenNgay.Location = new System.Drawing.Point(223, 54);
             this.dtpDenNgay.MinimumSize = new System.Drawing.Size(0, 29);
             this.dtpDenNgay.Name = "dtpDenNgay";
@@ -126,6 +128,16 @@
             this.materialCard4.Size = new System.Drawing.Size(925, 100);
             this.materialCard4.TabIndex = 16;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.label3.Location = new System.Drawing.Point(425, 8);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(215, 24);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Số Điện Thoại Tìm Kiếm";
+            // 
             // btnXuatExcel
             // 
             this.btnXuatExcel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -196,16 +208,6 @@
             this.label1.Size = new System.Drawing.Size(82, 24);
             this.label1.TabIndex = 10;
             this.label1.Text = "Từ Ngày";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.label3.Location = new System.Drawing.Point(425, 8);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(215, 24);
-            this.label3.TabIndex = 18;
-            this.label3.Text = "Số Điện Thoại Tìm Kiếm";
             // 
             // UC_QuanLyHoaDon
             // 

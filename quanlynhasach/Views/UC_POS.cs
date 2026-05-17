@@ -32,7 +32,6 @@ namespace quanlynhasach
 
             dgvSach.CellDoubleClick += dgvSach_CellDoubleClick;
             dgvGioHang.CellContentClick += dgvGioHang_CellContentClick;
-
             dgvGioHang.CellEndEdit += dgvGioHang_CellEndEdit;
 
             txtTimKiem.TextChanged += txtTimKiem_TextChanged;
@@ -78,12 +77,10 @@ namespace quanlynhasach
             dgvSach.Columns["GiaBan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
             dgvGioHang.Columns.Clear();
-
             dgvGioHang.ReadOnly = false;
 
             dgvGioHang.Columns.Add("MaSach", "Mã");
             dgvGioHang.Columns["MaSach"].Visible = false;
-
             dgvGioHang.Columns.Add("TenSach", "Tên sách");
             dgvGioHang.Columns["TenSach"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dgvGioHang.Columns["TenSach"].ReadOnly = true;
@@ -112,7 +109,6 @@ namespace quanlynhasach
             dgvGioHang.Columns.Add("DonGia", "Đơn giá");
             dgvGioHang.Columns["DonGia"].DefaultCellStyle.Format = "N0";
             dgvGioHang.Columns["DonGia"].ReadOnly = true;
-
             dgvGioHang.Columns.Add("ThanhTien", "Thành tiền");
             dgvGioHang.Columns["ThanhTien"].DefaultCellStyle.Format = "N0";
             dgvGioHang.Columns["ThanhTien"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -164,11 +160,11 @@ namespace quanlynhasach
 
                 if (kh != null)
                 {
+                    // Lấy % giảm tự động từ Model KhachHang đã được nhúng thuật toán ở bước trước
                     phanTramGiamHienTai = kh.PhanTramGiam;
                     maKhachHangHienTai = kh.MaKH;
 
                     lblTenKhachDisplay.Text = "Khách hàng: " + kh.HoTen;
-
                     lblHangThanhVien.Text = "Hạng: " + kh.TenHang;
                     lblHangThanhVien.ForeColor = Color.FromArgb(48, 63, 159);
                 }
@@ -201,9 +197,7 @@ namespace quanlynhasach
             long thanhTien = tongTienHang - soTienDuocGiam;
 
             lblTamTinh.Text = string.Format("{0:N0} đ", tongTienHang);
-
             lblGiamGia.Text = string.Format("- {0:N0} đ ({1}%)", soTienDuocGiam, phanTramGiamHienTai);
-
             lblTongCong.Text = string.Format("{0:N0} đ", thanhTien);
         }
 
@@ -356,6 +350,7 @@ namespace quanlynhasach
             catch (System.IO.IOException) { return true; }
             return false;
         }
+
         private void ExportInvoiceToPDF(string filePath)
         {
             try
@@ -379,16 +374,17 @@ namespace quanlynhasach
 
                         document.SetFont(fontNormal);
 
-                        document.Add(new Paragraph("HÓA ĐƠN")
+                        document.Add(new Paragraph("HÓA ĐƠN BÁN LẺ")
                             .SetTextAlignment(TextAlignment.CENTER)
                             .SetFontSize(20)
                             .SetFont(fontBold));
 
-                        document.Add(new Paragraph("Nhà Sách Thư Quán").SetTextAlignment(TextAlignment.CENTER));
+                        document.Add(new Paragraph("Nhà Sách Đan Phượng").SetTextAlignment(TextAlignment.CENTER));
                         document.Add(new Paragraph("--------------------------------------------------").SetTextAlignment(TextAlignment.CENTER));
 
                         document.Add(new Paragraph(lblTenKhachDisplay.Text));
                         document.Add(new Paragraph(lblHangThanhVien.Text));
+                        document.Add(new Paragraph($"Thu ngân: {quanlynhasach.Models.Session.HoTen}"));
                         document.Add(new Paragraph($"Ngày lập: {DateTime.Now:dd/MM/yyyy HH:mm}"));
                         document.Add(new Paragraph("\n"));
 
@@ -457,7 +453,6 @@ namespace quanlynhasach
             int tienGiam = (tongTienHang * phanTramGiamHienTai) / 100;
             int khachCanTra = tongTienHang - tienGiam;
 
-            // Đã sửa lại lỗi bất đồng bộ khi gọi Session
             int maNhanVien = quanlynhasach.Models.Session.MaNV > 0 ? quanlynhasach.Models.Session.MaNV : 1;
 
             HoaDonController hdController = new HoaDonController();
@@ -484,8 +479,11 @@ namespace quanlynhasach
                 txtSoDienThoai.Clear();
                 phanTramGiamHienTai = 0;
                 maKhachHangHienTai = null;
-                lblTongCong.Text = "0 VNĐ";
-                lblTongCong.ForeColor = Color.Black;
+                lblTongCong.Text = "0 đ";
+                lblTamTinh.Text = "0 đ";
+                lblGiamGia.Text = "- 0 đ (0%)";
+                lblTenKhachDisplay.Text = "Khách hàng: Khách vãng lai";
+                lblHangThanhVien.Text = "Hạng: N/A";
 
                 LoadDanhSachSach();
             }
@@ -499,22 +497,17 @@ namespace quanlynhasach
         {
             Form frmPopup = new Form();
             frmPopup.Text = "Quản lý Khách Hàng";
-            frmPopup.Size = new Size(1100, 650); // Chiều rộng và cao tùy bạn chỉnh
+            frmPopup.Size = new Size(1100, 650);
             frmPopup.StartPosition = FormStartPosition.CenterParent;
             frmPopup.FormBorderStyle = FormBorderStyle.FixedDialog;
             frmPopup.MaximizeBox = false;
             frmPopup.MinimizeBox = false;
 
-            // Khởi tạo UC_QuanLyKhachHang và cho lấp đầy Form ảo
             UC_QuanLyKhachHang ucKH = new UC_QuanLyKhachHang();
             ucKH.Dock = DockStyle.Fill;
             frmPopup.Controls.Add(ucKH);
-
-            // ShowDialog buộc người dùng phải tắt form này đi thì mới bấm được bên ngoài
             frmPopup.ShowDialog();
 
-            // QUAN TRỌNG: Sau khi form tắt (đã thêm khách xong), 
-            // tự động chạy lại hàm kiểm tra để load thông tin khách hàng mới vào POS ngay lập tức
             KiemTraKhachHang();
         }
     }
