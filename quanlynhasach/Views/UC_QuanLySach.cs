@@ -167,7 +167,6 @@ namespace quanlynhasach
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            // 1. CHẶN RỖNG CÁC TRƯỜNG BẮT BUỘC ĐỂ TRÁNH LỖI KHÓA NGOẠI (FOREIGN KEY = 0)
             if (string.IsNullOrWhiteSpace(txtTenSach.Text) ||
                 string.IsNullOrWhiteSpace(txtTheLoai.Text) ||
                 string.IsNullOrWhiteSpace(txtTacGia.Text) ||
@@ -177,14 +176,12 @@ namespace quanlynhasach
                 return;
             }
 
-            // 2. KIỂM TRA ĐIỀU KIỆN NĂM XUẤT BẢN (Số dương & Không vượt quá năm hiện tại)
             if (!int.TryParse(txtNamXB.Text.Trim(), out int namXB) || namXB <= 0 || namXB > DateTime.Now.Year)
             {
                 MessageBox.Show($"Năm xuất bản phải là một số nguyên dương và không được lớn hơn năm hiện tại ({DateTime.Now.Year})!", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Đọc và ép kiểu an toàn cho dữ liệu số tránh crash định dạng chữ
             int.TryParse(txtGiaNhap.Text.Trim(), out int giaNhap);
             int.TryParse(txtGiaBan.Text.Trim(), out int giaBan);
             int.TryParse(txtSoLuong.Text.Trim(), out int soLuong);
@@ -222,7 +219,6 @@ namespace quanlynhasach
                 return;
             }
 
-            // 1. CHẶN RỖNG KHI SỬA
             if (string.IsNullOrWhiteSpace(txtTenSach.Text) ||
                 string.IsNullOrWhiteSpace(txtTheLoai.Text) ||
                 string.IsNullOrWhiteSpace(txtTacGia.Text) ||
@@ -232,7 +228,6 @@ namespace quanlynhasach
                 return;
             }
 
-            // 2. KIỂM TRA ĐIỀU KIỆN NĂM XUẤT BẢN KHI SỬA
             if (!int.TryParse(txtNamXB.Text.Trim(), out int namXB) || namXB <= 0 || namXB > DateTime.Now.Year)
             {
                 MessageBox.Show($"Năm xuất bản phải là một số nguyên dương và không được lớn hơn năm hiện tại ({DateTime.Now.Year})!", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -382,32 +377,92 @@ namespace quanlynhasach
             }
         }
 
+        // HÀM MỚI: TẠO FORM POP-UP NHẬP HÀNG CHUYÊN NGHIỆP THAY CHO INPUTBOX
         private void btnNhapHang_Click(object sender, EventArgs e)
         {
-            if (!int.TryParse(lblMaSach.Text, out int maSach))
+            // Đảm bảo nhân viên phải chọn sách từ GridView trước khi kích hoạt phiếu nhập
+            if (string.IsNullOrEmpty(lblMaSach.Text) || !int.TryParse(lblMaSach.Text, out int maSach))
             {
-                MessageBox.Show("Vui lòng click chọn một cuốn sách từ danh sách bên dưới trước khi nhập hàng!");
+                MessageBox.Show("Vui lòng click chuột chọn một cuốn sách từ bảng danh sách bên dưới trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Nhập số lượng sách cộng thêm vào kho:", "Nhập hàng", "0");
+            // KHỞI TẠO POP-UP ĐỘNG: Lập chứng từ phiếu nhập hàng bằng code giao diện trực tiếp
+            Form frmPopup = new Form();
+            frmPopup.Text = "LẬP PHIẾU NHẬP HÀNG SÁCH";
+            frmPopup.Size = new Size(420, 300);
+            frmPopup.StartPosition = FormStartPosition.CenterParent;
+            frmPopup.FormBorderStyle = FormBorderStyle.FixedDialog;
+            frmPopup.MaximizeBox = false;
+            frmPopup.MinimizeBox = false;
+            frmPopup.BackColor = Color.White;
 
-            if (int.TryParse(input, out int soLuongThem) && soLuongThem > 0)
+            // Thiết kế các nhãn điều khiển hiển thị nội dung điền thông tin
+            Label lblTitle = new Label() { Text = "NHẬP KHO: " + txtTenSach.Text, Left = 20, Top = 20, Width = 360, Font = new Font("Segoe UI", 11F, FontStyle.Bold), ForeColor = Color.FromArgb(48, 63, 159) };
+
+            Label lblSL = new Label() { Text = "Số lượng nhập thêm:", Left = 20, Top = 80, Width = 150, Font = new Font("Segoe UI", 9.5F) };
+            TextBox txtSL = new TextBox() { Left = 180, Top = 78, Width = 190, Font = new Font("Segoe UI", 9.5F) };
+
+            Label lblGia = new Label() { Text = "Đơn giá nhập hàng (đ):", Left = 20, Top = 130, Width = 150, Font = new Font("Segoe UI", 9.5F) };
+
+            // Lấy sẵn đơn giá nhập hiện tại gán vào ô để nhân viên đỡ phải gõ lại nếu giá nhập không thay đổi
+            TextBox txtGia = new TextBox() { Left = 180, Top = 128, Width = 190, Font = new Font("Segoe UI", 9.5F), Text = txtGiaNhap.Text };
+
+            Button btnLuu = new Button() { Text = "XÁC NHẬN NHẬP", Left = 70, Top = 200, Width = 130, Height = 38, BackColor = Color.FromArgb(48, 63, 159), ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold) };
+            Button btnHuy = new Button() { Text = "HỦY BỎ", Left = 220, Top = 200, Width = 130, Height = 38, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 9.5F) };
+
+            // Ép các linh kiện xuất hiện lên Form Pop-up ảo
+            frmPopup.Controls.AddRange(new Control[] { lblTitle, lblSL, txtSL, lblGia, txtGia, btnLuu, btnHuy });
+
+            // Đăng ký hành vi phản hồi sự kiện bấm nút trên Pop-up
+            btnHuy.Click += (s, args) => frmPopup.Close();
+
+            btnLuu.Click += (s, args) =>
             {
-                if (sachController.NhapHang(maSach, soLuongThem))
+                // Kiểm tra chặn lọc lỗi số lượng nhập hàng
+                if (!int.TryParse(txtSL.Text.Trim(), out int soLuong) || soLuong <= 0)
                 {
-                    MessageBox.Show($"Đã nhập thêm {soLuongThem} cuốn vào kho thành công!");
+                    MessageBox.Show("Số lượng nhập kho bắt buộc phải là một con số nguyên dương lớn hơn 0!", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtSL.Focus();
+                    return;
+                }
+
+                // Kiểm tra chặn lọc lỗi đơn giá vốn nhập hàng
+                if (!int.TryParse(txtGia.Text.Trim(), out int giaNhap) || giaNhap <= 0)
+                {
+                    MessageBox.Show("Đơn giá nhập sách bắt buộc phải là một con số nguyên dương lớn hơn 0!", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtGia.Focus();
+                    return;
+                }
+
+                int maNhanVien = quanlynhasach.Models.Session.MaNV > 0 ? quanlynhasach.Models.Session.MaNV : 1;
+
+                if (sachController.NhapHangVaoKho(maSach, soLuong, giaNhap, maNhanVien))
+                {
+                    MessageBox.Show($"Lập chứng từ phiếu nhập kho cho {soLuong} cuốn sách thành công! Kho hàng và giá vốn đã được cập nhật.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    frmPopup.Close();
+
                     LoadData();
+
+                    // VÁ LỖI HIỂN THỊ: Tính toán luôn Giá vốn Bình quân gia quyền ngay trên Giao diện
+                    int tonCu = int.Parse(txtSoLuong.Text == "" ? "0" : txtSoLuong.Text);
+                    int giaCu = int.Parse(txtGiaNhap.Text == "" ? "0" : txtGiaNhap.Text);
+
+                    // Công thức: [(Tồn cũ * Giá cũ) + (Nhập mới * Giá mới)] / Tổng số lượng
+                    int giaBinhQuanMoi = (int)Math.Round((double)((tonCu * giaCu) + (soLuong * giaNhap)) / (tonCu + soLuong));
+
+                    // Đẩy kết quả đã trộn giá (49000) lên TextBox
+                    txtSoLuong.Text = (tonCu + soLuong).ToString();
+                    txtGiaNhap.Text = giaBinhQuanMoi.ToString();
                 }
                 else
                 {
-                    MessageBox.Show("Lỗi khi kết nối CSDL để nhập hàng!");
+                    MessageBox.Show("Lập phiếu nhập thất bại! Bạn hãy kiểm tra lại xem cấu trúc bảng dữ liệu 'phieunhap' và 'chitietphieunhap' đã được tạo dưới MySQL Workbench chưa nhé.", "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
-            else if (!string.IsNullOrEmpty(input))
-            {
-                MessageBox.Show("Số lượng nhập vào phải là một con số hợp lệ lớn hơn 0!");
-            }
+            };
+
+            // Hiển thị hộp thoại ép buộc xử lý xong mới cho tương tác ra bên ngoài
+            frmPopup.ShowDialog();
         }
     }
 }

@@ -62,18 +62,83 @@ namespace quanlynhasach.Controllers
             };
         }
 
-        public bool NhapHang(int maSach, int soLuongThem)
+        // HÀM MỚI NÂNG CẤP: Quản lý giao dịch nhập kho chặt chẽ, sinh chứng từ PhieuNhap
+        // HÀM ĐÃ SỬA LỖI TÊN CỘT: Quản lý giao dịch nhập kho chặt chẽ, sinh chứng từ PhieuNhap
+        // HÀM ĐÃ SỬA LỖI TÊN CỘT VÀ THÊM MaNCC: Quản lý giao dịch nhập kho chặt chẽ, sinh chứng từ PhieuNhap
+        public bool NhapHangVaoKho(int maSach, int soLuongNhap, int giaNhap, int maNV)
         {
-            try
+            // Lấy chuỗi kết nối an toàn từ DatabaseHelper
+            DatabaseHelper dbHelper = new DatabaseHelper();
+            string connectionString = dbHelper.ConnectionString;
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                string query = "UPDATE Sach SET SoLuongTon = SoLuongTon + @soLuongThem WHERE MaSach = @maSach";
-                MySqlParameter[] parameters = {
-                    new MySqlParameter("@soLuongThem", soLuongThem),
-                    new MySqlParameter("@maSach", maSach)
-                };
-                return db.ExecuteNonQuery(query, parameters) > 0;
+                conn.Open();
+                using (MySqlTransaction trans = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        // 1. SỬA LỖI CHÍ MẠNG: Bổ sung thêm cột MaNCC (Mã Nhà Cung Cấp) vào câu lệnh INSERT
+                        string queryPhieuNhap = "INSERT INTO phieunhap (MaNV, MaNCC, TongTien) VALUES (@maNV, @maNCC, @tongTien); SELECT LAST_INSERT_ID();";
+                        int tongTienPhieu = soLuongNhap * giaNhap;
+                        int maPN = 0;
+
+                        using (MySqlCommand cmd = new MySqlCommand(queryPhieuNhap, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@maNV", maNV);
+
+                            // Tạm thời gán cứng Mã Nhà Cung Cấp = 1 để qua cửa MySQL
+                            cmd.Parameters.AddWithValue("@maNCC", 1);
+
+                            cmd.Parameters.AddWithValue("@tongTien", tongTienPhieu);
+                            maPN = Convert.ToInt32(cmd.ExecuteScalar());
+                        }
+
+                        // 2. Tạo Chi Tiết Phiếu Nhập
+                        string queryChiTiet = "INSERT INTO chitietphieunhap (MaPN, MaSach, SoLuongNhap, GiaNhap, ThanhTien) VALUES (@maPN, @maSach, @soLuongNhap, @giaNhap, @thanhTien)";
+                        using (MySqlCommand cmd = new MySqlCommand(queryChiTiet, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@maPN", maPN);
+                            cmd.Parameters.AddWithValue("@maSach", maSach);
+                            cmd.Parameters.AddWithValue("@soLuongNhap", soLuongNhap);
+                            cmd.Parameters.AddWithValue("@giaNhap", giaNhap);
+                            cmd.Parameters.AddWithValue("@thanhTien", tongTienPhieu);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 3. Cập nhật số lượng tồn kho và giá vốn (GiaNhap) mới cho cuốn sách đó
+                        // 3. CẬP NHẬT KHO BẰNG PHƯƠNG PHÁP BÌNH QUÂN GIA QUYỀN
+                        // Cập nhật giá nhập mới trước (trộn giá cũ và giá mới), sau đó mới cộng dồn số lượng
+                        string queryUpdateSach = @"
+    UPDATE sach 
+    SET GiaNhap = ROUND(((SoLuongTon * GiaNhap) + (@soLuong * @giaNhap)) / (SoLuongTon + @soLuong)), 
+        SoLuongTon = SoLuongTon + @soLuong 
+    WHERE MaSach = @maSach";
+
+                        using (MySqlCommand cmd = new MySqlCommand(queryUpdateSach, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@soLuong", soLuongNhap);
+                            cmd.Parameters.AddWithValue("@giaNhap", giaNhap);
+                            cmd.Parameters.AddWithValue("@maSach", maSach);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 4. Ghi nhận lịch sử cho quản lý theo dõi
+                        LichSuController.GhiLog(maNV, $"Lập phiếu nhập hàng ID {maPN}: Thêm +{soLuongNhap} cuốn sách (Mã: {maSach}) vào kho.");
+
+                        // Hoàn tất giao dịch
+                        trans.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        // In lỗi ra Output (Console) của Visual Studio để dễ debug nếu có lỗi khác
+                        Console.WriteLine("Lỗi thực thi nhập hàng: " + ex.Message);
+                        trans.Rollback();
+                        return false;
+                    }
+                }
             }
-            catch { return false; }
         }
 
         public bool AddSach(Sach s)
@@ -120,7 +185,6 @@ namespace quanlynhasach.Controllers
             };
             bool result = db.ExecuteNonQuery(query, parameters) > 0;
 
-            // THÊM ĐOẠN NÀY:
             if (result && quanlynhasach.Models.Session.MaNV > 0)
             {
                 LichSuController.GhiLog(quanlynhasach.Models.Session.MaNV, $"Xóa sách có mã ID: {maSach}");
